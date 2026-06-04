@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'core/theme/app_theme.dart';
+import 'features/home/presentation/pages/home_screen.dart';
 
 void main() {
   runApp(const AuraqApp());
@@ -12,20 +14,14 @@ class AuraqApp extends StatelessWidget {
     return MaterialApp(
       title: 'Auraq',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
-        useMaterial3: true,
-      ),
-      home: Home(),
+
+      // Professional Theme Setup
+      theme: AppThemeData.lightTheme,
+      darkTheme: AppThemeData.darkTheme,
+      themeMode: ThemeMode.system,
+
+      // Auto-switch based on phone settings
+      home: HomeScreen(),
     );
-  }
-}
-
-class Home extends StatelessWidget {
-  const Home({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
   }
 }
