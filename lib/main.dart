@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/theme/app_theme.dart';
 import 'home/ui/screens/home_screen.dart';
 
 void main() {
-  runApp(const AuraqApp());
+  // ProviderScope is mandatory for Riverpod
+  runApp(const ProviderScope(child: AuraqApp()));
 }
 
 class AuraqApp extends StatelessWidget {
@@ -14,14 +16,10 @@ class AuraqApp extends StatelessWidget {
     return MaterialApp(
       title: 'Auraq',
       debugShowCheckedModeBanner: false,
-
-      // Professional Theme Setup
       theme: AppThemeData.lightTheme,
       darkTheme: AppThemeData.darkTheme,
       themeMode: ThemeMode.system,
-
-      // Auto-switch based on phone settings
-      home: HomeScreen(),
+      home: const HomeScreen(),
     );
   }
 }
