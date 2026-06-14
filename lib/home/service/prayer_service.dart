@@ -1,7 +1,11 @@
 import 'package:adhan_dart/adhan_dart.dart';
 import 'package:auraq/home/service/check_ramadhan.dart';
+import 'package:hive/hive.dart';
+
+import '../../core/constant/db_consts.dart';
 
 class PrayerService {
+  final box = Hive.box(DbConstants.appBox);
   Future<PrayerTimes> getPrayerTime(
     double lat,
     double lng,
@@ -11,14 +15,14 @@ class PrayerService {
 
     final time = DateTime.now();
 
-    return PrayerTimes(
+    return  PrayerTimes(
       date: time,
       coordinates: coordinates,
       calculationParameters: CalculationParameters(
         method: CalculationMethod.ummAlQura,
         fajrAngle: 18.5,
         ishaAngle: 0.0,
-        ishaInterval: await isRamadhan(time) ? 120 : 90,
+        ishaInterval:  isRamadhan(time) ? 120 : 90,
         madhab: isHanafi ? Madhab.hanafi : Madhab.shafi,
       ),
     );

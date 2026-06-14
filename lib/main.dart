@@ -1,10 +1,15 @@
+import 'package:auraq/core/constant/db_consts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'core/theme/app_theme.dart';
 import 'home/ui/screens/home_screen.dart';
 
-void main() {
-  // ProviderScope is mandatory for Riverpod
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  await Hive.openBox(DbConstants.appBox);
   runApp(const ProviderScope(child: AuraqApp()));
 }
 
