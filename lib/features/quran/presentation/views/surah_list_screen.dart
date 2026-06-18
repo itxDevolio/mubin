@@ -15,14 +15,18 @@ class SurahListScreen extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
           'Surah List',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
-            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+            color: isDark
+                ? AppColors.textPrimaryDark
+                : AppColors.textPrimaryLight,
           ),
         ),
         backgroundColor: Colors.transparent,
@@ -32,7 +36,9 @@ class SurahListScreen extends ConsumerWidget {
           icon: Icon(
             Icons.arrow_back_ios_new,
             size: 20,
-            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+            color: isDark
+                ? AppColors.textPrimaryDark
+                : AppColors.textPrimaryLight,
           ),
           onPressed: () => Navigator.pop(context),
         ),
@@ -41,22 +47,37 @@ class SurahListScreen extends ConsumerWidget {
         children: [
           // Premium Search Bar
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 12.0,
+            ),
             child: TextField(
-              onChanged: (val) => ref.read(surahJuzControllerProvider.notifier).searchSurah(val),
+              onChanged: (val) => ref
+                  .read(surahJuzControllerProvider.notifier)
+                  .searchSurah(val),
               style: TextStyle(
-                color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                color: isDark
+                    ? AppColors.textPrimaryDark
+                    : AppColors.textPrimaryLight,
                 fontSize: 14,
               ),
               decoration: InputDecoration(
                 hintText: 'Search Surah...',
                 hintStyle: TextStyle(
-                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                  color: isDark
+                      ? AppColors.textSecondaryDark
+                      : AppColors.textSecondaryLight,
                   fontSize: 14,
                 ),
-                prefixIcon: const Icon(Icons.search_rounded, color: AppColors.primaryTeal, size: 22),
+                prefixIcon: const Icon(
+                  Icons.search_rounded,
+                  color: AppColors.primaryTeal,
+                  size: 22,
+                ),
                 filled: true,
-                fillColor: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
+                fillColor: isDark
+                    ? AppColors.surfaceDark
+                    : AppColors.surfaceLight,
                 contentPadding: const EdgeInsets.symmetric(vertical: 14),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
@@ -65,7 +86,9 @@ class SurahListScreen extends ConsumerWidget {
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
                   borderSide: BorderSide(
-                    color: isDark ? AppColors.borderDark : AppColors.borderLight,
+                    color: isDark
+                        ? AppColors.borderDark
+                        : AppColors.borderLight,
                     width: 1,
                   ),
                 ),
@@ -90,7 +113,9 @@ class SurahListScreen extends ConsumerWidget {
                     child: Text(
                       'No Surah found',
                       style: TextStyle(
-                        color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                        color: isDark
+                            ? AppColors.textSecondaryDark
+                            : AppColors.textSecondaryLight,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -99,10 +124,15 @@ class SurahListScreen extends ConsumerWidget {
 
                 return ListView.separated(
                   itemCount: list.length,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   physics: const BouncingScrollPhysics(),
                   separatorBuilder: (context, index) => Divider(
-                    color: isDark ? AppColors.borderDark : AppColors.borderLight,
+                    color: isDark
+                        ? AppColors.borderDark
+                        : AppColors.borderLight,
                     height: 1,
                     thickness: 0.8,
                   ),
@@ -111,21 +141,31 @@ class SurahListScreen extends ConsumerWidget {
 
                     // Fetching optimized data directly from global quran package instance
                     final totalVerses = quran.getVerseCount(surah.number);
-                    final revelationPlace = quran.getPlaceOfRevelation(surah.number);
+                    final revelationPlace = quran.getPlaceOfRevelation(
+                      surah.number,
+                    );
 
                     return InkWell(
                       onTap: () {
-                        int startingPage = quran.getSurahPages(surah.number).first;
+                        int startingPage = quran
+                            .getSurahPages(surah.number)
+                            .first;
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => MushafViewScreen(initialPage: startingPage),
+                            builder: (context) => MushafViewScreen(
+                              initialPage: startingPage,
+                              shouldUpdateProgress: false,
+                            ),
                           ),
                         );
                       },
                       borderRadius: BorderRadius.circular(12),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 4.0),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 12.0,
+                          horizontal: 4.0,
+                        ),
                         child: Row(
                           children: [
                             // Islamic Pattern Style Number Design
@@ -160,11 +200,14 @@ class SurahListScreen extends ConsumerWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    surah.nameEnglish, // Clean Roman English Name
+                                    surah
+                                        .nameEnglish, // Clean Roman English Name
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
-                                      color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                                      color: isDark
+                                          ? AppColors.textPrimaryDark
+                                          : AppColors.textPrimaryLight,
                                       letterSpacing: 0.2,
                                     ),
                                   ),
@@ -176,14 +219,19 @@ class SurahListScreen extends ConsumerWidget {
                                         revelationPlace,
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: isDark ? AppColors.accentGold.withOpacity(0.8) : AppColors.primaryTeal,
+                                          color: isDark
+                                              ? AppColors.accentGold
+                                                    .withOpacity(0.8)
+                                              : AppColors.primaryTeal,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
                                       Text(
                                         " • ",
                                         style: TextStyle(
-                                          color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                                          color: isDark
+                                              ? AppColors.textSecondaryDark
+                                              : AppColors.textSecondaryLight,
                                         ),
                                       ),
                                       // Corrected dynamic verses count UI mapping
@@ -191,7 +239,9 @@ class SurahListScreen extends ConsumerWidget {
                                         "$totalVerses Verses",
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                                          color: isDark
+                                              ? AppColors.textSecondaryDark
+                                              : AppColors.textSecondaryLight,
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
@@ -207,7 +257,9 @@ class SurahListScreen extends ConsumerWidget {
                               style: GoogleFonts.amiri(
                                 fontSize: 22,
                                 fontWeight: FontWeight.w500,
-                                color: isDark ? AppColors.accentGold : AppColors.primaryTeal,
+                                color: isDark
+                                    ? AppColors.accentGold
+                                    : AppColors.primaryTeal,
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -215,7 +267,9 @@ class SurahListScreen extends ConsumerWidget {
                             Icon(
                               Icons.arrow_forward_ios_rounded,
                               size: 12,
-                              color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                              color: isDark
+                                  ? AppColors.textSecondaryDark
+                                  : AppColors.textSecondaryLight,
                             ),
                           ],
                         ),
@@ -224,13 +278,67 @@ class SurahListScreen extends ConsumerWidget {
                   },
                 );
               },
-              loading: () => const Center(
-                child: CircularProgressIndicator(color: AppColors.primaryTeal),
+              loading: () => Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const CircularProgressIndicator(color: AppColors.primaryTeal),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Loading Surahs...',
+                      style: TextStyle(
+                        color: isDark
+                            ? AppColors.textSecondaryDark
+                            : AppColors.textSecondaryLight,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              error: (err, _) => Center(
-                child: Text(
-                  'Error: $err',
-                  style: const TextStyle(color: AppColors.error),
+              error: (err, stack) => Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error_outline_rounded,
+                      color: AppColors.error.withOpacity(0.8),
+                      size: 32,
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'Failed to load Surahs',
+                      style: TextStyle(
+                        color: isDark
+                            ? AppColors.textPrimaryDark
+                            : AppColors.textPrimaryLight,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      err.toString(),
+                      style: TextStyle(
+                        color: isDark
+                            ? AppColors.textSecondaryDark
+                            : AppColors.textSecondaryLight,
+                        fontSize: 12,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16),
+                    TextButton.icon(
+                      onPressed: () => ref
+                          .read(surahJuzControllerProvider.notifier)
+                          .loadSurahs(),
+                      icon: const Icon(Icons.refresh, size: 16),
+                      label: const Text('Retry'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: AppColors.primaryTeal,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

@@ -43,7 +43,6 @@ class UserProfileWidget extends StatelessWidget {
           ],
         ),
         const SizedBox(width: 12), // Text aur Avatar k darmiyan gap
-
         // Profile Avatar (Jo pehle trailing me tha)
       ],
     );

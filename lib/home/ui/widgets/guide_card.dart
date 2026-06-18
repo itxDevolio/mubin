@@ -1,6 +1,5 @@
-import 'package:auraq/core/app_colors.dart';
-import 'package:auraq/core/services/dark_&_light_theme.dart';
-import 'package:auraq/core/services/haptic_feedback.dart';
+import 'package:auraq/core/services/dark_and_light_theme.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -25,12 +24,11 @@ class InfoGuideCard extends StatelessWidget {
 
     const double componentHeight = 105.0;
 
-    // 🔥 Fix: UnconstrainedBox lagaya taake ListView card ko niche ki taraf zardasti stretch na kare
     return UnconstrainedBox(
-      alignment: Alignment.topCenter, // Card ko top par align rakhega
+      alignment: Alignment.topCenter,
       child: GestureDetector(
         onTap: () {
-          hapticFeedBack();
+
           onTap();
         },
         child: Container(
@@ -56,7 +54,6 @@ class InfoGuideCard extends StatelessWidget {
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            // Sirf utna size lo jitna maal andar hai
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 1. IMAGE SECTION
@@ -87,7 +84,6 @@ class InfoGuideCard extends StatelessWidget {
 
               // 2. TEXT CONTENT SECTION (Neeche se padding tight)
               Padding(
-                // bottom padding ko mazeed tight (6.0) kar diya taake ganda space bilkul bache hi na
                 padding: const EdgeInsets.only(
                   left: 12.0,
                   right: 12.0,

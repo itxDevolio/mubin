@@ -19,14 +19,18 @@ class QuranHomeScreen extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
           'Al-Quran',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
-            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+            color: isDark
+                ? AppColors.textPrimaryDark
+                : AppColors.textPrimaryLight,
           ),
         ),
         backgroundColor: Colors.transparent,
@@ -36,16 +40,22 @@ class QuranHomeScreen extends ConsumerWidget {
           icon: Icon(
             Icons.arrow_back_ios_new,
             size: 20,
-            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+            color: isDark
+                ? AppColors.textPrimaryDark
+                : AppColors.textPrimaryLight,
           ),
           onPressed: () => Navigator.pop(context),
         ),
       ),
       body: RefreshIndicator(
         color: AppColors.primaryTeal,
-        backgroundColor: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
+        backgroundColor: isDark
+            ? AppColors.surfaceDark
+            : AppColors.surfaceLight,
         onRefresh: () async {
-          await ref.read(quranProgressControllerProvider.notifier).loadProgress();
+          await ref
+              .read(quranProgressControllerProvider.notifier)
+              .loadProgress();
         },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -71,7 +81,12 @@ class QuranHomeScreen extends ConsumerWidget {
                   },
                 ),
                 loading: () => const _LoadingPlaceholder(),
-                error: (err, _) => _ErrorPlaceholder(error: err.toString()),
+                error: (err, stack) => _ErrorPlaceholder(
+                  error: err.toString(),
+                  onRetry: () => ref
+                      .read(quranProgressControllerProvider.notifier)
+                      .loadProgress(),
+                ),
               ),
 
               const SizedBox(height: 30),
@@ -81,61 +96,76 @@ class QuranHomeScreen extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                  color: isDark
+                      ? AppColors.textPrimaryDark
+                      : AppColors.textPrimaryLight,
                 ),
               ),
               const SizedBox(height: 16),
 
               // Minimal Grid Menu (All colors synced perfectly with AppColors)
-              GridView.count(
-                crossAxisCount: 2,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                mainAxisSpacing: 14,
-                crossAxisSpacing: 14,
-                childAspectRatio: 1.35,
-                children: [
-                  _buildMinimalMenu(
-                    context,
-                    title: 'Surah',
-                    icon: FlutterIslamicIcons.solidQuran,
-                    baseColor: AppColors.lightTeal,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const SurahListScreen()),
-                    ),
-                  ),
-                  _buildMinimalMenu(
-                    context,
-                    title: 'Juz',
-                    icon: FlutterIslamicIcons.solidQuran2,
-                    baseColor: AppColors.lightTeal,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const JuzListScreen()),
-                    ),
-                  ),
-                  _buildMinimalMenu(
-                    context,
-                    title: 'Bookmarks',
-                    icon: Icons.bookmark_rounded,
-                    baseColor: AppColors.lightTeal,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const BookmarkListScreen()),
-                    ),
-                  ),
-                  _buildMinimalMenu(
-                    context,
-                    title: 'Audio',
-                    icon: Icons.audiotrack_rounded,
-                    baseColor: AppColors.lightTeal,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const QuranAudioPlayerScreen()),
-                    ),
-                  ),
-                ],
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final crossAxisCount = constraints.maxWidth > 600 ? 4 : 2;
+                  return GridView.count(
+                    crossAxisCount: crossAxisCount,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    mainAxisSpacing: 14,
+                    crossAxisSpacing: 14,
+                    childAspectRatio: constraints.maxWidth > 600 ? 1.0 : 1.35,
+                    children: [
+                      _buildMinimalMenu(
+                        context,
+                        title: 'Surah',
+                        icon: FlutterIslamicIcons.solidQuran,
+                        baseColor: AppColors.lightTeal,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SurahListScreen(),
+                          ),
+                        ),
+                      ),
+                      _buildMinimalMenu(
+                        context,
+                        title: 'Juz',
+                        icon: FlutterIslamicIcons.solidQuran2,
+                        baseColor: AppColors.lightTeal,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const JuzListScreen(),
+                          ),
+                        ),
+                      ),
+                      _buildMinimalMenu(
+                        context,
+                        title: 'Bookmarks',
+                        icon: Icons.bookmark_rounded,
+                        baseColor: AppColors.lightTeal,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const BookmarkListScreen(),
+                          ),
+                        ),
+                      ),
+                      _buildMinimalMenu(
+                        context,
+                        title: 'Audio',
+                        icon: Icons.audiotrack_rounded,
+                        baseColor: AppColors.lightTeal,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const QuranAudioPlayerScreen(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
               const SizedBox(height: 24),
             ],
@@ -146,12 +176,12 @@ class QuranHomeScreen extends ConsumerWidget {
   }
 
   Widget _buildMinimalMenu(
-      BuildContext context, {
-        required String title,
-        required IconData icon,
-        required Color baseColor,
-        required VoidCallback onTap,
-      }) {
+    BuildContext context, {
+    required String title,
+    required IconData icon,
+    required Color baseColor,
+    required VoidCallback onTap,
+  }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return InkWell(
@@ -160,10 +190,14 @@ class QuranHomeScreen extends ConsumerWidget {
       child: Container(
         decoration: BoxDecoration(
           // Dark mode me opacity kam rakhi hai taaki screen chubhni na lage, light mode me soft backdrop bnaya hai
-          color: isDark ? baseColor.withOpacity(0.12) : baseColor.withOpacity(0.08),
+          color: isDark
+              ? baseColor.withOpacity(0.12)
+              : baseColor.withOpacity(0.08),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isDark ? baseColor.withOpacity(0.3) : baseColor.withOpacity(0.2),
+            color: isDark
+                ? baseColor.withOpacity(0.3)
+                : baseColor.withOpacity(0.2),
             width: 1.2,
           ),
         ),
@@ -182,7 +216,9 @@ class QuranHomeScreen extends ConsumerWidget {
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
                 letterSpacing: 0.3,
-                color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                color: isDark
+                    ? AppColors.textPrimaryDark
+                    : AppColors.textPrimaryLight,
               ),
             ),
           ],
@@ -208,14 +244,22 @@ class _LoadingPlaceholder extends StatelessWidget {
           width: 1,
         ),
       ),
-      child: const Center(child: CircularProgressIndicator(color: AppColors.primaryTeal)),
+      child: const Center(
+        child: CircularProgressIndicator(color: AppColors.primaryTeal),
+      ),
     );
   }
 }
 
 class _ErrorPlaceholder extends StatelessWidget {
   final String error;
-  const _ErrorPlaceholder({required this.error});
+  final VoidCallback? onRetry;
+  
+  const _ErrorPlaceholder({
+    required this.error,
+    this.onRetry,
+  });
+  
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -231,12 +275,35 @@ class _ErrorPlaceholder extends StatelessWidget {
           width: 1,
         ),
       ),
-      child: Center(
-        child: Text(
-          'Error: $error',
-          style: const TextStyle(color: AppColors.error, fontWeight: FontWeight.w500),
-          textAlign: TextAlign.center,
-        ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.error_outline_rounded,
+            color: AppColors.error.withOpacity(0.8),
+            size: 24,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Failed to load progress',
+            style: TextStyle(
+              color: isDark
+                  ? AppColors.textPrimaryDark
+                  : AppColors.textPrimaryLight,
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
+            ),
+          ),
+          if (onRetry != null)
+            TextButton.icon(
+              onPressed: onRetry,
+              icon: const Icon(Icons.refresh, size: 16),
+              label: const Text('Retry'),
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.primaryTeal,
+              ),
+            ),
+        ],
       ),
     );
   }

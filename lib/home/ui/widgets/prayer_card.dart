@@ -1,5 +1,5 @@
 import 'package:auraq/core/app_colors.dart';
-import 'package:auraq/core/services/dark_&_light_theme.dart';
+import 'package:auraq/core/services/dark_and_light_theme.dart';
 import 'package:auraq/core/services/haptic_feedback.dart';
 import 'package:auraq/core/widgets/loading_widget.dart';
 import 'package:auraq/home/controllers/prayer_provider.dart';
@@ -41,7 +41,9 @@ class PrayerCard extends ConsumerWidget {
             color: themeDark(context) ? Colors.black54 : Colors.white,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: themeDark(context) ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.05),
+              color: themeDark(context)
+                  ? Colors.white.withOpacity(0.08)
+                  : Colors.black.withOpacity(0.05),
             ),
           ),
           child: Column(
@@ -57,7 +59,9 @@ class PrayerCard extends ConsumerWidget {
                         Icon(
                           FlutterIslamicIcons.mosque,
                           size: 18,
-                          color: themeDark(context) ? AppColors.primaryTeal : AppColors.success,
+                          color: themeDark(context)
+                              ? AppColors.primaryTeal
+                              : AppColors.success,
                         ),
                         const SizedBox(width: 8),
                         Expanded(
@@ -68,7 +72,9 @@ class PrayerCard extends ConsumerWidget {
                             style: GoogleFonts.poppins(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: themeDark(context) ? Colors.white : Colors.black87,
+                              color: themeDark(context)
+                                  ? Colors.white
+                                  : Colors.black87,
                             ),
                           ),
                         ),
@@ -87,7 +93,9 @@ class PrayerCard extends ConsumerWidget {
                       icon: Icon(
                         Icons.notifications_active,
                         size: 20,
-                        color: themeDark(context) ? AppColors.primaryTeal : AppColors.success,
+                        color: themeDark(context)
+                            ? AppColors.primaryTeal
+                            : AppColors.success,
                       ),
                     ),
                   ),
@@ -103,11 +111,37 @@ class PrayerCard extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  PrayerTimeCard(prayerName: "Fajr", prayerTime: d.fajr, activePrayer: active, currentCardPrayer: Prayer.fajr),
-                  PrayerTimeCard(prayerName: "Dhuhr", prayerTime: d.dhuhr, activePrayer: active, currentCardPrayer: Prayer.dhuhr),
-                  PrayerTimeCard(prayerName: "Asr", prayerTime: d.asr, activePrayer: active, currentCardPrayer: Prayer.asr),
-                  PrayerTimeCard(prayerName: "Maghrib", prayerTime: d.maghrib, activePrayer: active, currentCardPrayer: Prayer.maghrib, flexValue: 13),
-                  PrayerTimeCard(prayerName: "Isha", prayerTime: d.isha, activePrayer: active, currentCardPrayer: Prayer.isha),
+                  PrayerTimeCard(
+                    prayerName: "Fajr",
+                    prayerTime: d.fajr,
+                    activePrayer: active,
+                    currentCardPrayer: Prayer.fajr,
+                  ),
+                  PrayerTimeCard(
+                    prayerName: "Dhuhr",
+                    prayerTime: d.dhuhr,
+                    activePrayer: active,
+                    currentCardPrayer: Prayer.dhuhr,
+                  ),
+                  PrayerTimeCard(
+                    prayerName: "Asr",
+                    prayerTime: d.asr,
+                    activePrayer: active,
+                    currentCardPrayer: Prayer.asr,
+                  ),
+                  PrayerTimeCard(
+                    prayerName: "Maghrib",
+                    prayerTime: d.maghrib,
+                    activePrayer: active,
+                    currentCardPrayer: Prayer.maghrib,
+                    flexValue: 13,
+                  ),
+                  PrayerTimeCard(
+                    prayerName: "Isha",
+                    prayerTime: d.isha,
+                    activePrayer: active,
+                    currentCardPrayer: Prayer.isha,
+                  ),
                 ],
               ),
             ],
@@ -116,9 +150,16 @@ class PrayerCard extends ConsumerWidget {
       },
       error: (e, s) => Container(
         padding: const EdgeInsets.all(16),
-        child: Center(child: Text(e.toString(), style: const TextStyle(color: Colors.redAccent))),
+        child: Center(
+          child: Text(
+            e.toString(),
+            style: const TextStyle(color: Colors.redAccent),
+          ),
+        ),
       ),
-      loading: () => Center(child: Padding(padding: const EdgeInsets.all(24.0), child: loading())),
+      loading: () => Center(
+        child: Padding(padding: const EdgeInsets.all(24.0), child: loading()),
+      ),
     );
   }
 }

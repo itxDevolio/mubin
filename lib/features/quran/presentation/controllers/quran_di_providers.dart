@@ -27,9 +27,21 @@ final quranRepositoryProvider = Provider<QuranRepository>((ref) {
 });
 
 // 3. Use Cases Providers
-final getSurahsUseCaseProvider = Provider((ref) => GetSurahsUseCase(ref.watch(quranRepositoryProvider)));
-final getJuzListUseCaseProvider = Provider((ref) => GetJuzListUseCase(ref.watch(quranRepositoryProvider)));
-final getReadingProgressUseCaseProvider = Provider((ref) => GetReadingProgressUseCase(ref.watch(quranRepositoryProvider)));
-final saveReadingProgressUseCaseProvider = Provider((ref) => SaveReadingProgressUseCase(ref.watch(quranRepositoryProvider)));
-final toggleBookmarkUseCaseProvider = Provider((ref) => ToggleBookmarkUseCase(ref.watch(quranRepositoryProvider)));
-final getBookmarksUseCaseProvider = Provider((ref) => GetBookmarksUseCase(ref.watch(quranRepositoryProvider)));
+final getSurahsUseCaseProvider = Provider(
+  (ref) => GetSurahsUseCase(ref.watch(quranRepositoryProvider)),
+);
+final getJuzListUseCaseProvider = Provider(
+  (ref) => GetJuzListUseCase(ref.watch(quranRepositoryProvider)),
+);
+final getReadingProgressUseCaseProvider = Provider(
+  (ref) => GetReadingProgressUseCase(ref.watch(quranRepositoryProvider)),
+);
+final saveReadingProgressUseCaseProvider = Provider(
+  (ref) => SaveReadingProgressUseCase(ref.watch(quranRepositoryProvider)),
+);
+final toggleBookmarkUseCaseProvider = Provider(
+  (ref) => ToggleBookmarkUseCase(ref.watch(quranRepositoryProvider)),
+);
+final getBookmarksUseCaseProvider = Provider(
+  (ref) => GetBookmarksUseCase(ref.watch(quranRepositoryProvider)),
+);

@@ -41,11 +41,7 @@ final prayerTimesProvider = FutureProvider.family<PrayerTimes?, DateTime>((
     });
 
     // 🔥 Target date ke sath offline calculation return ki
-    return await prayerService.getPrayerTime(
-      savedLat,
-      savedLng,
-      isShafi,
-    );
+    return await prayerService.getPrayerTime(savedLat, savedLng, isShafi);
   }
 
   final position = await ref.watch(locationProvider.future);

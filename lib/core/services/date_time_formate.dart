@@ -1,9 +1,9 @@
 import 'package:intl/intl.dart';
 
-
- dateFormate(DateTime date){
-return DateFormat('yMMMd').format(date);
+String dateFormate(DateTime date) {
+  return DateFormat('yMMMd').format(date);
 }
-timeFormate(DateTime time){
- return DateFormat('hh:mm a').format(time);
+
+String timeFormate(DateTime time) {
+  return DateFormat('hh:mm a').format(time);
 }

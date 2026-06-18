@@ -1,12 +1,12 @@
 class Verse {
-  final int id;              
-  final int surahNumber;     
-  final int verseNumber;     
-  final int juzNumber;       
-  final int pageNumber;      
-  final String textArabic;   
-  final String translation;  
-  final String audioUrl;     
+  final int id;
+  final int surahNumber;
+  final int verseNumber;
+  final int juzNumber;
+  final int pageNumber;
+  final String textArabic;
+  final String translation;
+  final String audioUrl;
   final String? bookmarkName; // Added field for named bookmarks
 
   const Verse({

@@ -14,14 +14,18 @@ class BookmarkListScreen extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
           'Saved Bookmarks',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
-            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+            color: isDark
+                ? AppColors.textPrimaryDark
+                : AppColors.textPrimaryLight,
           ),
         ),
         backgroundColor: Colors.transparent,
@@ -31,7 +35,9 @@ class BookmarkListScreen extends ConsumerWidget {
           icon: Icon(
             Icons.arrow_back_ios_new,
             size: 20,
-            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+            color: isDark
+                ? AppColors.textPrimaryDark
+                : AppColors.textPrimaryLight,
           ),
           onPressed: () => Navigator.pop(context),
         ),
@@ -54,14 +60,18 @@ class BookmarkListScreen extends ConsumerWidget {
                     child: Icon(
                       Icons.bookmark_border_rounded,
                       size: 40,
-                      color: isDark ? AppColors.textSecondaryDark : AppColors.primaryTeal.withOpacity(0.5),
+                      color: isDark
+                          ? AppColors.textSecondaryDark
+                          : AppColors.primaryTeal.withOpacity(0.5),
                     ),
                   ),
                   const SizedBox(height: 16),
                   Text(
                     'No bookmarks saved yet',
                     style: TextStyle(
-                      color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                      color: isDark
+                          ? AppColors.textSecondaryDark
+                          : AppColors.textSecondaryLight,
                       fontWeight: FontWeight.w500,
                       fontSize: 15,
                     ),
@@ -89,13 +99,20 @@ class BookmarkListScreen extends ConsumerWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => MushafViewScreen(initialPage: verse.pageNumber),
+                      builder: (context) => MushafViewScreen(
+                        initialPage: verse.pageNumber,
+                        highlightVerseId: verse.id,
+                        shouldUpdateProgress: false,
+                      ),
                     ),
                   );
                 },
                 borderRadius: BorderRadius.circular(12),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 4.0),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 14.0,
+                    horizontal: 4.0,
+                  ),
                   child: Row(
                     children: [
                       // Elegant Left Icon Badge
@@ -127,29 +144,39 @@ class BookmarkListScreen extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              hasCustomName ? verse.bookmarkName! : verse.textArabic,
+                              hasCustomName
+                                  ? verse.bookmarkName!
+                                  : verse.textArabic,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              textDirection: hasCustomName ? TextDirection.ltr : TextDirection.rtl,
+                              textDirection: hasCustomName
+                                  ? TextDirection.ltr
+                                  : TextDirection.rtl,
                               style: hasCustomName
                                   ? TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                                color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
-                                letterSpacing: 0.2,
-                              )
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                      color: isDark
+                                          ? AppColors.textPrimaryDark
+                                          : AppColors.textPrimaryLight,
+                                      letterSpacing: 0.2,
+                                    )
                                   : GoogleFonts.amiri(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                                color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
-                              ),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                      color: isDark
+                                          ? AppColors.textPrimaryDark
+                                          : AppColors.textPrimaryLight,
+                                    ),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               'Surah ${verse.surahNumber} • Verse ${verse.verseNumber} • Page ${verse.pageNumber}',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                                color: isDark
+                                    ? AppColors.textSecondaryDark
+                                    : AppColors.textSecondaryLight,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -160,9 +187,14 @@ class BookmarkListScreen extends ConsumerWidget {
 
                       // Elegant Delete Button
                       IconButton(
-                        icon: const Icon(Icons.delete_outline_rounded, size: 22),
+                        icon: const Icon(
+                          Icons.delete_outline_rounded,
+                          size: 22,
+                        ),
                         color: AppColors.error.withOpacity(0.8),
-                        onPressed: () => ref.read(bookmarkControllerProvider.notifier).toggleBookmarkState(verse),
+                        onPressed: () => ref
+                            .read(bookmarkControllerProvider.notifier)
+                            .toggleBookmarkState(verse),
                         splashRadius: 22,
                       ),
                     ],

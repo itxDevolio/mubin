@@ -29,7 +29,7 @@ class QuranUtils {
     "قَالَ فَمَا خَطْبُكُمْ",
     "قَدْ سَمِعَ اللَّهُ",
     "تَبَارَكَ الَّذِي",
-    "عَمَّ يَتَسَاءَلُونَ"
+    "عَمَّ يَتَسَاءَلُونَ",
   ];
 
   static const List<String> juzNamesEnglish = [
@@ -62,6 +62,6 @@ class QuranUtils {
     "Qala Fama Khatbukum",
     "Qad Samiallah",
     "Tabarakallazi",
-    "Amma Yatasa'aloon"
+    "Amma Yatasa'aloon",
   ];
 }

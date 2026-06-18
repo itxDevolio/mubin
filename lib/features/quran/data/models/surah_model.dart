@@ -18,7 +18,9 @@ class SurahModel extends Surah {
       nameEnglish: map['nameEnglish'] as String,
       totalVerses: map['totalVerses'] as int,
       verses: map['verses'] != null
-          ? (map['verses'] as List).map((v) => VerseModel.fromMap(v as Map)).toList()
+          ? (map['verses'] as List)
+                .map((v) => VerseModel.fromMap(v as Map))
+                .toList()
           : const [],
     );
   }

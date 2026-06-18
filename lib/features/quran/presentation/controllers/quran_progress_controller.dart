@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/legacy.dart';
 import '../../domain/entities/reading_progress.dart';
 import 'quran_di_providers.dart';
 
-class QuranProgressController extends StateNotifier<AsyncValue<ReadingProgress>> {
+class QuranProgressController
+    extends StateNotifier<AsyncValue<ReadingProgress>> {
   final Ref _ref;
 
   QuranProgressController(this._ref) : super(const AsyncValue.loading()) {
@@ -24,7 +25,7 @@ class QuranProgressController extends StateNotifier<AsyncValue<ReadingProgress>>
     try {
       final repo = _ref.read(quranRepositoryProvider);
       await repo.saveReadingProgress(pageNumber);
-      
+
       // Update local state without full reload if possible, or just refresh
       final updatedProgress = ReadingProgress(
         lastReadPage: pageNumber,
@@ -38,6 +39,8 @@ class QuranProgressController extends StateNotifier<AsyncValue<ReadingProgress>>
 }
 
 final quranProgressControllerProvider =
-    StateNotifierProvider<QuranProgressController, AsyncValue<ReadingProgress>>((ref) {
-  return QuranProgressController(ref);
-});
+    StateNotifierProvider<QuranProgressController, AsyncValue<ReadingProgress>>(
+      (ref) {
+        return QuranProgressController(ref);
+      },
+    );

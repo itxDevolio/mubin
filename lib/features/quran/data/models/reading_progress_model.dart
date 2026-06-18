@@ -10,7 +10,9 @@ class ReadingProgressModel extends ReadingProgress {
   factory ReadingProgressModel.fromMap(Map<dynamic, dynamic> map) {
     return ReadingProgressModel(
       lastReadPage: map['lastReadPage'] as int? ?? 1,
-      updatedAt: DateTime.parse(map['updatedAt'] as String? ?? DateTime.now().toIso8601String()),
+      updatedAt: DateTime.parse(
+        map['updatedAt'] as String? ?? DateTime.now().toIso8601String(),
+      ),
     );
   }
 

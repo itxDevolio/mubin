@@ -13,7 +13,9 @@ abstract class QuranRepository {
   Future<ReadingProgress> getReadingProgress();
 
   // Bookmarks
-  Future<void> toggleBookmark(Verse verse); // Updated: name is now part of entity if provided
+  Future<void> toggleBookmark(
+    Verse verse,
+  ); // Updated: name is now part of entity if provided
   Future<List<Verse>> getBookmarkedVerses();
   Future<List<Verse>> getVerses(int page, {String lang = 'en'});
 }

@@ -39,7 +39,9 @@ class QuranRepositoryImpl implements QuranRepository {
     try {
       List<Juz> totalJuzList = [];
       for (int i = 1; i <= 30; i++) {
-        totalJuzList.add(Juz(number: i, verses: [])); // Lazy load verses if needed
+        totalJuzList.add(
+          Juz(number: i, verses: []),
+        ); // Lazy load verses if needed
       }
       return totalJuzList;
     } catch (e) {
@@ -89,7 +91,7 @@ class QuranRepositoryImpl implements QuranRepository {
       final List<dynamic> rawPageData = quran.getPageData(page);
       List<Verse> verses = [];
 
-      final translationType = lang == 'ur' 
+      final translationType = lang == 'ur'
           ? quran.Translation.urdu
           : quran.Translation.enSaheeh;
 
@@ -102,7 +104,7 @@ class QuranRepositoryImpl implements QuranRepository {
         for (int v = start; v <= end; v++) {
           verses.add(
             Verse(
-              id: int.parse('$surah$v'),
+              id: surah * 1000 + v,
               surahNumber: surah,
               verseNumber: v,
               textArabic: quran.getVerse(surah, v, verseEndSymbol: true),

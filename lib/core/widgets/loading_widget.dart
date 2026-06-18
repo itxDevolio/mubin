@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
 
-Widget loading(){
+Widget loading() {
   return CircularProgressIndicator();
 }

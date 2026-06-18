@@ -1,6 +1,5 @@
 import 'package:auraq/core/app_colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void userProfileDialog(BuildContext context, String imageUrl) {
@@ -9,7 +8,7 @@ void userProfileDialog(BuildContext context, String imageUrl) {
     builder: (context) => Dialog(
       backgroundColor: AppColors.textSecondaryDark,
 
-      child: Container(
+      child: SizedBox(
         width: 250,
         height: 300,
 

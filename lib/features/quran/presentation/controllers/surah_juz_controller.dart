@@ -31,7 +31,7 @@ class SurahJuzController extends StateNotifier<SurahJuzState> {
   final Ref _ref;
 
   SurahJuzController(this._ref)
-      : super(SurahJuzState(surahs: const AsyncValue.loading())) {
+    : super(SurahJuzState(surahs: const AsyncValue.loading())) {
     loadSurahs();
   }
 
@@ -53,10 +53,13 @@ class SurahJuzController extends StateNotifier<SurahJuzState> {
       if (query.isEmpty) {
         state = state.copyWith(filteredSurahs: list);
       } else {
-        final filtered = list.where((s) => 
-          s.nameEnglish.toLowerCase().contains(query.toLowerCase()) || 
-          s.number.toString() == query
-        ).toList();
+        final filtered = list
+            .where(
+              (s) =>
+                  s.nameEnglish.toLowerCase().contains(query.toLowerCase()) ||
+                  s.number.toString() == query,
+            )
+            .toList();
         state = state.copyWith(filteredSurahs: filtered);
       }
     });
@@ -68,6 +71,6 @@ class SurahJuzController extends StateNotifier<SurahJuzState> {
 }
 
 final surahJuzControllerProvider =
-StateNotifierProvider<SurahJuzController, SurahJuzState>((ref) {
-  return SurahJuzController(ref);
-});
+    StateNotifierProvider<SurahJuzController, SurahJuzState>((ref) {
+      return SurahJuzController(ref);
+    });

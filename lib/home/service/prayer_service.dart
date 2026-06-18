@@ -15,14 +15,14 @@ class PrayerService {
 
     final time = DateTime.now();
 
-    return  PrayerTimes(
+    return PrayerTimes(
       date: time,
       coordinates: coordinates,
       calculationParameters: CalculationParameters(
         method: CalculationMethod.ummAlQura,
         fajrAngle: 18.5,
         ishaAngle: 0.0,
-        ishaInterval:  isRamadhan(time) ? 120 : 90,
+        ishaInterval: isRamadhan(time) ? 120 : 90,
         madhab: isHanafi ? Madhab.hanafi : Madhab.shafi,
       ),
     );

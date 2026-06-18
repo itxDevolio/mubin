@@ -9,9 +9,7 @@ class SettingsState {
   SettingsState({this.language = 'en'});
 
   SettingsState copyWith({String? language}) {
-    return SettingsState(
-      language: language ?? this.language,
-    );
+    return SettingsState(language: language ?? this.language);
   }
 }
 
@@ -33,6 +31,7 @@ class SettingsController extends StateNotifier<SettingsState> {
   }
 }
 
-final settingsControllerProvider = StateNotifierProvider<SettingsController, SettingsState>((ref) {
-  return SettingsController();
-});
+final settingsControllerProvider =
+    StateNotifierProvider<SettingsController, SettingsState>((ref) {
+      return SettingsController();
+    });

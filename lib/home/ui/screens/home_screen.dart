@@ -41,7 +41,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 children: [
                   UserProfileWidget(
                     name: "Khadija",
-                    pUrl: "https://media.gettyimages.com/id/956842252/photo/portrait-of-a-confident-muslim-girl.jpg?s=170667a&w=gi&k=20&c=DonQKYjWv-OgPjWQxPpMK1mljHEfihmiZow2iYnpdGg=",
+                    pUrl:
+                        "https://media.gettyimages.com/id/956842252/photo/portrait-of-a-confident-muslim-girl.jpg?s=170667a&w=gi&k=20&c=DonQKYjWv-OgPjWQxPpMK1mljHEfihmiZow2iYnpdGg=",
                   ),
                   // Minimalist Language Toggle
                   Container(
@@ -52,10 +53,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     child: TextButton.icon(
                       onPressed: () {
                         final newLang = settings.language == 'en' ? 'ur' : 'en';
-                        ref.read(settingsControllerProvider.notifier).setLanguage(newLang);
+                        ref
+                            .read(settingsControllerProvider.notifier)
+                            .setLanguage(newLang);
                         hapticFeedBack();
                       },
-                      icon: const Icon(Icons.language, size: 18, color: AppColors.primaryTeal),
+                      icon: const Icon(
+                        Icons.language,
+                        size: 18,
+                        color: AppColors.primaryTeal,
+                      ),
                       label: Text(
                         settings.language == 'en' ? 'English' : 'اردو',
                         style: const TextStyle(
@@ -111,7 +118,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => const QuranHomeScreen(),
+                                        builder: (context) =>
+                                            const QuranHomeScreen(),
                                       ),
                                     );
                                   },
@@ -159,7 +167,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: Theme.of(context).textTheme.titleLarge?.color,
+                                color: Theme.of(
+                                  context,
+                                ).textTheme.titleLarge?.color,
                               ),
                             ),
                             const SizedBox(height: 12),
@@ -172,14 +182,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 children: [
                                   InfoGuideCard(
                                     title: "Namaz-e-Janaza ka Tariqa",
-                                    subTitle: "Step by step mukammal masail aur azkar ke sath seekhein.",
-                                    imageUrl: "https://images.unsplash.com/photo-1542838132-92c53300491e",
+                                    subTitle:
+                                        "Step by step mukammal masail aur azkar ke sath seekhein.",
+                                    imageUrl:
+                                        "https://images.unsplash.com/photo-1542838132-92c53300491e",
                                     onTap: () {},
                                   ),
                                   InfoGuideCard(
                                     title: "Eidain ki Namaz ka Tariqa",
-                                    subTitle: "6 zayd takbeeraat ke sath Eid ki namaz ka mukammal tareeqa.",
-                                    imageUrl: "https://images.unsplash.com/photo-1564507592333-c60657eea523",
+                                    subTitle:
+                                        "6 zayd takbeeraat ke sath Eid ki namaz ka mukammal tareeqa.",
+                                    imageUrl:
+                                        "https://images.unsplash.com/photo-1564507592333-c60657eea523",
                                     onTap: () {},
                                   ),
                                 ],

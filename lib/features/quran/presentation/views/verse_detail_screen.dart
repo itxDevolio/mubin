@@ -10,7 +10,11 @@ class VerseDetailScreen extends ConsumerWidget {
   final String title;
   final List<Verse> verses;
 
-  const VerseDetailScreen({super.key, required this.title, required this.verses});
+  const VerseDetailScreen({
+    super.key,
+    required this.title,
+    required this.verses,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -46,15 +50,21 @@ class VerseDetailScreen extends ConsumerWidget {
                     style: GoogleFonts.amiriQuran(
                       fontSize: 24,
                       height: 2.3,
-                      color: isAudioPlaying ? Colors.teal : const Color(0xFF222222),
-                      backgroundColor: isAudioPlaying ? Colors.teal.withOpacity(0.12) : null,
+                      color: isAudioPlaying
+                          ? Colors.teal
+                          : const Color(0xFF222222),
+                      backgroundColor: isAudioPlaying
+                          ? Colors.teal.withOpacity(0.12)
+                          : null,
                     ),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
                         showModalBottomSheet(
                           context: context,
                           shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(24),
+                            ),
                           ),
                           builder: (context) => VerseBottomSheet(verse: verse),
                         );

@@ -1,10 +1,7 @@
-import 'dart:ui';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/app_colors.dart';
-import '../../../core/services/dark_&_light_theme.dart';
+import '../../../core/services/dark_and_light_theme.dart';
 
 class FeatureCard extends StatelessWidget {
   final String title;
@@ -27,10 +24,7 @@ class FeatureCard extends StatelessWidget {
         onTap: onTap,
         child: Container(
           margin: const EdgeInsets.all(4),
-          padding: const EdgeInsets.symmetric(
-            vertical: 16,
-            horizontal: 8,
-          ),
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
           decoration: BoxDecoration(
             color: isDark ? Colors.black54 : Colors.white,
             borderRadius: BorderRadius.circular(14),
@@ -45,9 +39,7 @@ class FeatureCard extends StatelessWidget {
               Icon(
                 icon,
                 size: 28,
-                color: isDark
-                    ? AppColors.primaryTeal
-                    : AppColors.success,
+                color: isDark ? AppColors.primaryTeal : AppColors.success,
               ),
 
               const SizedBox(height: 10),
@@ -58,9 +50,7 @@ class FeatureCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
-                  color: isDark
-                      ? Colors.white
-                      : Colors.black87,
+                  color: isDark ? Colors.white : Colors.black87,
                 ),
               ),
             ],

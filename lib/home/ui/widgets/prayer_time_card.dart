@@ -1,6 +1,6 @@
 import 'package:adhan_dart/adhan_dart.dart';
 import 'package:auraq/core/app_colors.dart';
-import 'package:auraq/core/services/dark_&_light_theme.dart';
+import 'package:auraq/core/services/dark_and_light_theme.dart';
 import 'package:auraq/core/services/date_time_formate.dart';
 import 'package:flutter/material.dart';
 

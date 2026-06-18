@@ -13,7 +13,9 @@ class BookmarkController extends StateNotifier<AsyncValue<List<Verse>>> {
   Future<void> loadBookmarks() async {
     try {
       // FIX: Changed getQuranRepositoryProvider to quranRepositoryProvider
-      final list = await _ref.read(quranRepositoryProvider).getBookmarkedVerses();
+      final list = await _ref
+          .read(quranRepositoryProvider)
+          .getBookmarkedVerses();
       state = AsyncValue.data(list);
     } catch (e, stack) {
       state = AsyncValue.error(e, stack);
@@ -32,6 +34,6 @@ class BookmarkController extends StateNotifier<AsyncValue<List<Verse>>> {
 }
 
 final bookmarkControllerProvider =
-StateNotifierProvider<BookmarkController, AsyncValue<List<Verse>>>((ref) {
-  return BookmarkController(ref);
-});
+    StateNotifierProvider<BookmarkController, AsyncValue<List<Verse>>>((ref) {
+      return BookmarkController(ref);
+    });
