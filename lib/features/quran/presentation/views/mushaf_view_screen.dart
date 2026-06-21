@@ -189,13 +189,13 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
                                   ? AppColors.accentGold
                                   : (isDark ? Colors.white : Colors.black87)),
                         backgroundColor: isSelected
-                            ? AppColors.accentGold.withOpacity(0.1)
+                            ? AppColors.accentGold.withAlpha(26)
                             : (isTargetHighlight
-                                  ? AppColors.accentGold.withOpacity(0.3)
+                                  ? AppColors.accentGold.withAlpha(77)
                                   : (isBookmarked
-                                        ? AppColors.accentGold.withOpacity(0.15)
+                                        ? AppColors.accentGold.withAlpha(38)
                                         : (isJuzStart && i == 0
-                                              ? AppColors.primaryTeal.withOpacity(0.15)
+                                              ? AppColors.primaryTeal.withAlpha(38)
                                               : null))),
                         fontWeight: (isJuzStart && i == 0 || isTargetHighlight)
                             ? FontWeight.bold

@@ -26,17 +26,15 @@ class PrayerTimeCard extends StatelessWidget {
 
     final Color textColor = isCurrentActive
         ? Colors.white
-        : (themeDark(context) ? Colors.white.withOpacity(0.8) : Colors.black87);
+        : getThemeColor(context, light: Colors.black87, dark: Colors.white.withOpacity(0.8));
 
     final Color subTextColor = isCurrentActive
         ? Colors.white.withOpacity(
             0.9,
           ) // Active ka subtext thoda aur clear kiya
-        : (themeDark(context) ? Colors.white38 : Colors.black45);
+        : getThemeColor(context, light: Colors.black45, dark: Colors.white38);
 
-    final Color inactiveBgColor = themeDark(context)
-        ? Colors.white.withOpacity(0.04)
-        : Colors.black.withOpacity(0.03);
+    final Color inactiveBgColor = getThemeColor(context, light: Colors.black.withOpacity(0.03), dark: Colors.white.withOpacity(0.04));
 
     return Expanded(
       // 🔥 Active card ko row mein thodi mazeed breathing space dene ke liye flex adjust kiya
@@ -71,9 +69,7 @@ class PrayerTimeCard extends StatelessWidget {
             // 🔥 Active card par soft neon cyan border taake wo pop out kare
             color: isCurrentActive
                 ? AppColors.primaryTeal.withOpacity(0.5)
-                : (themeDark(context)
-                      ? Colors.white.withOpacity(0.05)
-                      : Colors.black.withOpacity(0.05)),
+                : getThemeColor(context, light: Colors.black.withOpacity(0.05), dark: Colors.white.withOpacity(0.05)),
             width: isCurrentActive ? 1.5 : 1,
           ),
           // 🔥 Active card par behtareen glow shadow

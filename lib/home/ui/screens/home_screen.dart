@@ -2,6 +2,7 @@ import 'package:auraq/core/app_colors.dart';
 import 'package:auraq/core/services/haptic_feedback.dart';
 import 'package:auraq/core/services/settings_controller.dart';
 import 'package:auraq/features/quran/presentation/views/quran_home_screen.dart';
+import 'package:auraq/features/settings/presentation/settings_screen.dart';
 import 'package:auraq/home/controllers/prayer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
@@ -11,6 +12,7 @@ import '../widgets/guide_card.dart';
 import '../widgets/user_profile_widget.dart';
 import '../widgets/prayer_card.dart';
 
+// FIX: ConsumerWidget ko ConsumerStatefulWidget se replace kiya kyunki isme state (_currentDate) use ho rahi hai
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
@@ -24,6 +26,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final settings = ref.watch(settingsControllerProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -33,7 +36,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           children: [
             const SizedBox(height: 10),
 
-            // Minimal Header with Settings
+            // Minimal Header with Settings button
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
@@ -42,35 +45,31 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   UserProfileWidget(
                     name: "Khadija",
                     pUrl:
-                        "https://media.gettyimages.com/id/956842252/photo/portrait-of-a-confident-muslim-girl.jpg?s=170667a&w=gi&k=20&c=DonQKYjWv-OgPjWQxPpMK1mljHEfihmiZow2iYnpdGg=",
+                    "https://media.gettyimages.com/id/956842252/photo/portrait-of-a-confident-muslim-girl.jpg?s=170667a&w=gi&k=20&c=DonQKYjWv-OgPjWQxPpMK1mljHEfihmiZow2iYnpdGg=",
                   ),
-                  // Minimalist Language Toggle
+                  // Settings button
                   Container(
+                    padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryTeal.withAlpha(20),
-                      borderRadius: BorderRadius.circular(20),
+                      color: AppColors.primaryTeal.withOpacity(0.08),
+                      shape: BoxShape.circle,
                     ),
-                    child: TextButton.icon(
+                    child: IconButton(
                       onPressed: () {
-                        final newLang = settings.language == 'en' ? 'ur' : 'en';
-                        ref
-                            .read(settingsControllerProvider.notifier)
-                            .setLanguage(newLang);
                         hapticFeedBack();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SettingsScreen(),
+                          ),
+                        );
                       },
                       icon: const Icon(
-                        Icons.language,
-                        size: 18,
+                        Icons.settings_suggest_rounded,
                         color: AppColors.primaryTeal,
+                        size: 24,
                       ),
-                      label: Text(
-                        settings.language == 'en' ? 'English' : 'اردو',
-                        style: const TextStyle(
-                          color: AppColors.primaryTeal,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                        ),
-                      ),
+                      tooltip: "Settings",
                     ),
                   ),
                 ],
@@ -106,7 +105,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // FIX: Row se external Expanded widgets ko clean kar diya hai kyunki FeatureCard internal level pr already Expanded use kar rha hai
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -119,7 +117,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            const QuranHomeScreen(),
+                                        const QuranHomeScreen(),
                                       ),
                                     );
                                   },
@@ -183,17 +181,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   InfoGuideCard(
                                     title: "Namaz-e-Janaza ka Tariqa",
                                     subTitle:
-                                        "Step by step mukammal masail aur azkar ke sath seekhein.",
+                                    "Step by step mukammal masail aur azkar ke sath seekhein.",
                                     imageUrl:
-                                        "https://images.unsplash.com/photo-1542838132-92c53300491e",
+                                    "https://images.unsplash.com/photo-1542838132-92c53300491e",
                                     onTap: () {},
                                   ),
                                   InfoGuideCard(
                                     title: "Eidain ki Namaz ka Tariqa",
                                     subTitle:
-                                        "6 zayd takbeeraat ke sath Eid ki namaz ka mukammal tareeqa.",
+                                    "6 zayd takbeeraat ke sath Eid ki namaz ka mukammal tareeqa.",
                                     imageUrl:
-                                        "https://images.unsplash.com/photo-1564507592333-c60657eea523",
+                                    "https://images.unsplash.com/photo-1564507592333-c60657eea523",
                                     onTap: () {},
                                   ),
                                 ],

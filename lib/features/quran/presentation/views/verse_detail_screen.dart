@@ -54,7 +54,7 @@ class VerseDetailScreen extends ConsumerWidget {
                           ? Colors.teal
                           : const Color(0xFF222222),
                       backgroundColor: isAudioPlaying
-                          ? Colors.teal.withOpacity(0.12)
+                          ? Colors.teal.withAlpha(31)
                           : null,
                     ),
                     recognizer: TapGestureRecognizer()

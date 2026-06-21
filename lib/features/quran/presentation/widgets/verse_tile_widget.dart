@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:auraq/core/services/dark_and_light_theme.dart';
 import 'package:google_fonts/google_fonts.dart'; // Add this package import
 import '../../domain/entities/verse.dart';
 
@@ -21,17 +22,17 @@ class VerseTileWidget extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isHighlighted ? Colors.teal.withOpacity(0.12) : Colors.white,
+        color: isHighlighted ? getThemeColor(context, light: Colors.white, dark: Colors.teal.withOpacity(0.12)) : getThemeColor(context, light: Colors.white, dark: Colors.white),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: getThemeColor(context, light: Colors.black.withOpacity(0.03), dark: Colors.white.withOpacity(0.03)),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
         ],
         border: Border.all(
-          color: isHighlighted ? Colors.teal : Colors.grey.withOpacity(0.15),
+          color: isHighlighted ? getThemeColor(context, light: Colors.grey.withOpacity(0.15), dark: Colors.teal) : getThemeColor(context, light: Colors.grey.withOpacity(0.15), dark: Colors.grey.withOpacity(0.15)),
           width: isHighlighted ? 1.5 : 1,
         ),
       ),
@@ -46,19 +47,19 @@ class VerseTileWidget extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 14,
-                  backgroundColor: Colors.teal.withOpacity(0.1),
+                  backgroundColor: getThemeColor(context, light: Colors.teal.withOpacity(0.1), dark: Colors.teal.withOpacity(0.1)),
                   child: Text(
                     '${verse.verseNumber}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 11,
-                      color: Colors.teal,
+                      color: getThemeColor(context, light: Colors.teal, dark: Colors.teal),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
                 Text(
                   'Surah ${verse.surahNumber}',
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  style: TextStyle(fontSize: 12, color: getThemeColor(context, light: Colors.grey, dark: Colors.grey)),
                 ),
               ],
             ),

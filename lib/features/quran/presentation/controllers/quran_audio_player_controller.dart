@@ -1,12 +1,45 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:auraq/core/services/settings_controller.dart';
+import 'package:auraq/features/quran/domain/entities/reciter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_riverpod/legacy.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quran/quran.dart' as quran;
+
+/// Download status for a surah
+enum DownloadStatus { notDownloaded, downloading, downloaded, failed }
+
+/// Download info for tracking individual downloads
+class DownloadInfo {
+  final int surahNumber;
+  final DownloadStatus status;
+  final double progress;
+  final String? errorMessage;
+
+  DownloadInfo({
+    required this.surahNumber,
+    this.status = DownloadStatus.notDownloaded,
+    this.progress = 0.0,
+    this.errorMessage,
+  });
+
+  DownloadInfo copyWith({
+    DownloadStatus? status,
+    double? progress,
+    String? errorMessage,
+  }) {
+    return DownloadInfo(
+      surahNumber: surahNumber,
+      status: status ?? this.status,
+      progress: progress ?? this.progress,
+      errorMessage: errorMessage ?? this.errorMessage,
+    );
+  }
+}
 
 class AudioState {
   final bool isPlaying;
@@ -18,8 +51,11 @@ class AudioState {
   final bool keepPlayingInBackground;
   final Duration position;
   final Duration duration;
-  final Map<int, double> downloadProgress; // surahNumber -> progress (0.0 to 1.0)
+  final Map<int, DownloadInfo> downloadInfoMap;
   final Set<int> downloadedSurahs;
+  final Reciter currentReciter;
+  final String? errorMessage;
+  final bool isPlayingFromLocal;
 
   AudioState({
     this.isPlaying = false,
@@ -31,9 +67,20 @@ class AudioState {
     this.keepPlayingInBackground = true,
     this.position = Duration.zero,
     this.duration = Duration.zero,
-    this.downloadProgress = const {},
+    this.downloadInfoMap = const {},
     this.downloadedSurahs = const {},
+    required this.currentReciter,
+    this.errorMessage,
+    this.isPlayingFromLocal = false,
   });
+
+  bool isSurahDownloaded(int surahNumber) => downloadedSurahs.contains(surahNumber);
+  
+  DownloadStatus getDownloadStatus(int surahNumber) => 
+      downloadInfoMap[surahNumber]?.status ?? DownloadStatus.notDownloaded;
+  
+  double getDownloadProgress(int surahNumber) => 
+      downloadInfoMap[surahNumber]?.progress ?? 0.0;
 
   AudioState copyWith({
     bool? isPlaying,
@@ -45,8 +92,11 @@ class AudioState {
     bool? keepPlayingInBackground,
     Duration? position,
     Duration? duration,
-    Map<int, double>? downloadProgress,
+    Map<int, DownloadInfo>? downloadInfoMap,
     Set<int>? downloadedSurahs,
+    Reciter? currentReciter,
+    String? errorMessage,
+    bool? isPlayingFromLocal,
   }) {
     return AudioState(
       isPlaying: isPlaying ?? this.isPlaying,
@@ -58,21 +108,45 @@ class AudioState {
       keepPlayingInBackground: keepPlayingInBackground ?? this.keepPlayingInBackground,
       position: position ?? this.position,
       duration: duration ?? this.duration,
-      downloadProgress: downloadProgress ?? this.downloadProgress,
+      downloadInfoMap: downloadInfoMap ?? this.downloadInfoMap,
       downloadedSurahs: downloadedSurahs ?? this.downloadedSurahs,
+      currentReciter: currentReciter ?? this.currentReciter,
+      errorMessage: errorMessage ?? this.errorMessage,
+      isPlayingFromLocal: isPlayingFromLocal ?? this.isPlayingFromLocal,
     );
   }
 }
 
-class QuranAudioPlayerController extends StateNotifier<AudioState> with WidgetsBindingObserver {
+class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindingObserver {
   final AudioPlayer _audioPlayer = AudioPlayer();
   final Dio _dio = Dio();
   Timer? _sleepTimer;
+  CancelToken? _downloadCancelToken;
 
-  QuranAudioPlayerController() : super(AudioState()) {
-    _initListeners();
-    _checkDownloadedSurahs();
-    WidgetsBinding.instance.addObserver(this);
+  @override
+  AudioState build() {
+    final initialReciter = ref.watch(settingsControllerProvider).currentReciter;
+    
+    Future.microtask(() {
+      _initListeners();
+      _checkDownloadedSurahs();
+      _setupAudioPlayer();
+      WidgetsBinding.instance.addObserver(this);
+    });
+
+    ref.onDispose(() {
+      WidgetsBinding.instance.removeObserver(this);
+      _audioPlayer.dispose();
+      _sleepTimer?.cancel();
+    });
+
+    return AudioState(
+      currentReciter: initialReciter,
+    );
+  }
+
+  void _setupAudioPlayer() {
+    _audioPlayer.setAutomaticallyWaitsToMinimizeStalling(true);
   }
 
   @override
@@ -85,15 +159,25 @@ class QuranAudioPlayerController extends StateNotifier<AudioState> with WidgetsB
   }
 
   Future<void> _checkDownloadedSurahs() async {
-    final dir = await getApplicationDocumentsDirectory();
-    final Set<int> downloaded = {};
-    for (int i = 1; i <= 114; i++) {
-      final file = File('${dir.path}/surahs/surah_$i.mp3');
-      if (await file.exists()) {
-        downloaded.add(i);
+    try {
+      final dir = await getApplicationDocumentsDirectory();
+      final Set<int> downloaded = {};
+      final String reciterFolder = state.currentReciter.name.replaceAll(' ', '_');
+      final surahsDir = Directory('${dir.path}/surahs/$reciterFolder');
+      
+      if (await surahsDir.exists()) {
+        for (int i = 1; i <= 114; i++) {
+          final file = File('${surahsDir.path}/surah_$i.mp3');
+          if (await file.exists()) {
+            downloaded.add(i);
+          }
+        }
       }
+      
+      state = state.copyWith(downloadedSurahs: downloaded);
+    } catch (e) {
+      debugPrint('Error checking downloads: $e');
     }
-    state = state.copyWith(downloadedSurahs: downloaded);
   }
 
   void _initListeners() {
@@ -110,9 +194,12 @@ class QuranAudioPlayerController extends StateNotifier<AudioState> with WidgetsB
           if (state.currentSurahNumber != null && state.currentSurahNumber! < 114) {
             playSurah(state.currentSurahNumber! + 1);
           } else if (state.currentSurahNumber == 114) {
-            playSurah(1); // Restart from first surah
+            playSurah(1);
           }
-        } else if (state.loopMode == LoopMode.off) {
+        } else if (state.loopMode == LoopMode.one) {
+          _audioPlayer.seek(Duration.zero);
+          _audioPlayer.play();
+        } else {
           stopAudio();
         }
       }
@@ -128,28 +215,24 @@ class QuranAudioPlayerController extends StateNotifier<AudioState> with WidgetsB
       }
     });
 
-    _audioPlayer.loopModeStream.listen((loopMode) {
-      state = state.copyWith(loopMode: loopMode);
+    _audioPlayer.playbackEventStream.listen((event) {}, onError: (Object e, StackTrace stackTrace) {
+      debugPrint('Audio error: $e');
+      state = state.copyWith(isLoading: false, isPlaying: false);
     });
   }
 
   Future<AudioSource> _getAudioSource(String url, int? surahNumber, {int? verseId}) async {
     String title = "Quran Recitation";
-    String artist = "Reciter";
+    String artist = state.currentReciter.name;
 
     if (surahNumber != null) {
       title = quran.getSurahNameEnglish(surahNumber);
-      artist = "Surah ${quran.getSurahNameArabic(surahNumber)}";
     } else if (verseId != null) {
-      // Logic to extract surah and verse from ID if possible
-      // Assuming ID is surah*1000 + verse or similar
       int sNum = verseId ~/ 1000;
       int vNum = verseId % 1000;
       if (sNum > 0 && sNum <= 114) {
         title = "${quran.getSurahNameEnglish(sNum)} - Verse $vNum";
-        artist = quran.getSurahNameArabic(sNum);
-      } else {
-        title = "Verse $verseId";
+        artist = state.currentReciter.name;
       }
     }
     
@@ -158,19 +241,30 @@ class QuranAudioPlayerController extends StateNotifier<AudioState> with WidgetsB
       album: "Al-Quran",
       title: title,
       artist: artist,
-      artUri: Uri.parse("https://auraq.app/assets/app_logos/auraq_logo.png"),
+      artUri: Uri.parse("https://quran.com/images/quran-share.png"),
     );
 
     if (surahNumber != null) {
-      final dir = await getApplicationDocumentsDirectory();
-      final file = File('${dir.path}/surahs/surah_$surahNumber.mp3');
-      if (await file.exists()) {
-        return AudioSource.uri(Uri.file(file.path), tag: tag);
+      final localFile = await _getLocalSurahFile(surahNumber);
+      if (await localFile.exists()) {
+        state = state.copyWith(isPlayingFromLocal: true);
+        return AudioSource.uri(Uri.file(localFile.path), tag: tag);
       }
     }
 
-    // Use LockCachingAudioSource for online URLs to provide basic caching
+    state = state.copyWith(isPlayingFromLocal: false);
     return LockCachingAudioSource(Uri.parse(url), tag: tag);
+  }
+
+  Future<File> _getLocalSurahFile(int surahNumber) async {
+    final dir = await getApplicationDocumentsDirectory();
+    final String reciterFolder = state.currentReciter.name.replaceAll(' ', '_');
+    return File('${dir.path}/surahs/$reciterFolder/surah_$surahNumber.mp3');
+  }
+
+  String _getSurahUrl(int surahNumber, Reciter reciter) {
+    final numStr = surahNumber.toString().padLeft(3, '0');
+    return "${reciter.urlPrefix}$numStr.mp3";
   }
 
   Future<void> playVerseAudio(String url, int verseId) async {
@@ -185,61 +279,85 @@ class QuranAudioPlayerController extends StateNotifier<AudioState> with WidgetsB
           currentAudioUrl: url,
           playingVerseId: verseId,
           currentSurahNumber: null,
+          errorMessage: null,
+          isPlayingFromLocal: false,
         );
         final source = await _getAudioSource(url, null, verseId: verseId);
         await _audioPlayer.setAudioSource(source);
         await _audioPlayer.play();
       }
     } catch (e) {
-      state = state.copyWith(isLoading: false);
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: "Could not load audio. Check your internet.",
+      );
     }
   }
 
   Future<void> playSurah(int surahNumber) async {
-    final url = quran.getAudioURLBySurah(surahNumber);
+    final url = _getSurahUrl(surahNumber, state.currentReciter);
     try {
       if (state.currentAudioUrl == url && state.currentSurahNumber == surahNumber) {
         if (!state.isPlaying) {
           await _audioPlayer.play();
         }
-      } else {
-        state = state.copyWith(
-          isLoading: true,
-          currentAudioUrl: url,
-          currentSurahNumber: surahNumber,
-          playingVerseId: surahNumber * 1000,
-        );
-        final source = await _getAudioSource(url, surahNumber);
-        await _audioPlayer.setAudioSource(source);
-        await _audioPlayer.play();
+        return;
       }
+
+      state = state.copyWith(
+        isLoading: true,
+        currentAudioUrl: url,
+        currentSurahNumber: surahNumber,
+        playingVerseId: surahNumber * 1000,
+        errorMessage: null,
+      );
+
+      final source = await _getAudioSource(url, surahNumber);
+      await _audioPlayer.setAudioSource(source);
+      await _audioPlayer.play();
     } catch (e) {
-      state = state.copyWith(isLoading: false);
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: "Could not load audio. Check your internet.",
+      );
     }
   }
 
   Future<void> downloadSurah(int surahNumber) async {
     if (state.downloadedSurahs.contains(surahNumber)) return;
-    
-    final url = quran.getAudioURLBySurah(surahNumber);
+    if (state.downloadInfoMap[surahNumber]?.status == DownloadStatus.downloading) return;
+
+    final url = _getSurahUrl(surahNumber, state.currentReciter);
     final dir = await getApplicationDocumentsDirectory();
-    final surahsDir = Directory('${dir.path}/surahs');
+    final String reciterFolder = state.currentReciter.name.replaceAll(' ', '_');
+    final surahsDir = Directory('${dir.path}/surahs/$reciterFolder');
+    
     if (!await surahsDir.exists()) {
       await surahsDir.create(recursive: true);
     }
     
     final savePath = '${surahsDir.path}/surah_$surahNumber.mp3';
+    _downloadCancelToken = CancelToken();
+    
+    final updatedMap = Map<int, DownloadInfo>.from(state.downloadInfoMap);
+    updatedMap[surahNumber] = DownloadInfo(surahNumber: surahNumber, status: DownloadStatus.downloading);
+    state = state.copyWith(downloadInfoMap: updatedMap);
     
     try {
       await _dio.download(
         url,
         savePath,
+        cancelToken: _downloadCancelToken,
         onReceiveProgress: (received, total) {
           if (total != -1) {
             final progress = received / total;
-            final Map<int, double> updatedProgress = Map.from(state.downloadProgress);
-            updatedProgress[surahNumber] = progress;
-            state = state.copyWith(downloadProgress: updatedProgress);
+            final updated = Map<int, DownloadInfo>.from(state.downloadInfoMap);
+            updated[surahNumber] = DownloadInfo(
+              surahNumber: surahNumber,
+              status: DownloadStatus.downloading,
+              progress: progress,
+            );
+            state = state.copyWith(downloadInfoMap: updated);
           }
         },
       );
@@ -247,17 +365,84 @@ class QuranAudioPlayerController extends StateNotifier<AudioState> with WidgetsB
       final updatedDownloaded = Set<int>.from(state.downloadedSurahs);
       updatedDownloaded.add(surahNumber);
       
-      final Map<int, double> updatedProgress = Map.from(state.downloadProgress);
-      updatedProgress.remove(surahNumber);
+      final finalMap = Map<int, DownloadInfo>.from(state.downloadInfoMap);
+      finalMap[surahNumber] = DownloadInfo(
+        surahNumber: surahNumber,
+        status: DownloadStatus.downloaded,
+        progress: 1.0,
+      );
       
       state = state.copyWith(
         downloadedSurahs: updatedDownloaded,
-        downloadProgress: updatedProgress,
+        downloadInfoMap: finalMap,
       );
     } catch (e) {
-      final Map<int, double> updatedProgress = Map.from(state.downloadProgress);
-      updatedProgress.remove(surahNumber);
-      state = state.copyWith(downloadProgress: updatedProgress);
+      if (CancelToken.isCancel(e as DioException)) {
+        debugPrint('Download cancelled');
+      } else {
+        final errorMap = Map<int, DownloadInfo>.from(state.downloadInfoMap);
+        errorMap[surahNumber] = DownloadInfo(
+          surahNumber: surahNumber,
+          status: DownloadStatus.failed,
+          errorMessage: e.toString(),
+        );
+        state = state.copyWith(downloadInfoMap: errorMap);
+      }
+    } finally {
+      _downloadCancelToken = null;
+    }
+  }
+
+  Future<void> cancelDownload(int surahNumber) async {
+    _downloadCancelToken?.cancel();
+    final updatedMap = Map<int, DownloadInfo>.from(state.downloadInfoMap);
+    updatedMap[surahNumber] = DownloadInfo(
+      surahNumber: surahNumber,
+      status: DownloadStatus.notDownloaded,
+    );
+    state = state.copyWith(downloadInfoMap: updatedMap);
+  }
+
+  Future<void> deleteDownloadedSurah(int surahNumber) async {
+    try {
+      final file = await _getLocalSurahFile(surahNumber);
+      if (await file.exists()) {
+        await file.delete();
+      }
+      
+      final updatedDownloaded = Set<int>.from(state.downloadedSurahs);
+      updatedDownloaded.remove(surahNumber);
+      
+      final updatedMap = Map<int, DownloadInfo>.from(state.downloadInfoMap);
+      updatedMap.remove(surahNumber);
+      
+      state = state.copyWith(
+        downloadedSurahs: updatedDownloaded,
+        downloadInfoMap: updatedMap,
+      );
+    } catch (e) {
+      debugPrint('Error deleting surah: $e');
+    }
+  }
+
+  Future<void> setReciter(Reciter reciter) async {
+    if (state.currentReciter == reciter) return;
+    
+    if (ref.read(settingsControllerProvider).currentReciter != reciter) {
+      ref.read(settingsControllerProvider.notifier).setReciter(reciter);
+    }
+
+    final int? currentSurah = state.currentSurahNumber;
+    final bool wasPlaying = state.isPlaying;
+    
+    state = state.copyWith(currentReciter: reciter);
+    await _checkDownloadedSurahs();
+    
+    if (currentSurah != null) {
+      await playSurah(currentSurah);
+      if (!wasPlaying) {
+        await pauseAudio();
+      }
     }
   }
 
@@ -279,6 +464,7 @@ class QuranAudioPlayerController extends StateNotifier<AudioState> with WidgetsB
         break;
     }
     await _audioPlayer.setLoopMode(nextMode);
+    state = state.copyWith(loopMode: nextMode);
   }
 
   void toggleBackgroundPlay() {
@@ -327,15 +513,12 @@ class QuranAudioPlayerController extends StateNotifier<AudioState> with WidgetsB
     );
   }
 
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    _audioPlayer.dispose();
-    super.dispose();
+  void clearError() {
+    state = state.copyWith(errorMessage: null);
   }
 }
 
 final quranAudioPlayerControllerProvider =
-    StateNotifierProvider<QuranAudioPlayerController, AudioState>((ref) {
-      return QuranAudioPlayerController();
-    });
+    NotifierProvider<QuranAudioPlayerController, AudioState>(() {
+  return QuranAudioPlayerController();
+});

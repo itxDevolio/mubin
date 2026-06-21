@@ -35,18 +35,16 @@ class InfoGuideCard extends StatelessWidget {
           width: screenWidth * 0.82,
           margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            color: isDark ? Colors.black54 : Colors.white,
+            color: getThemeColor(context, light: Colors.white, dark: Colors.black54),
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-              color: isDark
-                  ? Colors.white.withOpacity(0.08)
-                  : Colors.black.withOpacity(0.05),
+              color: getThemeColor(context, light: Colors.black.withOpacity(0.05), dark: Colors.white.withOpacity(0.08)),
             ),
             boxShadow: isDark
                 ? []
                 : [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.02),
+                      color: getThemeColor(context, light: Colors.black.withOpacity(0.02), dark: Colors.white.withOpacity(0.02)),
                       blurRadius: 8,
                       offset: const Offset(0, 3),
                     ),
@@ -70,7 +68,7 @@ class InfoGuideCard extends StatelessWidget {
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
                       height: componentHeight,
-                      color: isDark ? Colors.grey[800] : Colors.grey[200],
+                      color: getThemeColor(context, light: Colors.grey[200]!, dark: Colors.grey[800]!),
                       child: const Center(
                         child: Icon(
                           Icons.image_not_supported_outlined,
@@ -102,7 +100,7 @@ class InfoGuideCard extends StatelessWidget {
                       style: GoogleFonts.poppins(
                         fontSize: 13.5,
                         fontWeight: FontWeight.bold,
-                        color: isDark ? Colors.white : Colors.black87,
+                        color: getThemeColor(context, light: Colors.black87, dark: Colors.white),
                       ),
                     ),
 
@@ -116,7 +114,7 @@ class InfoGuideCard extends StatelessWidget {
                       style: GoogleFonts.poppins(
                         fontSize: 10.5,
                         fontWeight: FontWeight.w400,
-                        color: isDark ? Colors.white60 : Colors.black54,
+                        color: getThemeColor(context, light: Colors.black54, dark: Colors.white60),
                         height: 1.25,
                       ),
                     ),

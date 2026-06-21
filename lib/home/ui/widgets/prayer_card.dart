@@ -38,12 +38,10 @@ class PrayerCard extends ConsumerWidget {
           margin: const EdgeInsets.all(16),
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: themeDark(context) ? Colors.black54 : Colors.white,
+            color: getThemeColor(context, light: Colors.white, dark: Colors.black54),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: themeDark(context)
-                  ? Colors.white.withOpacity(0.08)
-                  : Colors.black.withOpacity(0.05),
+              color: getThemeColor(context, light: Colors.black.withOpacity(0.05), dark: Colors.white.withOpacity(0.08)),
             ),
           ),
           child: Column(

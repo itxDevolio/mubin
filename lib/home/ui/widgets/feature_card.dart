@@ -26,12 +26,10 @@ class FeatureCard extends StatelessWidget {
           margin: const EdgeInsets.all(4),
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
           decoration: BoxDecoration(
-            color: isDark ? Colors.black54 : Colors.white,
+            color: getThemeColor(context, light: Colors.white, dark: Colors.black54),
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-              color: isDark
-                  ? Colors.white.withOpacity(0.08)
-                  : Colors.black.withOpacity(0.05),
+              color: getThemeColor(context, light: Colors.black.withOpacity(0.05), dark: Colors.white.withOpacity(0.08)),
             ),
           ),
           child: Column(
@@ -50,7 +48,7 @@ class FeatureCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
-                  color: isDark ? Colors.white : Colors.black87,
+                  color: getThemeColor(context, light: Colors.black87, dark: Colors.white),
                 ),
               ),
             ],
