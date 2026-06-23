@@ -206,6 +206,31 @@ class AudioPlayingScreen extends ConsumerWidget {
                     ),
                     child: Column(
                       children: [
+                        // Sleep Timer Countdown
+                        if (audioState.remainingSleepTimer != null)
+                          Container(
+                            margin: const EdgeInsets.only(bottom: 16),
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryTeal.withAlpha(20),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.timer_outlined, size: 14, color: AppColors.primaryTeal),
+                                const SizedBox(width: 6),
+                                Text(
+                                  "Stopping in ${_formatDuration(audioState.remainingSleepTimer!)}",
+                                  style: const TextStyle(
+                                    color: AppColors.primaryTeal,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         const Spacer(),
                         
                         // Artwork / Disc with download status
@@ -541,9 +566,7 @@ class AudioPlayingScreen extends ConsumerWidget {
                             ),
                             IconButton(
                               icon: const Icon(
-                                Icons.skip_next_rounded,
-                                size: 48,
-                              ),
+                                Icons.skip_next_rounded, size: 48),
                               onPressed: () {
                                 hapticFeedBack();
                                 ref
@@ -557,7 +580,9 @@ class AudioPlayingScreen extends ConsumerWidget {
                             IconButton(
                               icon: Icon(
                                 Icons.timer_outlined,
-                                color: isDark ? Colors.white54 : Colors.black54,
+                                color: audioState.remainingSleepTimer != null 
+                                    ? AppColors.primaryTeal 
+                                    : (isDark ? Colors.white54 : Colors.black54),
                               ),
                               onPressed: () =>
                                   _showTimerBottomSheet(context, ref),

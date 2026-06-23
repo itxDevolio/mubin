@@ -56,6 +56,7 @@ class AudioState {
   final Reciter currentReciter;
   final String? errorMessage;
   final bool isPlayingFromLocal;
+  final Duration? remainingSleepTimer;
 
   AudioState({
     this.isPlaying = false,
@@ -64,7 +65,7 @@ class AudioState {
     this.playingVerseId,
     this.currentSurahNumber,
     this.loopMode = LoopMode.off,
-    this.keepPlayingInBackground = true,
+    this.keepPlayingInBackground = false,
     this.position = Duration.zero,
     this.duration = Duration.zero,
     this.downloadInfoMap = const {},
@@ -72,6 +73,7 @@ class AudioState {
     required this.currentReciter,
     this.errorMessage,
     this.isPlayingFromLocal = false,
+    this.remainingSleepTimer,
   });
 
   bool isSurahDownloaded(int surahNumber) => downloadedSurahs.contains(surahNumber);
@@ -97,6 +99,8 @@ class AudioState {
     Reciter? currentReciter,
     String? errorMessage,
     bool? isPlayingFromLocal,
+    Duration? remainingSleepTimer,
+    bool clearSleepTimer = false,
   }) {
     return AudioState(
       isPlaying: isPlaying ?? this.isPlaying,
@@ -113,6 +117,7 @@ class AudioState {
       currentReciter: currentReciter ?? this.currentReciter,
       errorMessage: errorMessage ?? this.errorMessage,
       isPlayingFromLocal: isPlayingFromLocal ?? this.isPlayingFromLocal,
+      remainingSleepTimer: clearSleepTimer ? null : (remainingSleepTimer ?? this.remainingSleepTimer),
     );
   }
 }
@@ -121,11 +126,14 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
   final AudioPlayer _audioPlayer = AudioPlayer();
   final Dio _dio = Dio();
   Timer? _sleepTimer;
+  Timer? _countdownTimer;
   CancelToken? _downloadCancelToken;
 
   @override
   AudioState build() {
-    final initialReciter = ref.watch(settingsControllerProvider).currentReciter;
+    final settings = ref.watch(settingsControllerProvider);
+    final initialReciter = settings.currentReciter;
+    final initialKeepBg = settings.keepPlayingInBackground;
     
     Future.microtask(() {
       _initListeners();
@@ -134,14 +142,22 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
       WidgetsBinding.instance.addObserver(this);
     });
 
+    ref.listen(settingsControllerProvider, (previous, next) {
+      if (previous?.keepPlayingInBackground != next.keepPlayingInBackground) {
+        state = state.copyWith(keepPlayingInBackground: next.keepPlayingInBackground);
+      }
+    });
+
     ref.onDispose(() {
       WidgetsBinding.instance.removeObserver(this);
       _audioPlayer.dispose();
       _sleepTimer?.cancel();
+      _countdownTimer?.cancel();
     });
 
     return AudioState(
       currentReciter: initialReciter,
+      keepPlayingInBackground: initialKeepBg,
     );
   }
 
@@ -263,6 +279,9 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
   }
 
   String _getSurahUrl(int surahNumber, Reciter reciter) {
+    if (reciter.name == "Mishary Rashid Alafasy") {
+      return quran.getAudioURLBySurah(surahNumber);
+    }
     final numStr = surahNumber.toString().padLeft(3, '0');
     return "${reciter.urlPrefix}$numStr.mp3";
   }
@@ -425,6 +444,56 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
     }
   }
 
+  Future<void> deleteAllDownloads() async {
+    try {
+      final dir = await getApplicationDocumentsDirectory();
+      final String reciterFolder = state.currentReciter.name.replaceAll(' ', '_');
+      final surahsDir = Directory('${dir.path}/surahs/$reciterFolder');
+      
+      if (await surahsDir.exists()) {
+        await surahsDir.delete(recursive: true);
+      }
+      
+      state = state.copyWith(
+        downloadedSurahs: {},
+        downloadInfoMap: {},
+      );
+    } catch (e) {
+      debugPrint('Error deleting all: $e');
+    }
+  }
+
+  Future<int> getDownloadStorageSize() async {
+    try {
+      final dir = await getApplicationDocumentsDirectory();
+      final String reciterFolder = state.currentReciter.name.replaceAll(' ', '_');
+      final surahsDir = Directory('${dir.path}/surahs/$reciterFolder');
+      
+      if (!await surahsDir.exists()) return 0;
+      
+      int totalSize = 0;
+      await for (final entity in surahsDir.list(recursive: true)) {
+        if (entity is File) {
+          totalSize += await entity.length();
+        }
+      }
+      return totalSize;
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  List<int> getDownloadedSurahsList() {
+    return state.downloadedSurahs.toList()..sort();
+  }
+
+  String formatBytes(int bytes) {
+    if (bytes < 1024) return '$bytes B';
+    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
+    if (bytes < 1024 * 1024 * 1024) return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+    return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(1)} GB';
+  }
+
   Future<void> setReciter(Reciter reciter) async {
     if (state.currentReciter == reciter) return;
     
@@ -462,13 +531,17 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
       case LoopMode.one:
         nextMode = LoopMode.off;
         break;
+      default:
+        nextMode = LoopMode.off;
     }
     await _audioPlayer.setLoopMode(nextMode);
     state = state.copyWith(loopMode: nextMode);
   }
 
   void toggleBackgroundPlay() {
-    state = state.copyWith(keepPlayingInBackground: !state.keepPlayingInBackground);
+    final newValue = !state.keepPlayingInBackground;
+    state = state.copyWith(keepPlayingInBackground: newValue);
+    ref.read(settingsControllerProvider.notifier).setKeepPlayingInBackground(newValue);
   }
 
   Future<void> skipNext() async {
@@ -493,15 +566,38 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
 
   void setSleepTimer(int minutes) {
     _sleepTimer?.cancel();
+    _countdownTimer?.cancel();
+    
     if (minutes > 0) {
-      _sleepTimer = Timer(Duration(minutes: minutes), () {
+      Duration remaining = Duration(minutes: minutes);
+      state = state.copyWith(remainingSleepTimer: remaining);
+      
+      _sleepTimer = Timer(remaining, () {
         stopAudio();
       });
+      
+      _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (state.remainingSleepTimer != null) {
+          final newRemaining = state.remainingSleepTimer! - const Duration(seconds: 1);
+          if (newRemaining.isNegative) {
+            timer.cancel();
+            state = state.copyWith(clearSleepTimer: true);
+          } else {
+            state = state.copyWith(remainingSleepTimer: newRemaining);
+          }
+        } else {
+          timer.cancel();
+        }
+      });
+    } else {
+      state = state.copyWith(clearSleepTimer: true);
     }
   }
 
   Future<void> stopAudio() async {
     await _audioPlayer.stop();
+    _sleepTimer?.cancel();
+    _countdownTimer?.cancel();
     state = state.copyWith(
       isPlaying: false,
       isLoading: false,
@@ -510,6 +606,7 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
       currentSurahNumber: null,
       position: Duration.zero,
       duration: Duration.zero,
+      clearSleepTimer: true,
     );
   }
 

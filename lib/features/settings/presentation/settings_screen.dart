@@ -72,6 +72,21 @@ class SettingsScreen extends ConsumerWidget {
                       activeTrackColor: AppColors.primaryTeal,
                     ),
                   ),
+                  _buildDivider(isDark),
+                  _buildSettingsTile(
+                    icon: Icons.play_circle_outline_rounded,
+                    title: 'Background Play',
+                    subtitle: settings.keepPlayingInBackground ? 'Keep playing when app is minimized' : 'Stop playing when app is minimized',
+                    isDark: isDark,
+                    trailing: Switch(
+                      value: settings.keepPlayingInBackground,
+                      onChanged: (val) {
+                        hapticFeedBack();
+                        ref.read(settingsControllerProvider.notifier).setKeepPlayingInBackground(val);
+                      },
+                      activeTrackColor: AppColors.primaryTeal,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 24),
@@ -102,6 +117,21 @@ class SettingsScreen extends ConsumerWidget {
                     isDark: isDark,
                     onTap: () {},
                   ),
+                  _buildDivider(isDark),
+                  _buildSettingsTile(
+                    icon: Icons.play_circle_outline_rounded,
+                    title: 'Background Play',
+                    subtitle: settings.keepPlayingInBackground ? 'Keep playing when app is minimized' : 'Stop playing when app is minimized',
+                    isDark: isDark,
+                    trailing: Switch(
+                      value: settings.keepPlayingInBackground,
+                      onChanged: (val) {
+                        hapticFeedBack();
+                        ref.read(settingsControllerProvider.notifier).setKeepPlayingInBackground(val);
+                      },
+                      activeTrackColor: AppColors.primaryTeal,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 24),
@@ -131,6 +161,21 @@ class SettingsScreen extends ConsumerWidget {
                     subtitle: 'Version 1.0.0 (Beta)',
                     isDark: isDark,
                     trailing: const SizedBox.shrink(),
+                  ),
+                  _buildDivider(isDark),
+                  _buildSettingsTile(
+                    icon: Icons.play_circle_outline_rounded,
+                    title: 'Background Play',
+                    subtitle: settings.keepPlayingInBackground ? 'Keep playing when app is minimized' : 'Stop playing when app is minimized',
+                    isDark: isDark,
+                    trailing: Switch(
+                      value: settings.keepPlayingInBackground,
+                      onChanged: (val) {
+                        hapticFeedBack();
+                        ref.read(settingsControllerProvider.notifier).setKeepPlayingInBackground(val);
+                      },
+                      activeTrackColor: AppColors.primaryTeal,
+                    ),
                   ),
                 ],
               ),

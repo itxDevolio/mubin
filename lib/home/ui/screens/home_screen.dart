@@ -1,6 +1,7 @@
 import 'package:auraq/core/app_colors.dart';
 import 'package:auraq/core/services/haptic_feedback.dart';
 import 'package:auraq/core/services/settings_controller.dart';
+import 'package:auraq/features/hadith/presentation/screens/books_screen.dart';
 import 'package:auraq/features/quran/presentation/views/quran_home_screen.dart';
 import 'package:auraq/features/settings/presentation/settings_screen.dart';
 import 'package:auraq/home/controllers/prayer_provider.dart';
@@ -48,29 +49,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     "https://media.gettyimages.com/id/956842252/photo/portrait-of-a-confident-muslim-girl.jpg?s=170667a&w=gi&k=20&c=DonQKYjWv-OgPjWQxPpMK1mljHEfihmiZow2iYnpdGg=",
                   ),
                   // Settings button
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryTeal.withOpacity(0.08),
-                      shape: BoxShape.circle,
+                  IconButton(
+                    onPressed: () {
+                      hapticFeedBack();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SettingsScreen(),
+                        ),
+                      );
+                    },
+                    icon: const Icon(
+                      Icons.settings,
+                      color: AppColors.primaryTeal,
+                      size: 24,
                     ),
-                    child: IconButton(
-                      onPressed: () {
-                        hapticFeedBack();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const SettingsScreen(),
-                          ),
-                        );
-                      },
-                      icon: const Icon(
-                        Icons.settings_suggest_rounded,
-                        color: AppColors.primaryTeal,
-                        size: 24,
-                      ),
-                      tooltip: "Settings",
-                    ),
+                    tooltip: "Settings",
                   ),
                 ],
               ),
@@ -126,7 +120,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 FeatureCard(
                                   title: "Hadith",
                                   icon: FlutterIslamicIcons.quran2,
-                                  onTap: () {},
+                                  onTap: () {
+                                    Navigator.push(context,MaterialPageRoute(builder: (context) => BooksScreen(),));
+                                  },
                                 ),
                                 const SizedBox(width: 8),
                                 FeatureCard(
