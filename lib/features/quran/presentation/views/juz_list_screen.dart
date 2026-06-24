@@ -227,12 +227,12 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
                                 height: 40,
                                 decoration: BoxDecoration(
                                   color: isDark
-                                      ? AppColors.primaryTeal.withOpacity(0.12)
-                                      : AppColors.primaryTeal.withOpacity(0.08),
+                                      ? AppColors.primaryTeal.withValues(alpha: 0.12)
+                                      : AppColors.primaryTeal.withValues(alpha: 0.08),
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(
-                                    color: AppColors.primaryTeal.withOpacity(
-                                      0.2,
+                                    color: AppColors.primaryTeal.withValues(
+                                      alpha: 0.2,
                                     ),
                                     width: 1,
                                   ),

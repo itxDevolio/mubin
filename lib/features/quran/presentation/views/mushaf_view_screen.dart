@@ -93,23 +93,20 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.primaryTeal,
         centerTitle: true,
-        title: widget.shouldUpdateProgress
-            ? Text(
-                "${_getSurahName(_currentPage)}  |   $_currentPage",
-                style: GoogleFonts.amiri(
-                  fontSize: 18,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              )
-            : Text(
-                "الجزء ${_getJuz(_currentPage)}  |  ${_getSurahName(_currentPage)}",
-                style: GoogleFonts.amiri(
-                  fontSize: 18,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+        title: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              "${_getSurahName(_currentPage)}  |  الجزء ${_getJuz(_currentPage)}",
+              style: GoogleFonts.amiri(
+                fontSize: 18,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
+            ),
+
+          ],
+        ),
       ),
       body: PageView.builder(
         controller: _pageController,
@@ -179,10 +176,10 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
 
                   spans.add(
                     TextSpan(
-                      text: '${verse.textArabic} ﴿${verse.verseNumber}﴾ ',
-                      style: GoogleFonts.amiri(
-                        fontSize: 26,
-                        height: 2.5,
+                      text: verse.textArabic,
+                      style: GoogleFonts.amiriQuran(
+                        fontSize: 22,
+                        height: 2.3,
                         color: isPlaying
                             ? AppColors.primaryTeal
                             : (isSelected
@@ -207,9 +204,8 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
                               .read(surahJuzControllerProvider.notifier)
                               .selectVerse(verse.id);
 
-                          ref
-                              .read(quranAudioPlayerControllerProvider.notifier)
-                              .playVerseAudio(verse.audioUrl, verse.id);
+                          // Audio play removed from here, user will play from bottom sheet
+                          // ref.read(quranAudioPlayerControllerProvider.notifier).playVerseAudio(verse.audioUrl, verse.id);
 
                           showModalBottomSheet(
                             context: context,
@@ -218,6 +214,7 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
                             builder: (context) =>
                                 VerseBottomSheet(verse: verse),
                           ).whenComplete(() {
+                            // Stop audio when bottom sheet is closed
                             ref
                                 .read(
                                   quranAudioPlayerControllerProvider.notifier,
@@ -308,9 +305,9 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
       margin: const EdgeInsets.symmetric(vertical: 20),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.primaryTeal.withOpacity(0.05),
+        color: AppColors.primaryTeal.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.primaryTeal.withOpacity(0.2)),
+        border: Border.all(color: AppColors.primaryTeal.withValues(alpha: 0.2)),
         image: DecorationImage(
           image: const AssetImage('assets/app_logos/auraq_logo.png'),
           opacity: 0.05,
@@ -373,25 +370,36 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
   String _getSurahName(int page) {
     try {
       final data = quran.getPageData(page);
-      return data.isEmpty
-          ? "القرآن الكريم"
-          : quran.getSurahNameArabic(data.first["surah"] ?? 1);
+      if (data.isEmpty) return "القرآن الكريم";
+
+      // Check if a new surah starts on this page, preferred for title
+      for (var v in data) {
+        if (v["verse"] == 1) {
+          return quran.getSurahNameArabic(v["surah"]!);
+        }
+      }
+
+      // Default to first surah on page
+      return quran.getSurahNameArabic(data.first["surah"] ?? 1);
     } catch (_) {
       return "القرآن الكريم";
     }
   }
 
   int _getJuz(int page) {
-    try {
-      final data = quran.getPageData(page);
-      return data.isEmpty
-          ? 1
-          : quran.getJuzNumber(
-              data.first["surah"] ?? 1,
-              data.first["verse"] ?? 1,
-            );
-    } catch (_) {
-      return 1;
+    // Standard Madani Mushaf Juz start pages (604 pages edition)
+    // This ensures Juz updates exactly at the correct page boundaries
+    // independently of the Surah names.
+    const juzStartPages = [
+      1, 22, 42, 62, 82, 102, 122, 142, 162, 182, 202, 222, 242, 262, 282, 
+      302, 322, 342, 362, 382, 402, 422, 442, 462, 482, 502, 522, 542, 562, 582
+    ];
+
+    for (int i = juzStartPages.length - 1; i >= 0; i--) {
+      if (page >= juzStartPages[i]) {
+        return i + 1;
+      }
     }
+    return 1;
   }
 }

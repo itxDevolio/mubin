@@ -119,6 +119,25 @@ class AdhkarListScreen extends ConsumerWidget {
                         else
                           _buildTranslationBlock(dhikr.english, "Translation", isDark, isUrdu: false),
                         
+                        if (dhikr.reference != null && dhikr.reference!.isNotEmpty) ...[
+                          const SizedBox(height: 12),
+                          Row(
+                            mainAxisAlignment: isUrdu ? MainAxisAlignment.end : MainAxisAlignment.start,
+                            children: [
+                              Icon(Icons.bookmark_outline, size: 14, color: AppColors.primaryTeal.withOpacity(0.6)),
+                              const SizedBox(width: 4),
+                              Text(
+                                dhikr.reference!,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontStyle: FontStyle.italic,
+                                  color: isDark ? Colors.white54 : Colors.black54,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+
                         const SizedBox(height: 24),
                         
                         // Counter Row

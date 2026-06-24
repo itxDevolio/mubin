@@ -3,6 +3,7 @@ import 'package:auraq/core/services/haptic_feedback.dart';
 import 'package:auraq/core/services/settings_controller.dart';
 import 'package:auraq/features/tasbeeh/presentation/screens/tasbeeh_list_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../data/models/adhkar_constants.dart';
@@ -21,7 +22,7 @@ class AdhkarHomeScreen extends ConsumerWidget {
       backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-          isUrdu ? 'اذکار و تسبیح' : "Adhkar & Tasbeeh",
+         "Adhkar & Tasbeeh",
           style: TextStyle(
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
@@ -55,7 +56,7 @@ class AdhkarHomeScreen extends ConsumerWidget {
               const SizedBox(height: 30),
               
               Text(
-                isUrdu ? 'اقسام' : "Explore Adhkar",
+              "Explore Adhkar",
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -124,7 +125,7 @@ class AdhkarHomeScreen extends ConsumerWidget {
                 color: Colors.white.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(14),
               ),
-              child: const Icon(Icons.fingerprint_rounded, color: Colors.white, size: 28),
+              child: const Icon(FlutterIslamicIcons.tasbih3, color: Colors.white, size: 28),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -132,7 +133,7 @@ class AdhkarHomeScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    isUrdu ? "تسبیح کاؤنٹر" : "Tasbeeh Counter",
+                   "Tasbeeh Counter",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -141,7 +142,7 @@ class AdhkarHomeScreen extends ConsumerWidget {
                     ),
                   ),
                   Text(
-                    isUrdu ? "اپنے اذکار کی گنتی کریں" : "Count your daily dhikr",
+                   "Count your daily dhikr",
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.8),
                       fontSize: 12,

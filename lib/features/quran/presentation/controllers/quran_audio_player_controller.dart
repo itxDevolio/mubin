@@ -168,7 +168,8 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
-      if (!this.state.keepPlayingInBackground) {
+      // Enforce: Background play only allowed if audio is downloaded
+      if (!this.state.keepPlayingInBackground || !this.state.isPlayingFromLocal) {
         pauseAudio();
       }
     }
@@ -531,8 +532,6 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
       case LoopMode.one:
         nextMode = LoopMode.off;
         break;
-      default:
-        nextMode = LoopMode.off;
     }
     await _audioPlayer.setLoopMode(nextMode);
     state = state.copyWith(loopMode: nextMode);

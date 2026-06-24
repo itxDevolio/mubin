@@ -54,7 +54,7 @@ class BookmarkListScreen extends ConsumerWidget {
                     decoration: BoxDecoration(
                       color: isDark
                           ? AppColors.surfaceDark
-                          : AppColors.primaryTeal.withOpacity(0.06),
+                          : AppColors.primaryTeal.withValues(alpha: 0.06),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -62,7 +62,7 @@ class BookmarkListScreen extends ConsumerWidget {
                       size: 40,
                       color: isDark
                           ? AppColors.textSecondaryDark
-                          : AppColors.primaryTeal.withOpacity(0.5),
+                          : AppColors.primaryTeal.withValues(alpha: 0.5),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -121,11 +121,11 @@ class BookmarkListScreen extends ConsumerWidget {
                         height: 40,
                         decoration: BoxDecoration(
                           color: isDark
-                              ? AppColors.primaryTeal.withOpacity(0.12)
-                              : AppColors.primaryTeal.withOpacity(0.08),
+                              ? AppColors.primaryTeal.withValues(alpha: 0.12)
+                              : AppColors.primaryTeal.withValues(alpha: 0.08),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: AppColors.primaryTeal.withOpacity(0.2),
+                            color: AppColors.primaryTeal.withValues(alpha: 0.2),
                             width: 1,
                           ),
                         ),
@@ -191,7 +191,7 @@ class BookmarkListScreen extends ConsumerWidget {
                           Icons.delete_outline_rounded,
                           size: 22,
                         ),
-                        color: AppColors.error.withOpacity(0.8),
+                        color: AppColors.error.withValues(alpha: 0.8),
                         onPressed: () => ref
                             .read(bookmarkControllerProvider.notifier)
                             .toggleBookmarkState(verse),

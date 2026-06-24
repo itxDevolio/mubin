@@ -3,6 +3,7 @@ import 'package:auraq/core/services/settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quran/quran.dart' as quran;
 import '../../domain/entities/verse.dart';
 import '../controllers/bookmark_controller.dart';
 import '../controllers/quran_audio_player_controller.dart';
@@ -60,12 +61,26 @@ class VerseBottomSheet extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Verse ${verse.surahNumber}:${verse.verseNumber}',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Theme.of(context).textTheme.titleLarge?.color,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Surah ${quran.getSurahName(verse.surahNumber)}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: Theme.of(context).textTheme.titleLarge?.color,
+                          ),
+                        ),
+                        Text(
+                          'Verse ${verse.verseNumber}',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: isDark ? Colors.white60 : Colors.black54,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   Row(
@@ -139,9 +154,23 @@ class VerseBottomSheet extends ConsumerWidget {
                 ],
               ),
               const Divider(),
+              const SizedBox(height: 16),
+              // Arabic Text of the Verse
+              Text(
+                verse.textArabic,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.amiriQuran(
+                  fontSize: 24,
+                  height: 1.8,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
+                textDirection: TextDirection.rtl,
+              ),
+              const SizedBox(height: 20),
+              const Divider(),
               const SizedBox(height: 12),
               Text(
-                isUrdu ? 'ترجمہ:' : 'Translation:',
+                 'Translation:',
                 style: TextStyle(
                   fontSize: 13,
                   color: isDark
@@ -188,7 +217,7 @@ class VerseBottomSheet extends ConsumerWidget {
         content: TextField(
           controller: controller,
           decoration: InputDecoration(
-            hintText: 'Enter name (e.g., Morning Adhkar)',
+            hintText: 'Enter title',
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),

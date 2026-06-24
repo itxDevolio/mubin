@@ -28,7 +28,7 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
       backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-          isUrdu ? 'حدیث کی کتابیں' : 'Hadith Books',
+         'Hadith Books',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
@@ -64,7 +64,7 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                 fontSize: 14,
               ),
               decoration: InputDecoration(
-                hintText: isUrdu ? 'کتاب تلاش کریں...' : 'Search Books...',
+              hint: Text( 'Search Books...'),
                 hintStyle: TextStyle(
                   color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
                   fontSize: 14,
@@ -110,7 +110,7 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                 if (filteredBooks.isEmpty) {
                   return Center(
                     child: Text(
-                      isUrdu ? 'کوئی کتاب نہیں ملی' : 'No Book found',
+              'No Book found',
                       style: TextStyle(
                         color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
                         fontWeight: FontWeight.w500,
@@ -178,7 +178,7 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    isUrdu ? "${book.totalHadith} احادیث" : "${book.totalHadith} Hadiths",
+                                  "${book.totalHadith} Hadiths",
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
@@ -216,10 +216,10 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                   children: [
                     const Icon(Icons.error_outline, color: AppColors.error, size: 40),
                     const SizedBox(height: 12),
-                    Text(isUrdu ? "کتابیں لوڈ کرنے میں خرابی" : "Error loading books"),
+                    Text("Error loading books"),
                     TextButton(
                       onPressed: () => ref.invalidate(booksProvider),
-                      child: Text(isUrdu ? "دوبارہ کوشش کریں" : "Retry", style: const TextStyle(color: AppColors.primaryTeal)),
+                      child: Text( "Retry", style: const TextStyle(color: AppColors.primaryTeal)),
                     )
                   ],
                 ),

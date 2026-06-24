@@ -95,6 +95,35 @@ class _ShifaDetailScreenState extends ConsumerState<ShifaDetailScreen> {
               text: isUrdu ? widget.dua.translationUr : widget.dua.translationEn,
               isUrdu: isUrdu,
             ),
+            const SizedBox(height: 12),
+
+            // Reference
+            if (widget.dua.reference.isNotEmpty)
+              Align(
+                alignment: isUrdu ? Alignment.centerRight : Alignment.centerLeft,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.bookmark_border, size: 16, color: Theme.of(context).primaryColor),
+                      const SizedBox(width: 8),
+                      Text(
+                        '${isUrdu ? "حوالہ: " : "Ref: "}${widget.dua.reference}',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontStyle: FontStyle.italic,
+                          fontFamily: isUrdu ? GoogleFonts.notoNastaliqUrdu().fontFamily : null,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             const SizedBox(height: 24),
 
             // Instructions

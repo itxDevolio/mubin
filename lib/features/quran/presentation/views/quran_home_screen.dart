@@ -191,13 +191,13 @@ class QuranHomeScreen extends ConsumerWidget {
         decoration: BoxDecoration(
           // Dark mode me opacity kam rakhi hai taaki screen chubhni na lage, light mode me soft backdrop bnaya hai
           color: isDark
-              ? baseColor.withOpacity(0.12)
-              : baseColor.withOpacity(0.08),
+              ? baseColor.withValues(alpha: 0.12)
+              : baseColor.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isDark
-                ? baseColor.withOpacity(0.3)
-                : baseColor.withOpacity(0.2),
+                ? baseColor.withValues(alpha: 0.3)
+                : baseColor.withValues(alpha: 0.2),
             width: 1.2,
           ),
         ),
@@ -206,7 +206,7 @@ class QuranHomeScreen extends ConsumerWidget {
           children: [
             Icon(
               icon,
-              color: isDark ? baseColor.withOpacity(0.9) : baseColor,
+              color: isDark ? baseColor.withValues(alpha: 0.9) : baseColor,
               size: 32,
             ),
             const SizedBox(height: 10),
@@ -280,7 +280,7 @@ class _ErrorPlaceholder extends StatelessWidget {
         children: [
           Icon(
             Icons.error_outline_rounded,
-            color: AppColors.error.withOpacity(0.8),
+            color: AppColors.error.withValues(alpha: 0.8),
             size: 24,
           ),
           const SizedBox(height: 8),

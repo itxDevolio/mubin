@@ -22,17 +22,17 @@ class VerseTileWidget extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isHighlighted ? getThemeColor(context, light: Colors.white, dark: Colors.teal.withOpacity(0.12)) : getThemeColor(context, light: Colors.white, dark: Colors.white),
+        color: isHighlighted ? getThemeColor(context, light: Colors.white, dark: Colors.teal.withValues(alpha: 0.12)) : getThemeColor(context, light: Colors.white, dark: Colors.white),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: getThemeColor(context, light: Colors.black.withOpacity(0.03), dark: Colors.white.withOpacity(0.03)),
+            color: getThemeColor(context, light: Colors.black.withValues(alpha: 0.03), dark: Colors.white.withValues(alpha: 0.03)),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
         ],
         border: Border.all(
-          color: isHighlighted ? getThemeColor(context, light: Colors.grey.withOpacity(0.15), dark: Colors.teal) : getThemeColor(context, light: Colors.grey.withOpacity(0.15), dark: Colors.grey.withOpacity(0.15)),
+          color: isHighlighted ? getThemeColor(context, light: Colors.grey.withValues(alpha: 0.15), dark: Colors.teal) : getThemeColor(context, light: Colors.grey.withValues(alpha: 0.15), dark: Colors.grey.withValues(alpha: 0.15)),
           width: isHighlighted ? 1.5 : 1,
         ),
       ),
@@ -47,7 +47,7 @@ class VerseTileWidget extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 14,
-                  backgroundColor: getThemeColor(context, light: Colors.teal.withOpacity(0.1), dark: Colors.teal.withOpacity(0.1)),
+                  backgroundColor: getThemeColor(context, light: Colors.teal.withValues(alpha: 0.1), dark: Colors.teal.withValues(alpha: 0.1)),
                   child: Text(
                     '${verse.verseNumber}',
                     style: TextStyle(

@@ -27,7 +27,9 @@ class HadithRepositoryImpl implements HadithRepository {
     // 1. Check Cache
     final cachedData = localDataSource.getCachedHadiths(cacheKey);
     if (cachedData != null && cachedData is List) {
-      return cachedData.map((e) => BookModel.fromJson(Map<String, dynamic>.from(e))).toList();
+      final List<BookEntity> books = cachedData.map((e) => BookModel.fromJson(Map<String, dynamic>.from(e))).toList();
+      // Only keep the first 6 books (Sihah Sittah)
+      return books.take(6).toList();
     }
 
     // 2. Fetch from API
@@ -42,13 +44,16 @@ class HadithRepositoryImpl implements HadithRepository {
         if (data is List) {
           // 3. Save to Cache
           await localDataSource.cacheHadiths(cacheKey, data);
-          return data.map((e) => BookModel.fromJson(e)).toList();
+          final List<BookEntity> books = data.map((e) => BookModel.fromJson(e)).toList();
+          // Only keep the first 6 books (Sihah Sittah)
+          return books.take(6).toList();
         }
       }
       throw Exception('Failed to load books');
     } catch (e) {
       if (cachedData != null) {
-         return (cachedData as List).map((e) => BookModel.fromJson(Map<String, dynamic>.from(e))).toList();
+         final List<BookEntity> books = (cachedData as List).map((e) => BookModel.fromJson(Map<String, dynamic>.from(e))).toList();
+         return books.take(6).toList();
       }
       throw Exception('Error fetching books: $e');
     }

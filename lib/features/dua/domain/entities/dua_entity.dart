@@ -1,25 +1,19 @@
-class ShifaEntity {
+class DuaEntity {
   final String id;
   final String titleEn;
   final String titleUr;
   final String arabic;
   final String translationEn;
   final String translationUr;
-  final String instructionEn;
-  final String instructionUr;
   final String reference;
-  final int targetCount;
 
-  ShifaEntity({
+  DuaEntity({
     required this.id,
     required this.titleEn,
     required this.titleUr,
     required this.arabic,
     required this.translationEn,
     required this.translationUr,
-    required this.instructionEn,
-    required this.instructionUr,
     required this.reference,
-    this.targetCount = 1,
   });
 }

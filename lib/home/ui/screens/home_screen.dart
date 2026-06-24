@@ -4,6 +4,7 @@ import 'package:auraq/core/services/settings_controller.dart';
 import 'package:auraq/features/adhkar/presentation/screens/adhkar_home_screen.dart';
 import 'package:auraq/features/hadith/presentation/screens/books_screen.dart';
 import 'package:auraq/features/shifa/presentation/screens/shifa_list_screen.dart';
+import 'package:auraq/features/dua/presentation/screens/dua_list_screen.dart';
 import 'package:auraq/features/quran/presentation/views/quran_home_screen.dart';
 import 'package:auraq/features/settings/presentation/settings_screen.dart';
 import 'package:auraq/home/controllers/prayer_provider.dart';
@@ -175,7 +176,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 FeatureCard(
                                   title: "Duas",
                                   icon: FlutterIslamicIcons.prayer,
-                                  onTap: () {},
+                                  onTap: () {
+                                    hapticFeedBack();
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const DuaListScreen(),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ],
                             ),
