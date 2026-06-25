@@ -22,12 +22,11 @@ class AdhkarHomeScreen extends ConsumerWidget {
       backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-         isUrdu ? "اذکار اور تسبیح" : "Adhkar & Tasbeeh",
+        "Adhkar & Tasbeeh",
           style: TextStyle(
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
             color: isDark ? Colors.white : Colors.black87,
-            fontFamily: isUrdu ? GoogleFonts.notoNastaliqUrdu().fontFamily : GoogleFonts.poppins().fontFamily,
           ),
         ),
         backgroundColor: Colors.transparent,
@@ -57,12 +56,11 @@ class AdhkarHomeScreen extends ConsumerWidget {
               const SizedBox(height: 30),
               
               Text(
-              isUrdu ? "اذکار دریافت کریں" : "Explore Adhkar",
+              "Explore Adhkar",
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: isDark ? Colors.white : AppColors.textPrimaryLight,
-                  fontFamily: isUrdu ? GoogleFonts.notoNastaliqUrdu().fontFamily : null,
                 ),
               ),
               const SizedBox(height: 16),
@@ -135,20 +133,19 @@ class AdhkarHomeScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                   isUrdu ? "تسبیح کاؤنٹر" : "Tasbeeh Counter",
+                "Tasbeeh Counter",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      fontFamily: isUrdu ? GoogleFonts.notoNastaliqUrdu().fontFamily : null,
+
                     ),
                   ),
                   Text(
-                   isUrdu ? "اپنا روزانہ ذکر شمار کریں" : "Count your daily dhikr",
+                    "Count your daily dhikr",
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.8),
                       fontSize: 12,
-                      fontFamily: isUrdu ? GoogleFonts.notoNastaliqUrdu().fontFamily : null,
                     ),
                   ),
                 ],
@@ -222,7 +219,6 @@ class AdhkarHomeScreen extends ConsumerWidget {
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
                 color: isDark ? Colors.white : AppColors.textPrimaryLight,
-                fontFamily: isUrdu ? GoogleFonts.notoNastaliqUrdu().fontFamily : null,
               ),
             ),
           ],

@@ -76,11 +76,8 @@ class TasbeehListScreen extends ConsumerWidget {
       backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-          isUrdu ? "تسبیحات" : "Tasbeeh",
-          style: isUrdu 
-            ? GoogleFonts.notoNastaliqUrdu(fontWeight: FontWeight.bold, fontSize: 20, color: isDark ? Colors.white : Colors.black87)
-            : GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18, color: isDark ? Colors.white : Colors.black87),
-        ),
+        "Tasbeeh",
+          ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,

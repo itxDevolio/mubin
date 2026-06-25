@@ -29,12 +29,11 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
       backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-          isUrdu ? 'ابواب' : 'Chapters',
+           'Chapters',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
             color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
-            fontFamily: isUrdu ? GoogleFonts.amiri().fontFamily : null,
           ),
         ),
         backgroundColor: Colors.transparent,
@@ -65,7 +64,7 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
                 fontSize: 14,
               ),
               decoration: InputDecoration(
-                hintText: isUrdu ? 'باب تلاش کریں...' : 'Search Chapters...',
+                hintText: 'Search Chapters...',
                 hintStyle: TextStyle(
                   color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
                   fontSize: 14,
@@ -112,7 +111,7 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
                 if (filteredChapters.isEmpty) {
                   return Center(
                     child: Text(
-                      isUrdu ? 'کوئی باب نہیں ملا' : 'No Chapter found',
+                      'No Chapter found',
                       style: TextStyle(
                         color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
                         fontWeight: FontWeight.w500,

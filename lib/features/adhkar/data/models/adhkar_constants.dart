@@ -556,13 +556,14 @@ safety.""",
     AdhkarCategory(
       id: 'morning',
       titleEn: 'Morning Adhkar',
-      titleUr: 'صبح کے اذکار',
+      titleUr: 'Morning Adhkar',
+
       dhikrs: morningAdhkar,
     ),
     AdhkarCategory(
       id: 'evening',
       titleEn: 'Evening Adhkar',
-      titleUr: 'شام کے اذکار',
+      titleUr: 'Evening Adhkar',
       dhikrs: eveningAdhkar,
     ),
   ];
