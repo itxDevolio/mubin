@@ -44,7 +44,6 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
         final isCompleted = remaining == 0;
 
         return Scaffold(
-          // یہاں سے کلر چینج لاجک ہٹا دی ہے، اب ہمیشہ بیک گراؤنڈ تھیم کے مطابق رہے گا
           backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
           appBar: AppBar(
             title: Text(widget.title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
@@ -67,36 +66,70 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
                 ref.read(adhkarCountProvider(dhikr.id).notifier).increment();
               }
             },
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                children: [
-                  const SizedBox(height: 10),
-                  if ((isUrdu ? dhikr.fazilatUrdu : dhikr.fazilatEnglish) != null)
-                    _buildTag(isUrdu ? dhikr.fazilatUrdu! : dhikr.fazilatEnglish!, isUrdu),
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if ((isUrdu ? dhikr.fazilatUrdu : dhikr.fazilatEnglish) != null)
+                      _buildTag(isUrdu ? dhikr.fazilatUrdu! : dhikr.fazilatEnglish!, isUrdu),
 
-                  const SizedBox(height: 40),
-                  Text(dhikr.arabic, style: GoogleFonts.amiriQuran(fontSize: 28, color: AppColors.primaryTeal), textAlign: TextAlign.center, textDirection: TextDirection.rtl),
+                    const SizedBox(height: 40),
 
-                  const SizedBox(height: 30),
-                  Text(
-                    isUrdu ? dhikr.urdu : dhikr.english,
-                    style: isUrdu ? GoogleFonts.notoNastaliqUrdu(fontSize: 15, color: isDark ? Colors.white70 : Colors.grey[700], height: 2.0) : TextStyle(fontSize: 14, color: isDark ? Colors.white60 : Colors.grey[600]),
-                    textAlign: TextAlign.center,
-                  ),
+                    // Arabic Text
+                    Text(
+                      dhikr.arabic,
+                      style: GoogleFonts.amiriQuran(fontSize: 28, color: AppColors.primaryTeal),
+                      textAlign: TextAlign.center,
+                      textDirection: TextDirection.rtl,
+                    ),
 
-                  const SizedBox(height: 50),
-                  isCompleted
-                      ? const Icon(Icons.check, size: 56, color: AppColors.primaryTeal)
-                      : Text(
-                    "$remaining",
-                    style: const TextStyle(fontSize: 56, fontWeight: FontWeight.w300, color: AppColors.primaryTeal),
-                  ),
+                    const SizedBox(height: 30),
 
-                  const SizedBox(height: 50),
-                  if (dhikr.reference != null)
-                    Text(dhikr.reference!, style: TextStyle(fontSize: 10, color: Colors.grey.withValues(alpha: 0.5), letterSpacing: 1.2)),
-                ],
+                    // Translation Text
+                    Text(
+                      isUrdu ? dhikr.urdu : dhikr.english,
+                      style: isUrdu
+                          ? GoogleFonts.notoNastaliqUrdu(fontSize: 15, color: isDark ? Colors.white70 : Colors.grey[700], height: 2.0)
+                          : TextStyle(fontSize: 14, color: isDark ? Colors.white60 : Colors.grey[600]),
+                      textAlign: TextAlign.center,
+                    ),
+
+                    const SizedBox(height: 50),
+
+                    // Centered Circle for Count/Tick
+                    Container(
+                      height: 100,
+                      width: 100,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isCompleted ? AppColors.primaryTeal.withValues(alpha: 0.1) : Colors.transparent,
+                        border: Border.all(
+                          color: AppColors.primaryTeal.withValues(alpha: 0.3),
+                          width: 1.5,
+                        ),
+                      ),
+                      child: isCompleted
+                          ? const Icon(Icons.check, size: 40, color: AppColors.primaryTeal)
+                          : Text(
+                        "$remaining",
+                        style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w300, color: AppColors.primaryTeal),
+                      ),
+                    ),
+
+                    const SizedBox(height: 50),
+
+                    if (dhikr.reference != null)
+                      Text(
+                        dhikr.reference!,
+                        style: TextStyle(fontSize: 10, color: Colors.grey.withValues(alpha: 0.5), letterSpacing: 1.2),
+                        textAlign: TextAlign.center,
+                      ),
+                  ],
+                ),
               ),
             ),
           ),
