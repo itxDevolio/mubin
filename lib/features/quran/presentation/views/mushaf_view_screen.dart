@@ -91,8 +91,9 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: AppColors.primaryTeal,
+        backgroundColor: isDark ? Colors.transparent : AppColors.primaryTeal,
         centerTitle: true,
+        elevation: 0,
         title: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -100,12 +101,18 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
               "${_getSurahName(_currentPage)}  |  الجزء ${_getJuz(_currentPage)}",
               style: GoogleFonts.amiri(
                 fontSize: 18,
-                color: Colors.white,
+                color: isDark ? AppColors.primaryTeal : Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             ),
-
           ],
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            color: isDark ? AppColors.primaryTeal : Colors.white,
+          ),
+          onPressed: () => Navigator.pop(context),
         ),
       ),
       body: PageView.builder(

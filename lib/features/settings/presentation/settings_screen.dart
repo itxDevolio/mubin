@@ -52,6 +52,14 @@ class SettingsScreen extends ConsumerWidget {
                 isDark,
                 children: [
                   _buildSettingsTile(
+                    icon: Icons.brightness_4_rounded,
+                    title: 'App Theme',
+                    subtitle: _getThemeModeName(settings.themeMode),
+                    isDark: isDark,
+                    onTap: () => _showThemeDialog(context, ref, settings.themeMode),
+                  ),
+                  _buildDivider(isDark),
+                  _buildSettingsTile(
                     icon: Icons.translate_rounded,
                     title: 'App Language',
                     subtitle: settings.language == 'en' ? 'English' : 'Urdu (اردو)',
@@ -390,6 +398,80 @@ class SettingsScreen extends ConsumerWidget {
         );
       },
     );
+  }
+
+  void _showThemeDialog(BuildContext context, WidgetRef ref, ThemeMode currentMode) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
+          title: const Text(
+            'Select Theme',
+            style: TextStyle(fontWeight: FontWeight.w900),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildThemeOption(context, ref, 'System Default', ThemeMode.system, currentMode == ThemeMode.system, isDark),
+              const SizedBox(height: 12),
+              _buildThemeOption(context, ref, 'Light Mode', ThemeMode.light, currentMode == ThemeMode.light, isDark),
+              const SizedBox(height: 12),
+              _buildThemeOption(context, ref, 'Dark Mode', ThemeMode.dark, currentMode == ThemeMode.dark, isDark),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildThemeOption(BuildContext context, WidgetRef ref, String title, ThemeMode mode, bool isSelected, bool isDark) {
+    return InkWell(
+      onTap: () {
+        hapticFeedBack();
+        ref.read(settingsControllerProvider.notifier).setThemeMode(mode);
+        Navigator.pop(context);
+      },
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.primaryTeal.withValues(alpha: 0.1) : Colors.transparent,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isSelected ? AppColors.primaryTeal : (isDark ? Colors.white10 : Colors.black.withValues(alpha: 0.05)),
+            width: 1,
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontWeight: isSelected ? FontWeight.w900 : FontWeight.normal,
+                color: isDark ? Colors.white : Colors.black87,
+              ),
+            ),
+            if (isSelected)
+              const Icon(Icons.check_circle_rounded, color: AppColors.primaryTeal, size: 22),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _getThemeModeName(ThemeMode mode) {
+    switch (mode) {
+      case ThemeMode.system:
+        return 'System Default';
+      case ThemeMode.light:
+        return 'Light Mode';
+      case ThemeMode.dark:
+        return 'Dark Mode';
+    }
   }
 
   void _showMadhabDialog(BuildContext context, WidgetRef ref, String currentMadhab) {

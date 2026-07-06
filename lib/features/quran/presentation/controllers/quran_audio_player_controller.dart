@@ -142,7 +142,7 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
       WidgetsBinding.instance.addObserver(this);
     });
 
-    ref.listen(settingsControllerProvider, (previous, next) {
+    ref.listen<SettingsState>(settingsControllerProvider, (previous, next) {
       if (previous?.keepPlayingInBackground != next.keepPlayingInBackground) {
         state = state.copyWith(keepPlayingInBackground: next.keepPlayingInBackground);
       }

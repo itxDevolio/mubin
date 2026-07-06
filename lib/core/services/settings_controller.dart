@@ -1,5 +1,7 @@
-import 'package:mubin/features/quran/domain/entities/reciter.dart';
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:mubin/features/quran/domain/entities/reciter.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 
 import '../constant/db_consts.dart';
@@ -9,12 +11,14 @@ class SettingsState {
   final Reciter currentReciter;
   final bool keepPlayingInBackground;
   final String madhab; // 'hanafi' or 'shafi'
+  final ThemeMode themeMode;
 
   SettingsState({
     this.language = 'en',
     Reciter? currentReciter,
     this.keepPlayingInBackground = false,
     this.madhab = 'hanafi',
+    this.themeMode = ThemeMode.system,
   }) : currentReciter = currentReciter ?? availableReciters.first;
 
   SettingsState copyWith({
@@ -22,12 +26,14 @@ class SettingsState {
     Reciter? currentReciter,
     bool? keepPlayingInBackground,
     String? madhab,
+    ThemeMode? themeMode,
   }) {
     return SettingsState(
       language: language ?? this.language,
       currentReciter: currentReciter ?? this.currentReciter,
       keepPlayingInBackground: keepPlayingInBackground ?? this.keepPlayingInBackground,
       madhab: madhab ?? this.madhab,
+      themeMode: themeMode ?? this.themeMode,
     );
   }
 }
@@ -56,6 +62,9 @@ class SettingsController extends StateNotifier<SettingsState> {
     );
 
     final String? reciterName = box.get('reciterName');
+    
+    final int themeIndex = box.get('themeMode', defaultValue: 0);
+    final themeMode = ThemeMode.values[themeIndex];
 
     Reciter reciter = availableReciters.first;
 
@@ -71,7 +80,14 @@ class SettingsController extends StateNotifier<SettingsState> {
       currentReciter: reciter,
       keepPlayingInBackground: keepBg,
       madhab: madhab,
+      themeMode: themeMode,
     );
+  }
+
+  Future<void> setThemeMode(ThemeMode mode) async {
+    final box = Hive.box(DbConstants.appBox);
+    await box.put('themeMode', mode.index);
+    state = state.copyWith(themeMode: mode);
   }
 
   Future<void> setLanguage(String lang) async {

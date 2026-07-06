@@ -1,4 +1,5 @@
 import 'package:mubin/core/constant/db_consts.dart';
+import 'package:mubin/core/services/settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -24,17 +25,19 @@ void main() async {
   runApp(const ProviderScope(child: MubinApp()));
 }
 
-class MubinApp extends StatelessWidget {
+class MubinApp extends ConsumerWidget {
   const MubinApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settings = ref.watch(settingsControllerProvider);
+    
     return MaterialApp(
       title: 'Mubin',
       debugShowCheckedModeBanner: false,
       theme: AppThemeData.lightTheme,
       darkTheme: AppThemeData.darkTheme,
-      themeMode: ThemeMode.system,
+      themeMode: settings.themeMode,
       home: const HomeScreen(),
     );
   }
