@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quran/quran.dart' as quran;
+import '../../../../core/services/settings_controller.dart';
 import '../controllers/surah_juz_controller.dart';
 import 'mushaf_view_screen.dart';
 
@@ -11,6 +12,13 @@ class SurahListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Listen to settings for language changes to refresh surah list
+    ref.listen<SettingsState>(settingsControllerProvider, (previous, next) {
+      if (previous?.language != next.language) {
+        ref.read(surahJuzControllerProvider.notifier).loadSurahs();
+      }
+    });
+
     final quranState = ref.watch(surahJuzControllerProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 

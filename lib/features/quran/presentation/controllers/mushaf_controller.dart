@@ -41,8 +41,16 @@ class MushafController extends StateNotifier<Map<int, AsyncValue<List<Verse>>>> 
     state = const {};
   }
 }
-
 final mushafControllerProvider =
-    StateNotifierProvider<MushafController, Map<int, AsyncValue<List<Verse>>>>((ref) {
-      return MushafController(ref);
-    });
+StateNotifierProvider<MushafController, Map<int, AsyncValue<List<Verse>>>>((ref) {
+  final controller = MushafController(ref);
+
+  // Listen to settings changes to clear cache
+  ref.listen<SettingsState>(settingsControllerProvider, (previous, next) {
+    if (previous?.language != next.language) {
+      controller.clearCache();
+    }
+  });
+
+  return controller;
+});

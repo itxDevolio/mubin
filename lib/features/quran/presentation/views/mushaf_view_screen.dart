@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quran/quran.dart' as quran;
+import '../../../../core/services/settings_controller.dart';
 import '../controllers/bookmark_controller.dart';
 import '../controllers/mushaf_controller.dart';
 import '../controllers/surah_juz_controller.dart';
@@ -75,6 +76,14 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Listen to settings for language changes
+    ref.listen<SettingsState>(settingsControllerProvider, (previous, next) {
+      if (previous?.language != next.language) {
+        // Refresh current page with new language
+        _loadPages(_currentPage);
+      }
+    });
+
     final mushafState = ref.watch(mushafControllerProvider);
     final audioState = ref.watch(quranAudioPlayerControllerProvider);
     final bookmarksState = ref.watch(bookmarkControllerProvider);
