@@ -131,7 +131,8 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
 
   @override
   AudioState build() {
-    final settings = ref.watch(settingsControllerProvider);
+    // Use read instead of watch to prevent full controller reset when settings change
+    final settings = ref.read(settingsControllerProvider);
     final initialReciter = settings.currentReciter;
     final initialKeepBg = settings.keepPlayingInBackground;
     
@@ -142,9 +143,13 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
       WidgetsBinding.instance.addObserver(this);
     });
 
+    // Surgical updates for settings changes
     ref.listen<SettingsState>(settingsControllerProvider, (previous, next) {
       if (previous?.keepPlayingInBackground != next.keepPlayingInBackground) {
         state = state.copyWith(keepPlayingInBackground: next.keepPlayingInBackground);
+      }
+      if (previous?.currentReciter != next.currentReciter) {
+        setReciter(next.currentReciter);
       }
     });
 
@@ -163,14 +168,17 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
 
   void _setupAudioPlayer() {
     _audioPlayer.setAutomaticallyWaitsToMinimizeStalling(true);
+    // Explicitly set User-Agent for network requests to avoid being blocked by some servers
+    // and improve compatibility with streaming sources.
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    debugPrint('App lifecycle state changed: $state');
     if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
-      // Enforce: Background play only allowed if audio is downloaded
-      if (!this.state.keepPlayingInBackground || !this.state.isPlayingFromLocal) {
-        pauseAudio();
+      if (!this.state.keepPlayingInBackground) {
+        debugPrint('Stopping audio: Background play is disabled');
+        stopAudio(); // Full stop when app is minimized if background play is off
       }
     }
   }
@@ -200,10 +208,18 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
   void _initListeners() {
     _audioPlayer.playerStateStream.listen((playerState) {
       final processingState = playerState.processingState;
+      
+      // Automatically clear error message if playback starts successfully
+      String? errorMessage = state.errorMessage;
+      if (playerState.playing && processingState == ProcessingState.ready) {
+        errorMessage = null;
+      }
+
       state = state.copyWith(
         isPlaying: playerState.playing,
         isLoading: processingState == ProcessingState.loading ||
             processingState == ProcessingState.buffering,
+        errorMessage: errorMessage,
       );
       
       if (processingState == ProcessingState.completed) {
@@ -217,7 +233,9 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
           _audioPlayer.seek(Duration.zero);
           _audioPlayer.play();
         } else {
-          stopAudio();
+          // Instead of stopAudio which clears state, just pause and seek to beginning
+          _audioPlayer.pause();
+          _audioPlayer.seek(Duration.zero);
         }
       }
     });
@@ -233,8 +251,12 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
     });
 
     _audioPlayer.playbackEventStream.listen((event) {}, onError: (Object e, StackTrace stackTrace) {
-      debugPrint('Audio error: $e');
-      state = state.copyWith(isLoading: false, isPlaying: false);
+      debugPrint('Audio playback error: $e');
+      state = state.copyWith(
+        isLoading: false, 
+        isPlaying: false,
+        errorMessage: "Audio Error: ${e.toString().contains('404') ? 'Audio file not found on server' : 'Playback failed'}",
+      );
     });
   }
 
@@ -258,19 +280,29 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
       album: "Al-Quran",
       title: title,
       artist: artist,
-      artUri: Uri.parse("https://quran.com/images/quran-share.png"),
+      // Fix: Use the standard asset format that just_audio_background expects
+      artUri: Uri.parse("assets/app_logos/mubin_app_logo.png"),
     );
 
     if (surahNumber != null) {
       final localFile = await _getLocalSurahFile(surahNumber);
       if (await localFile.exists()) {
+        debugPrint('Playing from local file: ${localFile.path}');
         state = state.copyWith(isPlayingFromLocal: true);
-        return AudioSource.uri(Uri.file(localFile.path), tag: tag);
+        return AudioSource.file(localFile.path, tag: tag);
       }
     }
 
     state = state.copyWith(isPlayingFromLocal: false);
-    return LockCachingAudioSource(Uri.parse(url), tag: tag);
+    
+    return AudioSource.uri(
+      Uri.parse(url),
+      tag: tag,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'Accept': '*/*',
+      },
+    );
   }
 
   Future<File> _getLocalSurahFile(int surahNumber) async {
@@ -288,12 +320,21 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
   }
 
   Future<void> playVerseAudio(String url, int verseId) async {
+    debugPrint('Attempting to play verse audio: $url');
+    // Clear error message at the start of a new attempt
+    state = state.copyWith(errorMessage: null);
+    
     try {
-      if (state.currentAudioUrl == url) {
+      if (state.currentAudioUrl == url && state.playingVerseId == verseId) {
         if (!state.isPlaying) {
           await _audioPlayer.play();
+        } else {
+          await _audioPlayer.pause();
         }
       } else {
+        // Reset player for new audio to avoid mixed states
+        await _audioPlayer.stop();
+        
         state = state.copyWith(
           isLoading: true,
           currentAudioUrl: url,
@@ -302,27 +343,39 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
           errorMessage: null,
           isPlayingFromLocal: false,
         );
+        
         final source = await _getAudioSource(url, null, verseId: verseId);
         await _audioPlayer.setAudioSource(source);
         await _audioPlayer.play();
+        debugPrint('Verse audio playback started');
       }
     } catch (e) {
+      debugPrint('Error playing verse audio: $e');
       state = state.copyWith(
         isLoading: false,
-        errorMessage: "Could not load audio. Check your internet.",
+        errorMessage: "Playback failed. Check your internet connection.",
       );
     }
   }
 
   Future<void> playSurah(int surahNumber) async {
     final url = _getSurahUrl(surahNumber, state.currentReciter);
+    debugPrint('Attempting to play surah $surahNumber: $url');
+    // Clear error message at the start of a new attempt
+    state = state.copyWith(errorMessage: null);
+    
     try {
       if (state.currentAudioUrl == url && state.currentSurahNumber == surahNumber) {
         if (!state.isPlaying) {
           await _audioPlayer.play();
+        } else {
+          await _audioPlayer.pause();
         }
         return;
       }
+
+      // Reset player for new surah
+      await _audioPlayer.stop();
 
       state = state.copyWith(
         isLoading: true,
@@ -335,10 +388,12 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
       final source = await _getAudioSource(url, surahNumber);
       await _audioPlayer.setAudioSource(source);
       await _audioPlayer.play();
+      debugPrint('Surah audio playback started');
     } catch (e) {
+      debugPrint('Error playing surah audio: $e');
       state = state.copyWith(
         isLoading: false,
-        errorMessage: "Could not load audio. Check your internet.",
+        errorMessage: "Playback failed. Check your internet connection.",
       );
     }
   }
@@ -560,6 +615,7 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
   }
 
   Future<void> resumeAudio() async {
+    state = state.copyWith(errorMessage: null);
     await _audioPlayer.play();
   }
 

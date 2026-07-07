@@ -439,19 +439,25 @@ class AudioPlayingScreen extends ConsumerWidget {
                                 .withAlpha(26),
                             thumbColor: AppColors.primaryTeal,
                           ),
-                          child: Slider(
-                            value: audioState.position.inSeconds.toDouble(),
-                            max: audioState.duration.inSeconds.toDouble().clamp(
-                              1.0,
-                              double.infinity,
-                            ),
-                            onChanged: (val) {
-                              ref
-                                  .read(
-                                    quranAudioPlayerControllerProvider.notifier,
-                                  )
-                                  .seek(Duration(seconds: val.toInt()));
-                            },
+                          child: Builder(
+                            builder: (context) {
+                              final double max = audioState.duration.inSeconds.toDouble();
+                              final double value = audioState.position.inSeconds.toDouble();
+                              // Ensure value is always between 0 and max to avoid Slider assertion errors
+                              final double clampedValue = value.clamp(0.0, max > 0 ? max : 0.0);
+                              
+                              return Slider(
+                                value: clampedValue,
+                                max: max > 0 ? max : 1.0, // Fallback to 1.0 if duration is 0
+                                onChanged: max > 0 ? (val) {
+                                  ref
+                                      .read(
+                                        quranAudioPlayerControllerProvider.notifier,
+                                      )
+                                      .seek(Duration(seconds: val.toInt()));
+                                } : null, // Disable slider if duration is unknown
+                              );
+                            }
                           ),
                         ),
                         Padding(
