@@ -25,11 +25,11 @@ class JanazaDetailScreen extends ConsumerWidget {
           centerTitle: true,
           elevation: 0,
           title: Text(
-            isUrdu 
+            isUrdu
               ? (isAdult ? "نمازِ جنازہ (بالغ)" : "نمازِ جنازہ (نابالغ)")
               : (isAdult ? "Adult Funeral Prayer" : "Child Funeral Prayer"),
-            style: isUrdu 
-              ? GoogleFonts.notoNastaliqUrdu(fontWeight: FontWeight.bold, fontSize: 18) 
+            style: isUrdu
+              ? GoogleFonts.notoNastaliqUrdu(fontWeight: FontWeight.bold, fontSize: 18)
               : const TextStyle(fontWeight: FontWeight.bold),
           ),
           bottom: TabBar(
@@ -56,11 +56,15 @@ class JanazaDetailScreen extends ConsumerWidget {
         body: TabBarView(
           children: [
             _JanazaContent(
-              steps: isAdult ? JanazaData.getAdultSteps(true) : JanazaData.getChildSteps(true),
+              steps: isAdult
+                ? JanazaData.getAdultSteps(true, settings.madhab)
+                : JanazaData.getChildSteps(true, settings.madhab),
               isUrdu: isUrdu
             ),
             _JanazaContent(
-              steps: isAdult ? JanazaData.getAdultSteps(false) : JanazaData.getChildSteps(false),
+              steps: isAdult
+                ? JanazaData.getAdultSteps(false, settings.madhab)
+                : JanazaData.getChildSteps(false, settings.madhab),
               isUrdu: isUrdu
             ),
           ],

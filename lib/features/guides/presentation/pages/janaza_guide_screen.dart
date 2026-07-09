@@ -20,39 +20,29 @@ class JanazaGuideScreen extends ConsumerWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          isUrdu ? "نمازِ جنازہ کا طریقہ" : "Funeral Prayer (Janaza)",
-          style: isUrdu 
-            ? GoogleFonts.notoNastaliqUrdu(fontWeight: FontWeight.bold) 
-            : const TextStyle(fontWeight: FontWeight.bold),
+"Funeral Prayer (Janaza)",
+
         ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20),
         child: Column(
-          crossAxisAlignment: isUrdu ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              isUrdu ? "درجہ منتخب کریں" : "Select Category",
-              style: isUrdu 
-                ? GoogleFonts.notoNastaliqUrdu(fontSize: 22, fontWeight: FontWeight.bold)
-                : const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+             "Select Category",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(
-              isUrdu 
-                ? "بالغ اور نابالغ کی نمازِ جنازہ کی دعائیں تھوڑی مختلف ہوتی ہیں۔"
-                : "Supplications differ slightly for adults and children.",
-              textAlign: isUrdu ? TextAlign.right : TextAlign.left,
-              style: isUrdu 
-                ? GoogleFonts.notoNastaliqUrdu(fontSize: 14, color: theme.colorScheme.onSurface.withOpacity(0.6), height: 1.8)
-                : TextStyle(fontSize: 14, color: theme.colorScheme.onSurface.withOpacity(0.6)),
+              "Supplications differ slightly for adults and children.",
+
             ),
             const SizedBox(height: 40),
             _SelectionCard(
-              title: isUrdu ? "بالغ کے لیے" : "For Adults",
-              subtitle: isUrdu ? "مردوں اور عورتوں کے لیے طریقہ" : "Janaza prayer for men and women",
+              title:  "For Adults",
+              subtitle: "Janaza prayer for men and women",
               icons: const [FlutterIslamicIcons.muslim, FlutterIslamicIcons.muslimah],
-              isUrdu: isUrdu,
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -62,10 +52,9 @@ class JanazaGuideScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             _SelectionCard(
-              title: isUrdu ? "نابالغ کے لیے" : "For Children",
-              subtitle: isUrdu ? "لڑکوں اور لڑکیوں کے لیے طریقہ" : "Janaza prayer for boys and girls",
+              title:  "For Children",
+              subtitle: "Janaza prayer for boys and girls",
               icons: const [FlutterIslamicIcons.muslim2, FlutterIslamicIcons.muslimah2],
-              isUrdu: isUrdu,
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -84,14 +73,12 @@ class _SelectionCard extends StatelessWidget {
   final String title;
   final String subtitle;
   final List<IconData> icons;
-  final bool isUrdu;
   final VoidCallback onTap;
 
   const _SelectionCard({
     required this.title,
     required this.subtitle,
     required this.icons,
-    required this.isUrdu,
     required this.onTap,
   });
 
@@ -119,7 +106,7 @@ class _SelectionCard extends StatelessWidget {
           ],
         ),
         child: Row(
-          textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
+          textDirection:TextDirection.ltr,
           children: [
             Stack(
               clipBehavior: Clip.none,
@@ -133,8 +120,7 @@ class _SelectionCard extends StatelessWidget {
                   child: Icon(icons[0], color: AppColors.primaryTeal, size: 26),
                 ),
                 Positioned(
-                  right: isUrdu ? null : -10,
-                  left: isUrdu ? -10 : null,
+                  right: -10,
                   bottom: -5,
                   child: Container(
                     padding: const EdgeInsets.all(6),
@@ -153,26 +139,22 @@ class _SelectionCard extends StatelessWidget {
             const SizedBox(width: 30),
             Expanded(
               child: Column(
-                crossAxisAlignment: isUrdu ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    style: isUrdu 
-                      ? GoogleFonts.notoNastaliqUrdu(fontSize: 18, fontWeight: FontWeight.bold)
-                      : const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style:  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: isUrdu 
-                      ? GoogleFonts.notoNastaliqUrdu(fontSize: 12, color: Colors.grey.shade600, height: 1.8)
-                      : TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                    style:TextStyle(fontSize: 13, color: Colors.grey.shade600),
                   ),
                 ],
               ),
             ),
             Icon(
-              isUrdu ? Icons.chevron_left_rounded : Icons.chevron_right_rounded,
+          Icons.chevron_right_rounded,
               color: AppColors.primaryTeal.withOpacity(0.4),
             ),
           ],
