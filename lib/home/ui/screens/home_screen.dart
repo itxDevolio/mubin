@@ -14,6 +14,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../features/qibla/presentation/pages/qibla_page.dart';
 import '../../../features/guides/presentation/pages/istikhara_guide_screen.dart';
 import '../../../features/guides/presentation/pages/janaza_guide_screen.dart';
+import '../../../features/guides/presentation/pages/qasar_guide_screen.dart';
 import '../widgets/feature_card.dart';
 import '../widgets/guide_card.dart';
 import '../widgets/user_profile_widget.dart';
@@ -239,13 +240,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     },
                                   ),
                                   InfoGuideCard(
-                                    title: "Eidain ki Namaz ka Tariqa",
+                                    title: "Traveler's Prayer ",
                                     subTitle:
-                                        "6 zayd takbeeraat ke sath Eid ki namaz ka mukammal tareeqa.",
+                                        "Guidelines and method for shortening prayers during travel.",
                                     imageUrl:
-                                        "https://images.unsplash.com/photo-1564507592333-c60657eea523",
-                                    onTap: () {},
+                                        "assets/app_logos/qasar.png",
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => const QasarGuideScreen(),
+                                        ),
+                                      );
+                                    },
                                   ),
+
                                 ],
                               ),
                             ),

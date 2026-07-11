@@ -10,26 +10,7 @@ class UserProfileWidget extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        GestureDetector(
-          onTap: () {
-            hapticFeedBack();
-            // User profile dialog maybe not needed for branding, 
-            // but keeping it with a placeholder if needed
-          },
-          child: Container(
-            padding: const EdgeInsets.all(2),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: AppColors.primaryTeal.withValues(alpha: 0.2), width: 1),
-            ),
-            child: const CircleAvatar(
-              backgroundColor: Colors.transparent,
-              backgroundImage: AssetImage("assets/app_logos/mubin.png"),
-              radius: 20,
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
+
         const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
