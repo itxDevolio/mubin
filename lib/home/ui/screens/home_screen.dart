@@ -1,5 +1,6 @@
 import 'package:mubin/core/app_colors.dart';
 import 'package:mubin/core/services/haptic_feedback.dart';
+import 'package:mubin/core/services/notification_service.dart';
 import 'package:mubin/core/services/settings_controller.dart';
 import 'package:mubin/features/adhkar/presentation/screens/adhkar_home_screen.dart';
 import 'package:mubin/features/hadith/presentation/screens/books_screen.dart';
@@ -28,8 +29,31 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObserver {
   DateTime _currentDate = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // Refresh current time and reschedule notifications when app is resumed
+      setState(() {
+        _currentDate = DateTime.now();
+      });
+      NotificationService().scheduleAllNotifications();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +108,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   });
                   ref.invalidate(locationProvider);
                   await ref.refresh(prayerTimesProvider(_currentDate).future);
+                  
+                  // Reschedule notifications on refresh
+                  await NotificationService().scheduleAllNotifications();
                 },
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(

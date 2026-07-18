@@ -1,5 +1,6 @@
 import 'package:adhan_dart/adhan_dart.dart';
 import 'package:mubin/core/constant/db_consts.dart';
+import 'package:mubin/core/services/notification_service.dart';
 import 'package:mubin/core/services/settings_controller.dart';
 import 'package:mubin/home/service/locatoin_service.dart';
 import 'package:mubin/home/service/prayer_service.dart';
@@ -34,8 +35,15 @@ final prayerTimesProvider = FutureProvider.family<PrayerTimes?, DateTime>((
     // Background mein location silent refresh karne ke liye trigger kiya
     ref.read(locationProvider.future).then((position) async {
       if (position != null) {
-        await box.put('lat', position.latitude);
-        await box.put('lng', position.longitude);
+        final double oldLat = savedLat;
+        final double oldLng = savedLng;
+        
+        if ((position.latitude - oldLat).abs() > 0.01 || (position.longitude - oldLng).abs() > 0.01) {
+          await box.put('lat', position.latitude);
+          await box.put('lng', position.longitude);
+          // Location significant change hui, notifications reschedule karo
+          await NotificationService().scheduleAllNotifications();
+        }
       }
     });
 

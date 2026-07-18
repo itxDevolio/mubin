@@ -5,6 +5,8 @@ import 'package:mubin/core/widgets/loading_widget.dart';
 import 'package:mubin/home/controllers/prayer_provider.dart';
 import 'package:mubin/home/service/hijri_date_service.dart';
 import 'package:mubin/home/ui/widgets/prayer_time_card.dart';
+import 'package:mubin/features/settings/presentation/notification_settings_screen.dart';
+import 'package:mubin/core/services/settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -87,11 +89,23 @@ class PrayerCard extends ConsumerWidget {
                     child: IconButton(
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
-                      onPressed: () => hapticFeedBack(),
+                      onPressed: () {
+                        hapticFeedBack();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const NotificationSettingsScreen(),
+                          ),
+                        );
+                      },
                       icon: Icon(
-                        Icons.notifications_active,
+                        ref.watch(settingsControllerProvider).notificationsEnabled
+                            ? Icons.notifications_active
+                            : Icons.notifications_off,
                         size: 20,
-                        color: Colors.transparent, // Made transparent as requested
+                        color: ref.watch(settingsControllerProvider).notificationsEnabled
+                            ? AppColors.primaryTeal
+                            : Colors.grey,
                       ),
                     ),
                   ),

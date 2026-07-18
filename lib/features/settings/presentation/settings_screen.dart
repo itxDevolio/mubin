@@ -3,6 +3,8 @@ import 'package:mubin/core/services/settings_controller.dart';
 import 'package:mubin/core/services/haptic_feedback.dart';
 import 'package:mubin/features/quran/domain/entities/reciter.dart';
 import 'package:mubin/features/quran/presentation/controllers/quran_audio_player_controller.dart';
+import 'package:mubin/features/settings/presentation/notification_settings_screen.dart';
+import 'package:mubin/features/settings/presentation/calculation_method_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -68,8 +70,40 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                   _buildDivider(isDark),
                   _buildSettingsTile(
+                    icon: Icons.notifications_none_rounded,
+                    title: 'Notifications',
+                    subtitle: settings.notificationsEnabled ? 'Enabled' : 'Disabled',
+                    isDark: isDark,
+                    onTap: () {
+                      hapticFeedBack();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const NotificationSettingsScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  _buildDivider(isDark),
+                  _buildSettingsTile(
                     icon: Icons.auto_awesome_mosaic_rounded,
-                    title: 'Prayer Calculation',
+                    title: 'Calculation Method',
+                    subtitle: calculationMethods.firstWhere((m) => m['key'] == settings.calculationMethod)['name']!,
+                    isDark: isDark,
+                    onTap: () {
+                      hapticFeedBack();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CalculationMethodScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  _buildDivider(isDark),
+                  _buildSettingsTile(
+                    icon: Icons.brightness_high_rounded,
+                    title: 'Madhab (Asr)',
                     subtitle: settings.madhab == 'hanafi' ? 'Hanafi (Later Asr)' : 'Shafi\'i (Earlier Asr)',
                     isDark: isDark,
                     onTap: () => _showMadhabDialog(context, ref, settings.madhab),
@@ -448,15 +482,20 @@ class SettingsScreen extends ConsumerWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontWeight: isSelected ? FontWeight.w900 : FontWeight.normal,
-                color: isDark ? Colors.white : Colors.black87,
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontWeight: isSelected ? FontWeight.w900 : FontWeight.normal,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
               ),
             ),
             if (isSelected)
-              const Icon(Icons.check_circle_rounded, color: AppColors.primaryTeal, size: 22),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: const Icon(Icons.check_circle_rounded, color: AppColors.primaryTeal, size: 22),
+              ),
           ],
         ),
       ),
@@ -544,15 +583,20 @@ class SettingsScreen extends ConsumerWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontWeight: isSelected ? FontWeight.w900 : FontWeight.normal,
-                color: isDark ? Colors.white : Colors.black87,
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontWeight: isSelected ? FontWeight.w900 : FontWeight.normal,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
               ),
             ),
             if (isSelected)
-              const Icon(Icons.check_circle_rounded, color: AppColors.primaryTeal, size: 22),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: const Icon(Icons.check_circle_rounded, color: AppColors.primaryTeal, size: 22),
+              ),
           ],
         ),
       ),
