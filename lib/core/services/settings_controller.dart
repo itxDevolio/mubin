@@ -24,7 +24,8 @@ class SettingsState {
   final bool asrNotification;
   final bool maghribNotification;
   final bool ishaNotification;
-  final bool adhkarNotification;
+  final bool morningAdhkarNotification;
+  final bool eveningAdhkarNotification;
   
   // Custom Adhkar Times (Stored as "HH:mm")
   final String morningAdhkarTime;
@@ -43,7 +44,8 @@ class SettingsState {
     this.asrNotification = true,
     this.maghribNotification = true,
     this.ishaNotification = true,
-    this.adhkarNotification = true,
+    this.morningAdhkarNotification = true,
+    this.eveningAdhkarNotification = true,
     this.morningAdhkarTime = '07:00',
     this.eveningAdhkarTime = '17:00',
   }) : currentReciter = currentReciter ?? availableReciters.first;
@@ -61,7 +63,8 @@ class SettingsState {
     bool? asrNotification,
     bool? maghribNotification,
     bool? ishaNotification,
-    bool? adhkarNotification,
+    bool? morningAdhkarNotification,
+    bool? eveningAdhkarNotification,
     String? morningAdhkarTime,
     String? eveningAdhkarTime,
   }) {
@@ -78,7 +81,8 @@ class SettingsState {
       asrNotification: asrNotification ?? this.asrNotification,
       maghribNotification: maghribNotification ?? this.maghribNotification,
       ishaNotification: ishaNotification ?? this.ishaNotification,
-      adhkarNotification: adhkarNotification ?? this.adhkarNotification,
+      morningAdhkarNotification: morningAdhkarNotification ?? this.morningAdhkarNotification,
+      eveningAdhkarNotification: eveningAdhkarNotification ?? this.eveningAdhkarNotification,
       morningAdhkarTime: morningAdhkarTime ?? this.morningAdhkarTime,
       eveningAdhkarTime: eveningAdhkarTime ?? this.eveningAdhkarTime,
     );
@@ -107,7 +111,8 @@ class SettingsController extends StateNotifier<SettingsState> {
     final bool asr = box.get('asrNotification', defaultValue: true);
     final bool maghrib = box.get('maghribNotification', defaultValue: true);
     final bool isha = box.get('ishaNotification', defaultValue: true);
-    final bool adhkar = box.get('adhkarNotification', defaultValue: true);
+    final bool morningAdhkar = box.get('morningAdhkarNotification', defaultValue: true);
+    final bool eveningAdhkar = box.get('eveningAdhkarNotification', defaultValue: true);
     
     final String morningTime = box.get('morningAdhkarTime', defaultValue: '07:00');
     final String eveningTime = box.get('eveningAdhkarTime', defaultValue: '17:00');
@@ -135,7 +140,8 @@ class SettingsController extends StateNotifier<SettingsState> {
       asrNotification: asr,
       maghribNotification: maghrib,
       ishaNotification: isha,
-      adhkarNotification: adhkar,
+      morningAdhkarNotification: morningAdhkar,
+      eveningAdhkarNotification: eveningAdhkar,
       morningAdhkarTime: morningTime,
       eveningAdhkarTime: eveningTime,
     );
@@ -155,27 +161,7 @@ class SettingsController extends StateNotifier<SettingsState> {
     final box = Hive.box(DbConstants.appBox);
     await box.put('notificationsEnabled', value);
     
-    if (value) {
-      // If enabling master switch, enable all individual ones as requested
-      await box.put('fajrNotification', true);
-      await box.put('dhuhrNotification', true);
-      await box.put('asrNotification', true);
-      await box.put('maghribNotification', true);
-      await box.put('ishaNotification', true);
-      await box.put('adhkarNotification', true);
-      
-      state = state.copyWith(
-        notificationsEnabled: true,
-        fajrNotification: true,
-        dhuhrNotification: true,
-        asrNotification: true,
-        maghribNotification: true,
-        ishaNotification: true,
-        adhkarNotification: true,
-      );
-    } else {
-      state = state.copyWith(notificationsEnabled: false);
-    }
+    state = state.copyWith(notificationsEnabled: value);
     
     NotificationService().scheduleAllNotifications();
   }
@@ -190,7 +176,8 @@ class SettingsController extends StateNotifier<SettingsState> {
       case 'asrNotification': state = state.copyWith(asrNotification: value); break;
       case 'maghribNotification': state = state.copyWith(maghribNotification: value); break;
       case 'ishaNotification': state = state.copyWith(ishaNotification: value); break;
-      case 'adhkarNotification': state = state.copyWith(adhkarNotification: value); break;
+      case 'morningAdhkarNotification': state = state.copyWith(morningAdhkarNotification: value); break;
+      case 'eveningAdhkarNotification': state = state.copyWith(eveningAdhkarNotification: value); break;
     }
     
     NotificationService().scheduleAllNotifications();

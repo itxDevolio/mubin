@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/app_colors.dart';
@@ -78,10 +78,10 @@ class NotificationSettingsScreen extends ConsumerWidget {
             _buildAdhkarTile(
               context,
               "Morning Adhkar",
-              settings.adhkarNotification,
+              settings.morningAdhkarNotification,
               settings.morningAdhkarTime,
               settings.notificationsEnabled,
-              (val) => controller.updateNotificationSetting('adhkarNotification', val),
+              (val) => controller.updateNotificationSetting('morningAdhkarNotification', val),
               () => _pickTime(context, ref, 'morningAdhkarTime', settings.morningAdhkarTime),
               isDark,
             ),
@@ -89,10 +89,10 @@ class NotificationSettingsScreen extends ConsumerWidget {
             _buildAdhkarTile(
               context,
               "Evening Adhkar",
-              settings.adhkarNotification,
+              settings.eveningAdhkarNotification,
               settings.eveningAdhkarTime,
               settings.notificationsEnabled,
-              (val) => controller.updateNotificationSetting('adhkarNotification', val),
+              (val) => controller.updateNotificationSetting('eveningAdhkarNotification', val),
               () => _pickTime(context, ref, 'eveningAdhkarTime', settings.eveningAdhkarTime),
               isDark,
             ),
@@ -196,26 +196,23 @@ class NotificationSettingsScreen extends ConsumerWidget {
   }
 
   Widget _buildSettingTile(String title, bool value, bool masterEnabled, Function(bool) onChanged, bool isDark) {
-    return Opacity(
-      opacity: masterEnabled ? 1.0 : 0.4,
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-        title: Text(
-          title,
-          style: GoogleFonts.poppins(
-            fontSize: 15, 
-            fontWeight: FontWeight.w600,
-            color: isDark ? Colors.white : Colors.black87,
-          ),
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+      title: Text(
+        title,
+        style: GoogleFonts.poppins(
+          fontSize: 15, 
+          fontWeight: FontWeight.w600,
+          color: isDark ? Colors.white : Colors.black87,
         ),
-        trailing: Switch.adaptive(
-          value: value,
-          activeColor: AppColors.primaryTeal,
-          onChanged: masterEnabled ? (val) {
-            hapticFeedBack();
-            onChanged(val);
-          } : null,
-        ),
+      ),
+      trailing: Switch.adaptive(
+        value: value,
+        activeColor: AppColors.primaryTeal,
+        onChanged: (val) {
+          hapticFeedBack();
+          onChanged(val);
+        },
       ),
     );
   }
@@ -230,64 +227,61 @@ class NotificationSettingsScreen extends ConsumerWidget {
     VoidCallback onTimeTap,
     bool isDark
   ) {
-    return Opacity(
-      opacity: masterEnabled ? 1.0 : 0.4,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: GoogleFonts.poppins(
-                      fontSize: 15, 
-                      fontWeight: FontWeight.w600,
-                      color: isDark ? Colors.white : Colors.black87,
-                    ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: GoogleFonts.poppins(
+                    fontSize: 15, 
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? Colors.white : Colors.black87,
                   ),
-                  InkWell(
-                    onTap: masterEnabled && value ? onTimeTap : null,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      margin: const EdgeInsets.only(top: 4),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryTeal.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.access_time_filled_rounded, size: 14, color: AppColors.primaryTeal),
-                          const SizedBox(width: 4),
-                          Text(
-                            time,
-                            style: GoogleFonts.poppins(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.primaryTeal,
-                            ),
+                ),
+                InkWell(
+                  onTap: value ? onTimeTap : null,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    margin: const EdgeInsets.only(top: 4),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryTeal.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.access_time_filled_rounded, size: 14, color: AppColors.primaryTeal),
+                        const SizedBox(width: 4),
+                        Text(
+                          time,
+                          style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.primaryTeal,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            Switch.adaptive(
-              value: value,
-              activeColor: AppColors.primaryTeal,
-              onChanged: masterEnabled ? (val) {
-                hapticFeedBack();
-                onChanged(val);
-              } : null,
-            ),
-          ],
-        ),
+          ),
+          Switch.adaptive(
+            value: value,
+            activeColor: AppColors.primaryTeal,
+            onChanged: (val) {
+              hapticFeedBack();
+              onChanged(val);
+            },
+          ),
+        ],
       ),
     );
   }
