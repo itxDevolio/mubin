@@ -97,4 +97,36 @@ class AppTypography {
     color: AppColors.textPrimaryDark,
     fontWeight: FontWeight.normal,
   );
+
+  // ===========================================================================
+  // 🇵🇰 URDU TYPOGRAPHY (Noto Nastaliq Urdu)
+  // ===========================================================================
+
+  static TextStyle get urduStyleLight => GoogleFonts.notoNastaliqUrdu(
+    color: AppColors.textPrimaryLight,
+    height: 2.2,
+  );
+
+  static TextStyle get urduStyleDark => GoogleFonts.notoNastaliqUrdu(
+    color: AppColors.textPrimaryDark,
+    height: 2.2,
+  );
+
+  /// Pre-fetches necessary fonts to avoid flickering on first load.
+  static Future<void> prefetchFonts() async {
+    // Touching the fonts with specific weights used in the app
+    // Poppins variants
+    GoogleFonts.poppins(fontWeight: FontWeight.normal);
+    GoogleFonts.poppins(fontWeight: FontWeight.w600);
+    GoogleFonts.poppins(fontWeight: FontWeight.w700);
+    GoogleFonts.poppins(fontWeight: FontWeight.bold);
+    
+    // Arabic & Urdu
+    GoogleFonts.amiri();
+    GoogleFonts.amiriQuran();
+    GoogleFonts.notoNastaliqUrdu();
+    
+    // Wait for all triggered font fetches to complete
+    await GoogleFonts.pendingFonts();
+  }
 }

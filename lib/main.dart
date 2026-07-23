@@ -10,6 +10,7 @@ import 'core/constant/db_consts.dart';
 import 'core/services/notification_service.dart';
 import 'core/services/settings_controller.dart';
 import 'core/theme/app_theme.dart';
+import 'core/theme/app_typography.dart';
 import 'home/ui/screens/home_screen.dart';
 
 void main() async {
@@ -46,6 +47,9 @@ void main() async {
 
   // Request location permission on start as it's needed for prayer times UI
   await Permission.location.request();
+
+  // Pre-fetch fonts to avoid UI flickering on first install
+  await AppTypography.prefetchFonts();
 
   // Schedule notifications on app start
   await notificationService.scheduleAllNotifications();

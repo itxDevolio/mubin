@@ -1,4 +1,5 @@
 import 'package:mubin/core/app_colors.dart';
+import 'package:mubin/core/widgets/glass_loading_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,6 +32,7 @@ class MushafViewScreen extends ConsumerStatefulWidget {
 class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
   late PageController _pageController;
   late int _currentPage;
+  bool _fontsLoaded = false;
 
   @override
   void initState() {
@@ -38,22 +40,23 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
     _currentPage = widget.initialPage;
     _pageController = PageController(initialPage: widget.initialPage - 1);
 
-    // Initial page load - Wrap in microtask to avoid "modify provider during build" error
-    Future.microtask(() {
-      if (mounted) {
-        _loadPages(_currentPage);
-      }
-    });
+    // Initial load and font check
+    _initScreen();
+  }
 
-    // Progress update - sirf tab agar requested ho
+  Future<void> _initScreen() async {
+    // Start data load
+    _loadPages(_currentPage);
+
+    // Wait for fonts to be ready
+    await GoogleFonts.pendingFonts();
+    if (mounted) {
+      setState(() => _fontsLoaded = true);
+    }
+
+    // Progress update
     if (widget.shouldUpdateProgress) {
-      Future.delayed(const Duration(milliseconds: 300), () {
-        if (mounted) {
-          ref
-              .read(quranProgressControllerProvider.notifier)
-              .updateProgress(_currentPage);
-        }
-      });
+      ref.read(quranProgressControllerProvider.notifier).updateProgress(_currentPage);
     }
   }
 
@@ -124,156 +127,162 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: PageView.builder(
-        controller: _pageController,
-        itemCount: 604,
-        reverse: true,
-        onPageChanged: (idx) {
-          final newPage = idx + 1;
-          setState(() => _currentPage = newPage);
+      body: Stack(
+        children: [
+          PageView.builder(
+            controller: _pageController,
+            itemCount: 604,
+            reverse: true,
+            onPageChanged: (idx) {
+              final newPage = idx + 1;
+              setState(() => _currentPage = newPage);
 
-          // Verses load karein
-          _loadPages(newPage);
+              // Verses load karein
+              _loadPages(newPage);
 
-          // Reading progress save karein (agar enabled ho)
-          if (widget.shouldUpdateProgress) {
-            ref
-                .read(quranProgressControllerProvider.notifier)
-                .updateProgress(newPage);
-          }
-        },
-        itemBuilder: (context, index) {
-          final pageNumber = index + 1;
-          final pageState = mushafState[pageNumber];
-
-          // Failsafe: Agar state null hai toh load trigger karein
-          if (pageState == null) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (mounted) {
+              // Reading progress save karein (agar enabled ho)
+              if (widget.shouldUpdateProgress) {
                 ref
-                    .read(mushafControllerProvider.notifier)
-                    .loadVersesForPage(pageNumber);
+                    .read(quranProgressControllerProvider.notifier)
+                    .updateProgress(newPage);
               }
-            });
-            return const Center(
-              child: CircularProgressIndicator(color: AppColors.primaryTeal),
-            );
-          }
+            },
+            itemBuilder: (context, index) {
+              final pageNumber = index + 1;
+              final pageState = mushafState[pageNumber];
 
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-            child: pageState.when(
-              data: (verses) {
-                final List<InlineSpan> spans = [];
-                final isJuzStart = _isJuzStartPage(pageNumber);
+              // Failsafe: Agar state null hai toh load trigger karein
+              if (pageState == null) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) {
+                    ref
+                        .read(mushafControllerProvider.notifier)
+                        .loadVersesForPage(pageNumber);
+                  }
+                });
+                return const Center(
+                  child: CircularProgressIndicator(color: AppColors.primaryTeal),
+                );
+              }
 
-                for (int i = 0; i < verses.length; i++) {
-                  final verse = verses[i];
-                  final isSelected = selectedVerseId == verse.id;
-                  final isPlaying =
-                      audioState.playingVerseId == verse.id &&
-                      audioState.isPlaying;
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                child: pageState.when(
+                  data: (verses) {
+                    final List<InlineSpan> spans = [];
+                    final isJuzStart = _isJuzStartPage(pageNumber);
 
-                  // 1. Surah Header & Bismillah Logic
-                  if (verse.verseNumber == 1) {
-                    spans.add(
-                      WidgetSpan(
-                        child: _buildSurahHeader(verse.surahNumber, isDark),
+                    for (int i = 0; i < verses.length; i++) {
+                      final verse = verses[i];
+                      final isSelected = selectedVerseId == verse.id;
+                      final isPlaying =
+                          audioState.playingVerseId == verse.id &&
+                          audioState.isPlaying;
+
+                      // 1. Surah Header & Bismillah Logic
+                      if (verse.verseNumber == 1) {
+                        spans.add(
+                          WidgetSpan(
+                            child: _buildSurahHeader(verse.surahNumber, isDark),
+                          ),
+                        );
+                        if (verse.surahNumber != 1 && verse.surahNumber != 9) {
+                          spans.add(WidgetSpan(child: _buildBismillah(isDark)));
+                        }
+                      }
+
+                      // 2. Verse Text Span
+                      final isBookmarked = bookmarkedIds.contains(verse.id);
+                      final isTargetHighlight = widget.highlightVerseId == verse.id;
+
+                      spans.add(
+                        TextSpan(
+                          text: verse.textArabic,
+                          style: GoogleFonts.amiriQuran(
+                            fontSize: 22,
+                            height: 2.3,
+                            color: isPlaying
+                                ? AppColors.primaryTeal
+                                : (isSelected
+                                      ? AppColors.accentGold
+                                      : (isDark ? Colors.white : Colors.black87)),
+                            backgroundColor: isSelected
+                                ? AppColors.accentGold.withAlpha(26)
+                                : (isTargetHighlight
+                                      ? AppColors.accentGold.withAlpha(77)
+                                      : (isBookmarked
+                                            ? AppColors.accentGold.withAlpha(38)
+                                            : (isJuzStart && i == 0
+                                                  ? AppColors.primaryTeal.withAlpha(38)
+                                                  : null))),
+                            fontWeight: (isJuzStart && i == 0 || isTargetHighlight)
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              ref
+                                  .read(surahJuzControllerProvider.notifier)
+                                  .selectVerse(verse.id);
+
+                              // Audio play removed from here, user will play from bottom sheet
+                              // ref.read(quranAudioPlayerControllerProvider.notifier).playVerseAudio(verse.audioUrl, verse.id);
+
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                builder: (context) =>
+                                    VerseBottomSheet(verse: verse),
+                              ).whenComplete(() {
+                                // Stop audio when bottom sheet is closed
+                                ref
+                                    .read(
+                                      quranAudioPlayerControllerProvider.notifier,
+                                    )
+                                    .stopAudio();
+                                ref
+                                    .read(surahJuzControllerProvider.notifier)
+                                    .selectVerse(-1);
+                              });
+                            },
+                        ),
+                      );
+                    }
+
+                    return SingleChildScrollView(
+                      child: RichText(
+                        textAlign: TextAlign.justify,
+                        textDirection: TextDirection.rtl,
+                        text: TextSpan(children: spans),
                       ),
                     );
-                    if (verse.surahNumber != 1 && verse.surahNumber != 9) {
-                      spans.add(WidgetSpan(child: _buildBismillah(isDark)));
-                    }
-                  }
-
-                  // 2. Verse Text Span
-                  final isBookmarked = bookmarkedIds.contains(verse.id);
-                  final isTargetHighlight = widget.highlightVerseId == verse.id;
-
-                  spans.add(
-                    TextSpan(
-                      text: verse.textArabic,
-                      style: GoogleFonts.amiriQuran(
-                        fontSize: 22,
-                        height: 2.3,
-                        color: isPlaying
-                            ? AppColors.primaryTeal
-                            : (isSelected
-                                  ? AppColors.accentGold
-                                  : (isDark ? Colors.white : Colors.black87)),
-                        backgroundColor: isSelected
-                            ? AppColors.accentGold.withAlpha(26)
-                            : (isTargetHighlight
-                                  ? AppColors.accentGold.withAlpha(77)
-                                  : (isBookmarked
-                                        ? AppColors.accentGold.withAlpha(38)
-                                        : (isJuzStart && i == 0
-                                              ? AppColors.primaryTeal.withAlpha(38)
-                                              : null))),
-                        fontWeight: (isJuzStart && i == 0 || isTargetHighlight)
-                            ? FontWeight.bold
-                            : FontWeight.normal,
-                      ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          ref
-                              .read(surahJuzControllerProvider.notifier)
-                              .selectVerse(verse.id);
-
-                          // Audio play removed from here, user will play from bottom sheet
-                          // ref.read(quranAudioPlayerControllerProvider.notifier).playVerseAudio(verse.audioUrl, verse.id);
-
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            builder: (context) =>
-                                VerseBottomSheet(verse: verse),
-                          ).whenComplete(() {
-                            // Stop audio when bottom sheet is closed
-                            ref
-                                .read(
-                                  quranAudioPlayerControllerProvider.notifier,
-                                )
-                                .stopAudio();
-                            ref
-                                .read(surahJuzControllerProvider.notifier)
-                                .selectVerse(-1);
-                          });
-                        },
-                    ),
-                  );
-                }
-
-                return SingleChildScrollView(
-                  child: RichText(
-                    textAlign: TextAlign.justify,
-                    textDirection: TextDirection.rtl,
-                    text: TextSpan(children: spans),
+                  },
+                  loading: () => const Center(
+                    child: CircularProgressIndicator(color: AppColors.primaryTeal),
                   ),
-                );
-              },
-              loading: () => const Center(
-                child: CircularProgressIndicator(color: AppColors.primaryTeal),
-              ),
-              error: (err, _) => Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Error: $err', textAlign: TextAlign.center),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () => ref
-                          .read(mushafControllerProvider.notifier)
-                          .loadVersesForPage(pageNumber),
-                      child: const Text('Retry'),
+                  error: (err, _) => Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Error: $err', textAlign: TextAlign.center),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () => ref
+                              .read(mushafControllerProvider.notifier)
+                              .loadVersesForPage(pageNumber),
+                          child: const Text('Retry'),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          );
-        },
+              );
+            },
+          ),
+          if (!_fontsLoaded)
+            const GlassLoadingOverlay(message: 'Preparing Quranic Fonts...'),
+        ],
       ),
     );
   }

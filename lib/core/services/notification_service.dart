@@ -48,7 +48,7 @@ class NotificationService {
 
     // Create channels
     const prayerChannel = AndroidNotificationChannel(
-      'prayer_times_v1', // ID changed to force update on Android
+      'prayer_times_v2', // Match with the ID in scheduling
       'Prayer Notifications',
       description: 'Notifications for Salah times',
       importance: Importance.max,
@@ -115,8 +115,9 @@ class NotificationService {
     final prayerService = PrayerService();
     final now = DateTime.now();
 
-    // Schedule for 30 days to cover the month
-    for (int i = 0; i < 30; i++) {
+    // Schedule for 3 days to keep the app light and responsive
+    // Recalculates every time the app is opened
+    for (int i = 0; i < 3; i++) {
       final scheduleDate = now.add(Duration(days: i));
       final prayerTimes = await prayerService.getPrayerTime(
         lat,
@@ -195,7 +196,7 @@ class NotificationService {
             scheduledDate: scheduledTime,
             notificationDetails: NotificationDetails(
               android: AndroidNotificationDetails(
-                'prayer_times_v1', // New channel ID match
+                'prayer_times_v2', // Match the new channel ID
                 'Prayer Notifications',
                 channelDescription: 'Notifications for Salah times',
                 importance: Importance.max,
@@ -203,7 +204,7 @@ class NotificationService {
                 playSound: true,
                 sound: const RawResourceAndroidNotificationSound('adhan_sound'),
                 fullScreenIntent: true,
-                category: AndroidNotificationCategory.alarm,
+                category: AndroidNotificationCategory.alarm, // Important for DND/Silent
                 visibility: NotificationVisibility.public,
                 showWhen: true,
                 ticker: 'Salah Time: $name',
