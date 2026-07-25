@@ -14,7 +14,12 @@ import 'package:google_fonts/google_fonts.dart';
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
-  TextStyle _getStyle({double fontSize = 14, FontWeight? fontWeight, Color? color, double? height}) {
+  TextStyle _getStyle({
+    double fontSize = 14,
+    FontWeight? fontWeight,
+    Color? color,
+    double? height,
+  }) {
     return GoogleFonts.poppins(
       fontSize: fontSize,
       fontWeight: fontWeight,
@@ -30,9 +35,14 @@ class SettingsScreen extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundLight,
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: Text(
+          'Settings',
+          style: _getStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
@@ -66,13 +76,16 @@ class SettingsScreen extends ConsumerWidget {
                 title: 'App Language',
                 subtitle: settings.language == 'en' ? 'English' : 'Urdu (اردو)',
                 isDark: isDark,
-                onTap: () => _showLanguageDialog(context, ref, settings.language),
+                onTap: () =>
+                    _showLanguageDialog(context, ref, settings.language),
               ),
               _buildDivider(isDark),
               _buildSettingsTile(
                 icon: Icons.notifications_none_rounded,
                 title: 'Notifications',
-                subtitle: settings.notificationsEnabled ? 'Enabled' : 'Disabled',
+                subtitle: settings.notificationsEnabled
+                    ? 'Fully Active'
+                    : 'Paused',
                 isDark: isDark,
                 onTap: () {
                   hapticFeedBack();
@@ -88,7 +101,10 @@ class SettingsScreen extends ConsumerWidget {
               _buildSettingsTile(
                 icon: Icons.auto_awesome_mosaic_rounded,
                 title: 'Calculation Method',
-                subtitle: calculationMethods.firstWhere((m) => m['key'] == settings.calculationMethod)['name']!,
+                subtitle: calculationMethods.firstWhere(
+                  (m) => m['key'] == settings.calculationMethod,
+                  orElse: () => calculationMethods.first,
+                )['name']!,
                 isDark: isDark,
                 onTap: () {
                   hapticFeedBack();
@@ -104,7 +120,9 @@ class SettingsScreen extends ConsumerWidget {
               _buildSettingsTile(
                 icon: Icons.brightness_high_rounded,
                 title: 'Madhab (Asr)',
-                subtitle: settings.madhab == 'hanafi' ? 'Hanafi (Later Asr)' : 'Shafi\'i (Earlier Asr)',
+                subtitle: settings.madhab == 'hanafi'
+                    ? 'Hanafi (Later Asr)'
+                    : 'Shafi\'i (Earlier Asr)',
                 isDark: isDark,
                 onTap: () => _showMadhabDialog(context, ref, settings.madhab),
               ),
@@ -112,14 +130,16 @@ class SettingsScreen extends ConsumerWidget {
               _buildSettingsTile(
                 icon: Icons.headphones_rounded,
                 title: 'Background Play',
-                subtitle: 'Keep audio active when app is minimized',
+                subtitle: 'Keep audio active when minimized',
                 isDark: isDark,
                 trailing: CupertinoSwitch(
                   value: settings.keepPlayingInBackground,
                   activeTrackColor: AppColors.primaryTeal,
                   onChanged: (val) {
                     hapticFeedBack();
-                    ref.read(settingsControllerProvider.notifier).setKeepPlayingInBackground(val);
+                    ref
+                        .read(settingsControllerProvider.notifier)
+                        .setKeepPlayingInBackground(val);
                   },
                 ),
               ),
@@ -135,7 +155,8 @@ class SettingsScreen extends ConsumerWidget {
                 title: 'Primary Reciter',
                 subtitle: audioState.currentReciter.name,
                 isDark: isDark,
-                onTap: () => _showReciterDialog(context, ref, audioState.currentReciter),
+                onTap: () =>
+                    _showReciterDialog(context, ref, audioState.currentReciter),
               ),
             ],
           ),
@@ -211,7 +232,11 @@ class SettingsScreen extends ConsumerWidget {
                 children: [
                   Text(
                     'MUBIN ISLAMIC SUITE',
-                    style: GoogleFonts.poppins(fontWeight: FontWeight.w900, letterSpacing: 3, fontSize: 10),
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 3,
+                      fontSize: 10,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -230,7 +255,7 @@ class SettingsScreen extends ConsumerWidget {
 
   Widget _buildSectionHeader(String title) {
     return Padding(
-      padding: const EdgeInsets.only(left: 12.0, right: 0, bottom: 10.0),
+      padding: const EdgeInsets.only(left: 12.0, bottom: 10.0),
       child: Text(
         title,
         style: _getStyle(
@@ -248,7 +273,9 @@ class SettingsScreen extends ConsumerWidget {
         color: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.white,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.05),
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.08)
+              : Colors.black.withValues(alpha: 0.05),
           width: 1,
         ),
       ),
@@ -271,16 +298,29 @@ class SettingsScreen extends ConsumerWidget {
       onTap: onTap,
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
       leading: _buildTileIcon(icon),
-      trailing: trailing ?? Icon(Icons.chevron_right_rounded, size: 20, color: isDark ? Colors.white12 : Colors.black12),
+      trailing:
+          trailing ??
+          Icon(
+            Icons.chevron_right_rounded,
+            size: 20,
+            color: isDark ? Colors.white12 : Colors.black12,
+          ),
       title: Text(
         title,
-        textAlign: TextAlign.left,
-        style: _getStyle(fontSize: 15, fontWeight: FontWeight.bold, color: isDark ? Colors.white.withOpacity(0.9) : Colors.black87),
+        style: _getStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.bold,
+          color: isDark ? Colors.white.withValues(alpha: 0.9) : Colors.black87,
+        ),
       ),
       subtitle: Text(
         subtitle,
-        textAlign: TextAlign.left,
-        style: _getStyle(fontSize: 12, color: isDark ? Colors.white38 : Colors.black45),
+        style: _getStyle(
+          fontSize: 12,
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.4)
+              : Colors.black.withValues(alpha: 0.45),
+        ),
       ),
     );
   }
@@ -298,7 +338,9 @@ class SettingsScreen extends ConsumerWidget {
 
   Widget _buildDivider(bool isDark) {
     return Divider(
-      color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.03),
+      color: isDark
+          ? Colors.white.withValues(alpha: 0.05)
+          : Colors.black.withValues(alpha: 0.03),
       height: 1,
       indent: 20,
       endIndent: 20,
@@ -313,15 +355,13 @@ class SettingsScreen extends ConsumerWidget {
         backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
         title: Text(
           'Support Our Mission',
-          textAlign: TextAlign.left,
           style: _getStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Help us keep Mubin ad-free. Your support helps us grow.',
-              textAlign: TextAlign.left,
+              'Help us keep Mubin ad-free and building tools for the Ummah.',
               style: _getStyle(fontSize: 14, height: 1.8),
             ),
             const SizedBox(height: 24),
@@ -350,7 +390,12 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSupportOption({required IconData icon, required String title, required Color color, required VoidCallback onTap}) {
+  Widget _buildSupportOption({
+    required IconData icon,
+    required String title,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
@@ -365,7 +410,10 @@ class SettingsScreen extends ConsumerWidget {
           children: [
             Icon(icon, color: color, size: 20),
             const SizedBox(width: 12),
-            Text(title, style: _getStyle(color: color, fontWeight: FontWeight.bold)),
+            Text(
+              title,
+              style: _getStyle(color: color, fontWeight: FontWeight.bold),
+            ),
             const Spacer(),
             Icon(Icons.arrow_forward_ios_rounded, color: color, size: 14),
           ],
@@ -375,14 +423,18 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   void _launchWhatsApp() async {
-    final Uri url = Uri.parse("https://wa.me/923499383654?text=Salam! I want to support Mubin development.");
+    final Uri url = Uri.parse(
+      "https://wa.me/923499383654?text=Salam! I want to support Mubin development.",
+    );
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
       throw Exception('Could not launch WhatsApp');
     }
   }
 
   void _launchEmail() async {
-    final Uri url = Uri.parse("mailto:ajmalkhan.dev@gmail.com?subject=Supporting Mubin App&body=Salam! I would like to help with Mubin development.");
+    final Uri url = Uri.parse(
+      "mailto:ajmalkhan.dev@gmail.com?subject=Supporting Mubin App&body=Salam! I would like to help with Mubin development.",
+    );
     if (!await launchUrl(url)) {
       throw Exception('Could not launch Email');
     }
@@ -395,26 +447,31 @@ class SettingsScreen extends ConsumerWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
         title: Text(
-            'About Mubin',
-            textAlign: TextAlign.left,
-            style: _getStyle(fontSize: 18, fontWeight: FontWeight.bold)
+          'About Mubin',
+          style: _getStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         content: Text(
-          'Mubin is an Islamic companion designed to bring peace through Quran and Prayer tools.',
-          textAlign: TextAlign.left,
+          'Mubin is a dedicated Islamic companion designed to bring peace through Quran and Prayer tools.',
           style: _getStyle(fontSize: 14, height: 1.8),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Close', style: _getStyle(color: AppColors.primaryTeal)),
+            child: Text(
+              'Close',
+              style: _getStyle(color: AppColors.primaryTeal),
+            ),
           ),
         ],
       ),
     );
   }
 
-  void _showReciterDialog(BuildContext context, WidgetRef ref, Reciter currentReciter) {
+  void _showReciterDialog(
+    BuildContext context,
+    WidgetRef ref,
+    Reciter currentReciter,
+  ) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     showModalBottomSheet(
       context: context,
@@ -431,7 +488,10 @@ class SettingsScreen extends ConsumerWidget {
               Container(
                 width: 40,
                 height: 4,
-                decoration: BoxDecoration(color: Colors.grey.withOpacity(0.2), borderRadius: BorderRadius.circular(2)),
+                decoration: BoxDecoration(
+                  color: Colors.grey.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(2),
+                ),
               ),
               const SizedBox(height: 24),
               Text(
@@ -450,19 +510,30 @@ class SettingsScreen extends ConsumerWidget {
                     return ListTile(
                       onTap: () {
                         hapticFeedBack();
-                        ref.read(quranAudioPlayerControllerProvider.notifier).setReciter(reciter);
+                        ref
+                            .read(quranAudioPlayerControllerProvider.notifier)
+                            .setReciter(reciter);
                         Navigator.pop(context);
                       },
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 4,
+                      ),
                       leading: _buildReciterAvatar(isSelected),
-                      trailing: isSelected ? const Icon(Icons.check_circle_rounded, color: AppColors.primaryTeal) : null,
+                      trailing: isSelected
+                          ? const Icon(
+                              Icons.check_circle_rounded,
+                              color: AppColors.primaryTeal,
+                            )
+                          : null,
                       title: Text(
                         reciter.name,
-                        textAlign: TextAlign.left,
                         style: _getStyle(
                           fontSize: 14,
                           color: isDark ? Colors.white : Colors.black87,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.normal,
                         ),
                       ),
                     );
@@ -478,22 +549,31 @@ class SettingsScreen extends ConsumerWidget {
 
   Widget _buildReciterAvatar(bool isSelected) {
     return CircleAvatar(
-      backgroundColor: isSelected ? AppColors.primaryTeal : AppColors.primaryTeal.withValues(alpha: 0.1),
+      radius: 18,
+      backgroundColor: isSelected
+          ? AppColors.primaryTeal
+          : AppColors.primaryTeal.withValues(alpha: 0.1),
       child: Icon(
         Icons.person_rounded,
         color: isSelected ? Colors.white : AppColors.primaryTeal,
-        size: 20,
+        size: 18,
       ),
     );
   }
 
-  void _showLanguageDialog(BuildContext context, WidgetRef ref, String currentLang) {
+  void _showLanguageDialog(
+    BuildContext context,
+    WidgetRef ref,
+    String currentLang,
+  ) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
           backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
           title: Text(
             'Select Language',
@@ -509,7 +589,9 @@ class SettingsScreen extends ConsumerWidget {
                 value: 'en',
                 isSelected: currentLang == 'en',
                 isDark: isDark,
-                onSelect: (val) => ref.read(settingsControllerProvider.notifier).setLanguage(val),
+                onSelect: (val) => ref
+                    .read(settingsControllerProvider.notifier)
+                    .setLanguage(val),
               ),
               const SizedBox(height: 12),
               _buildOption(
@@ -519,7 +601,9 @@ class SettingsScreen extends ConsumerWidget {
                 value: 'ur',
                 isSelected: currentLang == 'ur',
                 isDark: isDark,
-                onSelect: (val) => ref.read(settingsControllerProvider.notifier).setLanguage(val),
+                onSelect: (val) => ref
+                    .read(settingsControllerProvider.notifier)
+                    .setLanguage(val),
               ),
             ],
           ),
@@ -528,27 +612,53 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  void _showThemeDialog(BuildContext context, WidgetRef ref, ThemeMode currentMode) {
+  void _showThemeDialog(
+    BuildContext context,
+    WidgetRef ref,
+    ThemeMode currentMode,
+  ) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
           backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
           title: Text(
             'Select Theme',
-            textAlign: TextAlign.left,
             style: _getStyle(fontSize: 18, fontWeight: FontWeight.w900),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildThemeOption(context, ref, 'System Default', ThemeMode.system, currentMode == ThemeMode.system, isDark),
+              _buildThemeOption(
+                context,
+                ref,
+                'System Default',
+                ThemeMode.system,
+                currentMode == ThemeMode.system,
+                isDark,
+              ),
               const SizedBox(height: 12),
-              _buildThemeOption(context, ref, 'Light Mode', ThemeMode.light, currentMode == ThemeMode.light, isDark),
+              _buildThemeOption(
+                context,
+                ref,
+                'Light Mode',
+                ThemeMode.light,
+                currentMode == ThemeMode.light,
+                isDark,
+              ),
               const SizedBox(height: 12),
-              _buildThemeOption(context, ref, 'Dark Mode', ThemeMode.dark, currentMode == ThemeMode.dark, isDark),
+              _buildThemeOption(
+                context,
+                ref,
+                'Dark Mode',
+                ThemeMode.dark,
+                currentMode == ThemeMode.dark,
+                isDark,
+              ),
             ],
           ),
         );
@@ -556,7 +666,14 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildThemeOption(BuildContext context, WidgetRef ref, String title, ThemeMode mode, bool isSelected, bool isDark) {
+  Widget _buildThemeOption(
+    BuildContext context,
+    WidgetRef ref,
+    String title,
+    ThemeMode mode,
+    bool isSelected,
+    bool isDark,
+  ) {
     return InkWell(
       onTap: () {
         hapticFeedBack();
@@ -567,27 +684,34 @@ class SettingsScreen extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primaryTeal.withValues(alpha: 0.1) : Colors.transparent,
+          color: isSelected
+              ? AppColors.primaryTeal.withValues(alpha: 0.1)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isSelected ? AppColors.primaryTeal : (isDark ? Colors.white10 : Colors.black.withValues(alpha: 0.05)),
+            color: isSelected
+                ? AppColors.primaryTeal
+                : (isDark
+                      ? Colors.white10
+                      : Colors.black.withValues(alpha: 0.05)),
             width: 1,
           ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
-              child: Text(
-                title,
-                textAlign: TextAlign.left,
-                style: _getStyle(fontWeight: isSelected ? FontWeight.w900 : FontWeight.normal, color: isDark ? Colors.white : Colors.black87),
+            Text(
+              title,
+              style: _getStyle(
+                fontWeight: isSelected ? FontWeight.w900 : FontWeight.normal,
+                color: isDark ? Colors.white : Colors.black87,
               ),
             ),
             if (isSelected)
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: const Icon(Icons.check_circle_rounded, color: AppColors.primaryTeal, size: 22),
+              const Icon(
+                Icons.check_circle_rounded,
+                color: AppColors.primaryTeal,
+                size: 22,
               ),
           ],
         ),
@@ -606,17 +730,22 @@ class SettingsScreen extends ConsumerWidget {
     }
   }
 
-  void _showMadhabDialog(BuildContext context, WidgetRef ref, String currentMadhab) {
+  void _showMadhabDialog(
+    BuildContext context,
+    WidgetRef ref,
+    String currentMadhab,
+  ) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
           backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
           title: Text(
             'Select Madhab',
-            textAlign: TextAlign.left,
             style: _getStyle(fontSize: 18, fontWeight: FontWeight.w900),
           ),
           content: Column(
@@ -629,7 +758,9 @@ class SettingsScreen extends ConsumerWidget {
                 value: 'hanafi',
                 isSelected: currentMadhab == 'hanafi',
                 isDark: isDark,
-                onSelect: (val) => ref.read(settingsControllerProvider.notifier).setMadhab(val),
+                onSelect: (val) => ref
+                    .read(settingsControllerProvider.notifier)
+                    .setMadhab(val),
               ),
               const SizedBox(height: 12),
               _buildOption(
@@ -639,7 +770,9 @@ class SettingsScreen extends ConsumerWidget {
                 value: 'shafi',
                 isSelected: currentMadhab == 'shafi',
                 isDark: isDark,
-                onSelect: (val) => ref.read(settingsControllerProvider.notifier).setMadhab(val),
+                onSelect: (val) => ref
+                    .read(settingsControllerProvider.notifier)
+                    .setMadhab(val),
               ),
             ],
           ),
@@ -649,14 +782,14 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   Widget _buildOption(
-      BuildContext context,
-      WidgetRef ref, {
-        required String title,
-        required String value,
-        required bool isSelected,
-        required bool isDark,
-        required Function(String) onSelect,
-      }) {
+    BuildContext context,
+    WidgetRef ref, {
+    required String title,
+    required String value,
+    required bool isSelected,
+    required bool isDark,
+    required Function(String) onSelect,
+  }) {
     return InkWell(
       onTap: () {
         hapticFeedBack();
@@ -667,27 +800,34 @@ class SettingsScreen extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primaryTeal.withValues(alpha: 0.1) : Colors.transparent,
+          color: isSelected
+              ? AppColors.primaryTeal.withValues(alpha: 0.1)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isSelected ? AppColors.primaryTeal : (isDark ? Colors.white10 : Colors.black.withValues(alpha: 0.05)),
+            color: isSelected
+                ? AppColors.primaryTeal
+                : (isDark
+                      ? Colors.white10
+                      : Colors.black.withValues(alpha: 0.05)),
             width: 1,
           ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
-              child: Text(
-                title,
-                textAlign: TextAlign.left,
-                style: _getStyle(fontWeight: isSelected ? FontWeight.w900 : FontWeight.normal, color: isDark ? Colors.white : Colors.black87),
+            Text(
+              title,
+              style: _getStyle(
+                fontWeight: isSelected ? FontWeight.w900 : FontWeight.normal,
+                color: isDark ? Colors.white : Colors.black87,
               ),
             ),
             if (isSelected)
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: const Icon(Icons.check_circle_rounded, color: AppColors.primaryTeal, size: 22),
+              const Icon(
+                Icons.check_circle_rounded,
+                color: AppColors.primaryTeal,
+                size: 22,
               ),
           ],
         ),

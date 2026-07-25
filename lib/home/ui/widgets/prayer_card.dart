@@ -36,6 +36,16 @@ class PrayerCard extends ConsumerWidget {
 
         Prayer active = d.currentPrayer(date: date.toLocal());
 
+        final settings = ref.watch(settingsControllerProvider);
+        final bool isAnyNotificationEnabled = settings.notificationsEnabled &&
+            (settings.fajrNotification ||
+                settings.dhuhrNotification ||
+                settings.asrNotification ||
+                settings.maghribNotification ||
+                settings.ishaNotification ||
+                settings.morningAdhkarNotification ||
+                settings.eveningAdhkarNotification);
+
         return Container(
           margin: const EdgeInsets.all(16),
           padding: const EdgeInsets.all(14),
@@ -99,11 +109,11 @@ class PrayerCard extends ConsumerWidget {
                         );
                       },
                       icon: Icon(
-                        ref.watch(settingsControllerProvider).notificationsEnabled
+                        isAnyNotificationEnabled
                             ? Icons.notifications_active
                             : Icons.notifications_off,
                         size: 20,
-                        color: ref.watch(settingsControllerProvider).notificationsEnabled
+                        color: isAnyNotificationEnabled
                             ? AppColors.primaryTeal
                             : Colors.grey,
                       ),
