@@ -3,7 +3,6 @@ import 'package:mubin/core/services/haptic_feedback.dart';
 import 'package:mubin/core/services/settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../domain/entities/dhikr_entity.dart';
 import '../controller/adhkar_provider.dart';
 
@@ -55,7 +54,7 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Center(
-                  child: Text("${_currentIndex + 1}/${widget.dhikrList.length}", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.primaryTeal)),
+                  child: Text("${_currentIndex + 1}/${widget.dhikrList.length}", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.primaryTeal)),
                 ),
               ),
             ],
@@ -82,7 +81,7 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
                     // Arabic Text
                     Text(
                       dhikr.arabic,
-                      style: GoogleFonts.amiriQuran(fontSize: 22,height: 2, color: AppColors.primaryTeal),
+                      style: const TextStyle(fontFamily: 'Amiri', fontSize: 22, height: 2, color: AppColors.primaryTeal),
                       textAlign: TextAlign.center,
                       textDirection: TextDirection.rtl,
                     ),
@@ -94,8 +93,8 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
                       Text(
                         isUrdu ? dhikr.urdu : dhikr.english,
                         style: isUrdu
-                            ? GoogleFonts.notoNastaliqUrdu(fontSize: 15, color: isDark ? Colors.white70 : Colors.grey[700], height: 2.0)
-                            : TextStyle(fontSize: 14, color: isDark ? Colors.white60 : Colors.grey[600]),
+                            ? const TextStyle(fontFamily: 'NotoNastaliqUrdu', fontSize: 15, color: Colors.white70, height: 2.0)
+                            : TextStyle(fontSize: 14, color: isDark ? Colors.white60 : const Color(0xFF757575)), // grey[600]
                         textAlign: TextAlign.center,
                       ),
                     ],
@@ -145,7 +144,7 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(color: AppColors.primaryTeal.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(20)),
-      child: Text(text, style: isUrdu ? GoogleFonts.notoNastaliqUrdu(fontSize: 11, color: AppColors.primaryTeal) : TextStyle(fontSize: 11, color: AppColors.primaryTeal, fontStyle: FontStyle.italic)),
+      child: Text(text, style: isUrdu ? const TextStyle(fontFamily: 'NotoNastaliqUrdu', fontSize: 11, color: AppColors.primaryTeal) : const TextStyle(fontSize: 11, color: AppColors.primaryTeal, fontStyle: FontStyle.italic)),
     );
   }
 }

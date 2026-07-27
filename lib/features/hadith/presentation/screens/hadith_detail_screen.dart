@@ -4,15 +4,11 @@ import 'package:mubin/features/hadith/domain/entities/hadith.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class HadithDetailScreen extends ConsumerWidget {
   final HadithEntity hadith;
 
-  const HadithDetailScreen({
-    super.key,
-    required this.hadith,
-  });
+  const HadithDetailScreen({super.key, required this.hadith});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,15 +17,17 @@ class HadithDetailScreen extends ConsumerWidget {
     final bool isUrdu = settings.language == 'ur';
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-          isUrdu ? 'حدیث نمبر ${hadith.hadithNumber}' : 'Hadith #${hadith.hadithNumber}',
+          'Hadith ${hadith.hadithNumber}',
           style: TextStyle(
-            fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
-            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
-            fontFamily: isUrdu ? GoogleFonts.amiri().fontFamily : null,
+            color: isDark
+                ? AppColors.textPrimaryDark
+                : AppColors.textPrimaryLight,
           ),
         ),
         backgroundColor: Colors.transparent,
@@ -39,25 +37,12 @@ class HadithDetailScreen extends ConsumerWidget {
           icon: Icon(
             Icons.arrow_back_ios_new,
             size: 20,
-            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+            color: isDark
+                ? AppColors.textPrimaryDark
+                : AppColors.textPrimaryLight,
           ),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.copy_rounded, size: 20),
-            onPressed: () {
-              final textToCopy = "${hadith.arabicText}\n\n${hadith.urduText}\n\n${hadith.englishText}";
-              Clipboard.setData(ClipboardData(text: textToCopy));
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(isUrdu ? 'حدیث کاپی کر دی گئی' : 'Hadith copied to clipboard'),
-                  duration: const Duration(seconds: 2),
-                ),
-              );
-            },
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -85,19 +70,25 @@ class HadithDetailScreen extends ConsumerWidget {
                 children: [
                   // Header Info
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 16,
+                    ),
                     color: AppColors.primaryTeal.withAlpha(20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
                           decoration: BoxDecoration(
                             color: AppColors.primaryTeal,
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
-                            isUrdu ? "حدیث نمبر ${hadith.hadithNumber}" : "Hadith #${hadith.hadithNumber}",
+                            "${hadith.hadithNumber}",
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 12,
@@ -106,9 +97,14 @@ class HadithDetailScreen extends ConsumerWidget {
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.primaryTeal.withAlpha(100)),
+                            border: Border.all(
+                              color: AppColors.primaryTeal.withAlpha(100),
+                            ),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -132,26 +128,28 @@ class HadithDetailScreen extends ConsumerWidget {
                         // Arabic Text (Always present and centered)
                         Text(
                           hadith.arabicText,
-                          style: GoogleFonts.amiri(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
+                          style: TextStyle(
+                            fontFamily: 'Amiri',
+                            fontSize: 20,
                             height: 1.8,
-                            color: isDark ? Colors.white : AppColors.textPrimaryLight,
+                            color: isDark
+                                ? Colors.white
+                                : AppColors.textPrimaryLight,
                           ),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 40),
-                        
+
                         // Main Translation based on Settings (Strictly only one)
-                        if (isUrdu) 
+                        if (isUrdu)
                           _buildTranslationSection(
-                            title: "اردو ترجمہ",
+                            title: "Translation",
                             content: hadith.urduText,
                             isUrdu: true,
                             isDark: isDark,
                             isMain: true,
                           )
-                        else 
+                        else
                           _buildTranslationSection(
                             title: "English Translation",
                             content: hadith.englishText,
@@ -180,39 +178,60 @@ class HadithDetailScreen extends ConsumerWidget {
     required bool isMain,
   }) {
     return Column(
-      crossAxisAlignment: isUrdu ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      crossAxisAlignment: isUrdu
+          ? CrossAxisAlignment.end
+          : CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: isUrdu ? MainAxisAlignment.end : MainAxisAlignment.start,
+          mainAxisAlignment: isUrdu
+              ? MainAxisAlignment.end
+              : MainAxisAlignment.start,
           children: [
-            if (!isUrdu) Container(width: 24, height: 2, color: AppColors.primaryTeal.withAlpha(100)),
+            if (!isUrdu)
+              Container(
+                width: 24,
+                height: 2,
+                color: AppColors.primaryTeal.withAlpha(100),
+              ),
             if (!isUrdu) const SizedBox(width: 8),
             Text(
               title,
               style: TextStyle(
-                color: isMain ? AppColors.primaryTeal : AppColors.primaryTeal.withAlpha(150),
+                color: isMain
+                    ? AppColors.primaryTeal
+                    : AppColors.primaryTeal.withAlpha(150),
                 fontSize: isMain ? 15 : 13,
                 fontWeight: FontWeight.bold,
               ),
             ),
             if (isUrdu) const SizedBox(width: 8),
-            if (isUrdu) Container(width: 24, height: 2, color: AppColors.primaryTeal.withAlpha(100)),
+            if (isUrdu)
+              Container(
+                width: 24,
+                height: 2,
+                color: AppColors.primaryTeal.withAlpha(100),
+              ),
           ],
         ),
         const SizedBox(height: 12),
         Text(
           content,
-          style: isUrdu 
-            ? GoogleFonts.amiri(
-                fontSize: isMain ? 20 : 17,
-                height: 1.6,
-                color: isDark ? (isMain ? Colors.white : Colors.white70) : AppColors.textPrimaryLight,
-              )
-            : TextStyle(
-                fontSize: isMain ? 16 : 14,
-                height: 1.5,
-                color: isDark ? (isMain ? Colors.white : Colors.white70) : AppColors.textPrimaryLight,
-              ),
+          style: isUrdu
+              ? TextStyle(
+                  fontFamily: 'NotoNastaliqUrdu',
+                  fontSize: 15,
+                  height: 2.0,
+                  color: isDark
+                      ? (isMain ? Colors.white : Colors.white70)
+                      : AppColors.textPrimaryLight,
+                )
+              : TextStyle(
+                  fontSize: isMain ? 16 : 14,
+                  height: 1.5,
+                  color: isDark
+                      ? (isMain ? Colors.white : Colors.white70)
+                      : AppColors.textPrimaryLight,
+                ),
           textAlign: isUrdu ? TextAlign.right : TextAlign.left,
         ),
       ],

@@ -26,7 +26,11 @@ class PrayerTimeCard extends StatelessWidget {
 
     final Color textColor = isCurrentActive
         ? Colors.white
-        : getThemeColor(context, light: Colors.black87, dark: Colors.white.withOpacity(0.8));
+        : getThemeColor(
+            context,
+            light: Colors.black87,
+            dark: Colors.white.withOpacity(0.8),
+          );
 
     final Color subTextColor = isCurrentActive
         ? Colors.white.withOpacity(
@@ -34,7 +38,11 @@ class PrayerTimeCard extends StatelessWidget {
           ) // Active ka subtext thoda aur clear kiya
         : getThemeColor(context, light: Colors.black45, dark: Colors.white38);
 
-    final Color inactiveBgColor = getThemeColor(context, light: Colors.black.withOpacity(0.03), dark: Colors.white.withOpacity(0.04));
+    final Color inactiveBgColor = getThemeColor(
+      context,
+      light: Colors.black.withOpacity(0.03),
+      dark: Colors.white.withOpacity(0.04),
+    );
 
     return Expanded(
       // 🔥 Active card ko row mein thodi mazeed breathing space dene ke liye flex adjust kiya
@@ -69,7 +77,11 @@ class PrayerTimeCard extends StatelessWidget {
             // 🔥 Active card par soft neon cyan border taake wo pop out kare
             color: isCurrentActive
                 ? AppColors.primaryTeal.withOpacity(0.5)
-                : getThemeColor(context, light: Colors.black.withOpacity(0.05), dark: Colors.white.withOpacity(0.05)),
+                : getThemeColor(
+                    context,
+                    light: Colors.black.withOpacity(0.05),
+                    dark: Colors.white.withOpacity(0.05),
+                  ),
             width: isCurrentActive ? 1.5 : 1,
           ),
           // 🔥 Active card par behtareen glow shadow
@@ -96,7 +108,7 @@ class PrayerTimeCard extends StatelessWidget {
                 color: textColor,
                 fontSize: isCurrentActive ? 12 : 11,
                 // Active ka size thoda bada
-                fontWeight: isCurrentActive ? FontWeight.bold : FontWeight.w600,
+                fontWeight: isCurrentActive ? FontWeight.bold : FontWeight.w500,
                 letterSpacing: isCurrentActive ? 0.4 : 0.2,
               ),
             ),
@@ -104,16 +116,18 @@ class PrayerTimeCard extends StatelessWidget {
             const SizedBox(height: 5),
 
             // 2. Formatted Time
-            Text(
-              timeFormate(prayerTime.toLocal()),
-              maxLines: 1,
-              style: TextStyle(
-                color: subTextColor,
-                fontSize: isCurrentActive ? 9.5 : 9,
-                // Active ka time bhi clear dikhe
-                fontWeight: isCurrentActive
-                    ? FontWeight.w700
-                    : FontWeight.normal,
+            Center(
+              child: Text(
+                timeFormate(prayerTime.toLocal()),
+                maxLines: 1,
+                style: TextStyle(
+                  color: subTextColor,
+                  fontSize: isCurrentActive ? 9.5 : 9,
+                  // Active ka time bhi clear dikhe
+                  fontWeight: isCurrentActive
+                      ? FontWeight.w700
+                      : FontWeight.w800,
+                ),
               ),
             ),
 

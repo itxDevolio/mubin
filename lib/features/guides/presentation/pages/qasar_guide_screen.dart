@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/services/settings_controller.dart';
 import '../widgets/guide_step_widget.dart';
 import '../../data/models/qasar_data.dart';
@@ -23,7 +22,7 @@ class QasarGuideScreen extends ConsumerWidget {
         title: Text(
           isUrdu ? "نمازِ قصر کا طریقہ" : "Qasar Prayer Guide",
           style: isUrdu 
-            ? GoogleFonts.notoNastaliqUrdu(fontWeight: FontWeight.bold, fontSize: 18) 
+            ? const TextStyle(fontFamily: 'NotoNastaliqUrdu', fontWeight: FontWeight.bold, fontSize: 18)
             : const TextStyle(fontWeight: FontWeight.bold),
         ),
       ),

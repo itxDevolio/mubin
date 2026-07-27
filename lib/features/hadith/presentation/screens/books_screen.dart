@@ -3,7 +3,6 @@ import 'package:mubin/core/services/haptic_feedback.dart';
 import 'package:mubin/core/services/settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../controller/data_provider.dart';
 import 'chapters_screen.dart';
 
@@ -25,15 +24,20 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
     final bool isUrdu = settings.language == 'ur';
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-         'Hadith Books',
+          'Hadith Books',
           style: TextStyle(
-            fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
-            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
-            fontFamily: isUrdu ? GoogleFonts.amiri().fontFamily : null,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Poppins'
+                '',
+            color: isDark
+                ? AppColors.textPrimaryDark
+                : AppColors.textPrimaryLight,
           ),
         ),
         backgroundColor: Colors.transparent,
@@ -43,7 +47,9 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
           icon: Icon(
             Icons.arrow_back_ios_new,
             size: 20,
-            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+            color: isDark
+                ? AppColors.textPrimaryDark
+                : AppColors.textPrimaryLight,
           ),
           onPressed: () => Navigator.pop(context),
         ),
@@ -52,7 +58,10 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
         children: [
           // Search Bar
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 12.0,
+            ),
             child: TextField(
               onChanged: (val) {
                 setState(() {
@@ -60,13 +69,17 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                 });
               },
               style: TextStyle(
-                color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                color: isDark
+                    ? AppColors.textPrimaryDark
+                    : AppColors.textPrimaryLight,
                 fontSize: 14,
               ),
               decoration: InputDecoration(
-              hint: Text( 'Search Books...'),
+                hint: const Text('Search Books...'),
                 hintStyle: TextStyle(
-                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                  color: isDark
+                      ? AppColors.textSecondaryDark
+                      : AppColors.textSecondaryLight,
                   fontSize: 14,
                 ),
                 prefixIcon: const Icon(
@@ -75,7 +88,9 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                   size: 22,
                 ),
                 filled: true,
-                fillColor: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
+                fillColor: isDark
+                    ? AppColors.surfaceDark
+                    : AppColors.surfaceLight,
                 contentPadding: const EdgeInsets.symmetric(vertical: 14),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
@@ -84,7 +99,9 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
                   borderSide: BorderSide(
-                    color: isDark ? AppColors.borderDark : AppColors.borderLight,
+                    color: isDark
+                        ? AppColors.borderDark
+                        : AppColors.borderLight,
                     width: 1,
                   ),
                 ),
@@ -110,9 +127,11 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                 if (filteredBooks.isEmpty) {
                   return Center(
                     child: Text(
-              'No Book found',
+                      'No Book found',
                       style: TextStyle(
-                        color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                        color: isDark
+                            ? AppColors.textSecondaryDark
+                            : AppColors.textSecondaryLight,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -121,12 +140,18 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
 
                 return ListView.separated(
                   itemCount: filteredBooks.length,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   physics: const BouncingScrollPhysics(),
-                  separatorBuilder: (context, index) => const SizedBox(height: 12),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 12),
                   itemBuilder: (context, index) {
                     final book = filteredBooks[index];
-                    final String displayTitle = isUrdu ? book.bookNameUrdu : book.bookName;
+                    final String displayTitle = isUrdu
+                        ? book.bookNameUrdu
+                        : book.bookName;
 
                     return InkWell(
                       onTap: () {
@@ -145,7 +170,9 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                           color: isDark ? AppColors.surfaceDark : Colors.white,
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: isDark ? AppColors.borderDark : AppColors.borderLight,
+                            color: isDark
+                                ? AppColors.borderDark
+                                : AppColors.borderLight,
                           ),
                           boxShadow: [
                             BoxShadow(
@@ -161,40 +188,50 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                               _buildBookIcon(),
                               const SizedBox(width: 16),
                             ],
-                            
+
                             Expanded(
                               child: Column(
-                                crossAxisAlignment: isUrdu ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                                crossAxisAlignment: isUrdu
+                                    ? CrossAxisAlignment.end
+                                    : CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     displayTitle,
                                     style: TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.normal,
                                       fontSize: 18,
-                                      color: isDark ? Colors.white : AppColors.textPrimaryLight,
-                                      fontFamily: isUrdu ? GoogleFonts.amiri().fontFamily : null,
+                                      color: isDark
+                                          ? Colors.white
+                                          : AppColors.textPrimaryLight,
+                                      fontFamily: isUrdu ? 'NotoNastaliqUrdu' : null,
                                     ),
-                                    textAlign: isUrdu ? TextAlign.right : TextAlign.left,
+                                    textAlign: isUrdu
+                                        ? TextAlign.right
+                                        : TextAlign.left,
                                   ),
-                                  const SizedBox(height: 4),
+                                  const SizedBox(height: 10),
                                   Text(
-                                  "${book.totalHadith} Hadiths",
+                                    "${book.totalHadith}",
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
-                                      fontWeight: FontWeight.w500,
+                                      color: isDark
+                                          ? AppColors.textSecondaryDark
+                                          : AppColors.textSecondaryLight,
+                                      fontWeight: FontWeight.w300,
                                     ),
-                                    textAlign: isUrdu ? TextAlign.right : TextAlign.left,
+                                    textAlign: isUrdu
+                                        ? TextAlign.right
+                                        : TextAlign.left,
                                   ),
                                 ],
                               ),
                             ),
-                            
+
                             if (isUrdu) ...[
                               const SizedBox(width: 16),
                               _buildBookIcon(),
                             ] else ...[
-                               const Icon(
+                              const Icon(
                                 Icons.arrow_forward_ios_rounded,
                                 size: 14,
                                 color: AppColors.primaryTeal,
@@ -214,13 +251,20 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.error_outline, color: AppColors.error, size: 40),
+                    const Icon(
+                      Icons.error_outline,
+                      color: AppColors.error,
+                      size: 40,
+                    ),
                     const SizedBox(height: 12),
-                    Text("Error loading books"),
+                    const Text("Error loading books"),
                     TextButton(
                       onPressed: () => ref.invalidate(booksProvider),
-                      child: Text( "Retry", style: const TextStyle(color: AppColors.primaryTeal)),
-                    )
+                      child: const Text(
+                        "Retry",
+                        style: TextStyle(color: AppColors.primaryTeal),
+                      ),
+                    ),
                   ],
                 ),
               ),

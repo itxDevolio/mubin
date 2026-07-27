@@ -18,10 +18,12 @@ class AdhkarHomeScreen extends ConsumerWidget {
     final bool isUrdu = settings.language == 'ur';
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-        "Adhkar & Tasbeeh",
+          "Adhkar & Tasbeeh",
           style: TextStyle(
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
@@ -48,14 +50,14 @@ class AdhkarHomeScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 10),
-              
+
               // Featured Card - Minimal & Clean
               _buildFeaturedCard(context, isUrdu, isDark),
-              
-              const SizedBox(height: 30),
-              
+
+              const SizedBox(height: 28),
+
               Text(
-              "Explore Adhkar",
+                "Explore Adhkar",
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -100,67 +102,89 @@ class AdhkarHomeScreen extends ConsumerWidget {
       borderRadius: BorderRadius.circular(20),
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [AppColors.darkTeal, AppColors.primaryTeal],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          // Clean surface color matching the design system instead of heavy gradients
+          color: isDark ? AppColors.surfaceDark : Colors.white,
           borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isDark ? AppColors.borderDark : AppColors.borderLight,
+            width: 1,
+          ),
           boxShadow: [
             BoxShadow(
-              color: AppColors.primaryTeal.withValues(alpha: 0.3),
-              blurRadius: 12,
-              offset: const Offset(0, 6),
-            )
+              color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
           ],
         ),
         child: Row(
           children: [
+            // Minimalist Icon Container with subtle primary tint
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.15),
+                color: AppColors.primaryTeal.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(14),
               ),
-              child: const Icon(FlutterIslamicIcons.tasbih3, color: Colors.white, size: 28),
+              child: const Icon(
+                FlutterIslamicIcons.tasbih3,
+                color: AppColors.primaryTeal,
+                size: 24,
+              ),
             ),
             const SizedBox(width: 16),
+
+            // Texts
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                "Tasbeeh Counter",
+                    "Tasbeeh Counter",
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-
+                      color: isDark ? Colors.white : AppColors.textPrimaryLight,
+                      fontSize: isUrdu ? 17 : 16,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
+                  const SizedBox(height: 3),
                   Text(
                     "Count your daily dhikr",
                     style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.8),
-                      fontSize: 12,
+                      color: isDark ? Colors.white60 : Colors.black54,
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ],
               ),
             ),
-            const Icon(Icons.arrow_forward_ios_rounded, color: Colors.white, size: 14),
+            const SizedBox(width: 12),
+
+            // Subtle forward arrow
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              color: isDark ? Colors.white54 : Colors.black45,
+              size: 16,
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildCategoryCard(BuildContext context, AdhkarCategory category, bool isUrdu, bool isDark) {
+  Widget _buildCategoryCard(
+    BuildContext context,
+    AdhkarCategory category,
+    bool isUrdu,
+    bool isDark,
+  ) {
     IconData icon;
     Color color;
-    
+
     switch (category.id) {
       case 'morning':
         icon = Icons.wb_sunny_rounded;
@@ -191,7 +215,7 @@ class AdhkarHomeScreen extends ConsumerWidget {
           MaterialPageRoute(
             builder: (_) => AdhkarListScreen(
               dhikrList: category.dhikrs,
-              title:  category.titleEn,
+              title: category.titleEn,
             ),
           ),
         );
@@ -209,14 +233,14 @@ class AdhkarHomeScreen extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 32, color: color),
-            const SizedBox(height: 12),
+            Icon(icon, size: 30, color: color),
+            const SizedBox(height: 10),
             Text(
               category.titleEn,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                fontSize: 13.5,
                 color: isDark ? Colors.white : AppColors.textPrimaryLight,
               ),
             ),

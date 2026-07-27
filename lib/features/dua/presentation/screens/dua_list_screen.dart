@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/app_colors.dart';
 import '../../../../core/services/settings_controller.dart';
 import '../controller/dua_notifier.dart';
@@ -23,7 +22,7 @@ class DuaListScreen extends ConsumerWidget {
         centerTitle: true,
         title: Text(
           isUrdu ? 'دعائیں' : 'All Duas',
-          style: isUrdu ? GoogleFonts.notoNastaliqUrdu(fontWeight: FontWeight.bold) : const TextStyle(fontWeight: FontWeight.bold),
+          style: isUrdu ? const TextStyle(fontFamily: 'NotoNastaliqUrdu', fontWeight: FontWeight.bold) : const TextStyle(fontWeight: FontWeight.bold),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(70),
@@ -88,7 +87,7 @@ class _DuaListView extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
        'No duas found.',
-              style: isUrdu ? GoogleFonts.notoNastaliqUrdu(color: Colors.grey) : const TextStyle(color: Colors.grey),
+              style: isUrdu ? const TextStyle(fontFamily: 'NotoNastaliqUrdu', color: Colors.grey) : const TextStyle(color: Colors.grey),
             ),
           ],
         ),
@@ -137,7 +136,7 @@ class DuaTile extends StatelessWidget {
         title: Text(
           isUrdu ? dua.titleUr : dua.titleEn,
           style: isUrdu 
-            ? GoogleFonts.notoNastaliqUrdu(fontWeight: FontWeight.w600, fontSize: 16, height: 1.8)
+            ? const TextStyle(fontFamily: 'NotoNastaliqUrdu', fontWeight: FontWeight.w600, fontSize: 16, height: 1.8)
             : const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
         ),
 

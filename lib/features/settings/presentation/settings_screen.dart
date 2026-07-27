@@ -9,7 +9,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -20,7 +19,8 @@ class SettingsScreen extends ConsumerWidget {
     Color? color,
     double? height,
   }) {
-    return GoogleFonts.poppins(
+    return TextStyle(
+      fontFamily: 'Poppins',
       fontSize: fontSize,
       fontWeight: fontWeight,
       color: color,
@@ -230,9 +230,10 @@ class SettingsScreen extends ConsumerWidget {
               opacity: 0.3,
               child: Column(
                 children: [
-                  Text(
+                  const Text(
                     'MUBIN ISLAMIC SUITE',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
                       fontWeight: FontWeight.w900,
                       letterSpacing: 3,
                       fontSize: 10,
@@ -494,9 +495,9 @@ class SettingsScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              Text(
+              const Text(
                 'Select Reciter',
-                style: _getStyle(fontSize: 18, fontWeight: FontWeight.w900),
+                style: TextStyle(fontFamily: 'Poppins', fontSize: 18, fontWeight: FontWeight.w900),
               ),
               const SizedBox(height: 16),
               Flexible(
@@ -575,9 +576,9 @@ class SettingsScreen extends ConsumerWidget {
             borderRadius: BorderRadius.circular(24),
           ),
           backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
-          title: Text(
+          title: const Text(
             'Select Language',
-            style: _getStyle(fontSize: 18, fontWeight: FontWeight.w900),
+            style: TextStyle(fontFamily: 'Poppins', fontSize: 18, fontWeight: FontWeight.w900),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -626,9 +627,9 @@ class SettingsScreen extends ConsumerWidget {
             borderRadius: BorderRadius.circular(24),
           ),
           backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
-          title: Text(
+          title: const Text(
             'Select Theme',
-            style: _getStyle(fontSize: 18, fontWeight: FontWeight.w900),
+            style: TextStyle(fontFamily: 'Poppins', fontSize: 18, fontWeight: FontWeight.w900),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -744,9 +745,9 @@ class SettingsScreen extends ConsumerWidget {
             borderRadius: BorderRadius.circular(24),
           ),
           backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
-          title: Text(
+          title: const Text(
             'Select Madhab',
-            style: _getStyle(fontSize: 18, fontWeight: FontWeight.w900),
+            style: TextStyle(fontFamily: 'Poppins', fontSize: 18, fontWeight: FontWeight.w900),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,

@@ -4,7 +4,6 @@ import 'package:mubin/features/quran/domain/entities/reciter.dart';
 import 'package:mubin/features/quran/presentation/controllers/quran_audio_player_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:quran/quran.dart' as quran;
 
@@ -348,7 +347,8 @@ class AudioPlayingScreen extends ConsumerWidget {
                         // Surah Info
                         Text(
                           surahArabic,
-                          style: GoogleFonts.amiri(
+                          style: const TextStyle(
+                            fontFamily: 'Amiri',
                             fontSize: 36,
                             fontWeight: FontWeight.bold,
                             color: AppColors.primaryTeal,

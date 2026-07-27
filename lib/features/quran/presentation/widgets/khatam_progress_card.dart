@@ -1,7 +1,6 @@
 import 'package:mubin/core/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 /// KhatamProgressCard - Quran completion progress dikhata hai
 /// Clean architecture ke hisaab se yeh sirf UI render karta hai
@@ -106,7 +105,8 @@ class KhatamProgressCard extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         "Page $validPage of $_totalPages",
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
                           color: isDark
                               ? AppColors.textPrimaryDark
                               : AppColors.textPrimaryLight,

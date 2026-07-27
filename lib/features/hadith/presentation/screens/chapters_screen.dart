@@ -3,12 +3,12 @@ import 'package:mubin/core/services/haptic_feedback.dart';
 import 'package:mubin/core/services/settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../controller/data_provider.dart';
 import 'hadith_list_screen.dart';
 
 class ChaptersScreen extends ConsumerStatefulWidget {
   final String bookSlug;
+
   const ChaptersScreen({super.key, required this.bookSlug});
 
   @override
@@ -26,16 +26,11 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
     final bool isUrdu = settings.language == 'ur';
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundLight,
       appBar: AppBar(
-        title: Text(
-           'Chapters',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            letterSpacing: 0.5,
-            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
-          ),
-        ),
+        title: const Text('Chapters', style: TextStyle(letterSpacing: 0.5)),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
@@ -43,7 +38,9 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
           icon: Icon(
             Icons.arrow_back_ios_new,
             size: 20,
-            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+            color: isDark
+                ? AppColors.textPrimaryDark
+                : AppColors.textPrimaryLight,
           ),
           onPressed: () => Navigator.pop(context),
         ),
@@ -52,7 +49,10 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
         children: [
           // Search Bar
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 12.0,
+            ),
             child: TextField(
               onChanged: (val) {
                 setState(() {
@@ -60,14 +60,18 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
                 });
               },
               style: TextStyle(
-                color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                color: isDark
+                    ? AppColors.textPrimaryDark
+                    : AppColors.textPrimaryLight,
                 fontSize: 14,
               ),
               decoration: InputDecoration(
                 hintText: 'Search Chapters...',
                 hintStyle: TextStyle(
-                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
-                  fontSize: 14,
+                  color: isDark
+                      ? AppColors.textSecondaryDark
+                      : AppColors.textSecondaryLight,
+                  fontSize: 12,
                 ),
                 prefixIcon: const Icon(
                   Icons.search_rounded,
@@ -75,7 +79,9 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
                   size: 22,
                 ),
                 filled: true,
-                fillColor: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
+                fillColor: isDark
+                    ? AppColors.surfaceDark
+                    : AppColors.surfaceLight,
                 contentPadding: const EdgeInsets.symmetric(vertical: 14),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
@@ -84,7 +90,9 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
                   borderSide: BorderSide(
-                    color: isDark ? AppColors.borderDark : AppColors.borderLight,
+                    color: isDark
+                        ? AppColors.borderDark
+                        : AppColors.borderLight,
                     width: 1,
                   ),
                 ),
@@ -103,7 +111,9 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
             child: chaptersAsync.when(
               data: (chapters) {
                 final filteredChapters = chapters.where((chapter) {
-                  return chapter.chapterEnglish.toLowerCase().contains(_searchQuery) ||
+                  return chapter.chapterEnglish.toLowerCase().contains(
+                        _searchQuery,
+                      ) ||
                       chapter.chapterUrdu.contains(_searchQuery) ||
                       chapter.chapterNumber.contains(_searchQuery);
                 }).toList();
@@ -113,7 +123,9 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
                     child: Text(
                       'No Chapter found',
                       style: TextStyle(
-                        color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                        color: isDark
+                            ? AppColors.textSecondaryDark
+                            : AppColors.textSecondaryLight,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -122,12 +134,18 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
 
                 return ListView.separated(
                   itemCount: filteredChapters.length,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   physics: const BouncingScrollPhysics(),
-                  separatorBuilder: (context, index) => const SizedBox(height: 12),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 12),
                   itemBuilder: (context, index) {
                     final chapter = filteredChapters[index];
-                    final String displayTitle = isUrdu ? chapter.chapterUrdu : chapter.chapterEnglish;
+                    final String displayTitle = isUrdu
+                        ? chapter.chapterUrdu
+                        : chapter.chapterEnglish;
 
                     return InkWell(
                       onTap: () {
@@ -150,7 +168,9 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
                           color: isDark ? AppColors.surfaceDark : Colors.white,
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: isDark ? AppColors.borderDark : AppColors.borderLight,
+                            color: isDark
+                                ? AppColors.borderDark
+                                : AppColors.borderLight,
                           ),
                           boxShadow: [
                             BoxShadow(
@@ -167,26 +187,32 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
                               _buildChapterBadge(chapter.chapterNumber),
                               const SizedBox(width: 16),
                             ],
-                            
+
                             Expanded(
                               child: Text(
                                 displayTitle,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
-                                  color: isDark ? Colors.white : AppColors.textPrimaryLight,
-                                  fontFamily: isUrdu ? GoogleFonts.amiri().fontFamily : null,
+                                  color: isDark
+                                      ? Colors.white
+                                      : AppColors.textPrimaryLight,
+                                  fontFamily: isUrdu
+                                      ? 'NotoNastaliqUrdu'
+                                      : null,
                                   height: 1.5,
                                 ),
-                                textAlign: isUrdu ? TextAlign.right : TextAlign.left,
+                                textAlign: isUrdu
+                                    ? TextAlign.right
+                                    : TextAlign.left,
                               ),
                             ),
-                            
+
                             if (isUrdu) ...[
                               const SizedBox(width: 16),
                               _buildChapterBadge(chapter.chapterNumber),
                             ] else ...[
-                               const Icon(
+                              const Icon(
                                 Icons.arrow_forward_ios_rounded,
                                 size: 14,
                                 color: AppColors.primaryTeal,
@@ -206,13 +232,25 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.error_outline, color: AppColors.error, size: 40),
+                    const Icon(
+                      Icons.error_outline,
+                      color: AppColors.error,
+                      size: 40,
+                    ),
                     const SizedBox(height: 12),
-                    Text(isUrdu ? "ابواب لوڈ کرنے میں خرابی" : "Error loading chapters"),
+                    Text(
+                      isUrdu
+                          ? "ابواب لوڈ کرنے میں خرابی"
+                          : "Error loading chapters",
+                    ),
                     TextButton(
-                      onPressed: () => ref.invalidate(chaptersProvider(widget.bookSlug)),
-                      child: Text(isUrdu ? "دوبارہ کوشش کریں" : "Retry", style: const TextStyle(color: AppColors.primaryTeal)),
-                    )
+                      onPressed: () =>
+                          ref.invalidate(chaptersProvider(widget.bookSlug)),
+                      child: Text(
+                        isUrdu ? "دوبارہ کوشش کریں" : "Retry",
+                        style: const TextStyle(color: AppColors.primaryTeal),
+                      ),
+                    ),
                   ],
                 ),
               ),

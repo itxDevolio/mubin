@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/gestures.dart';
 import '../../domain/entities/verse.dart';
 import '../controllers/quran_audio_player_controller.dart';
@@ -47,7 +46,8 @@ class VerseDetailScreen extends ConsumerWidget {
 
                   return TextSpan(
                     text: '${verse.textArabic} ',
-                    style: GoogleFonts.amiriQuran(
+                    style: TextStyle(
+                      fontFamily: 'Amiri',
                       fontSize: 24,
                       height: 2.3,
                       color: isAudioPlaying

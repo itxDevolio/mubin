@@ -1,7 +1,5 @@
 import 'package:mubin/core/services/dark_and_light_theme.dart';
-
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class InfoGuideCard extends StatelessWidget {
   final String title;
@@ -104,7 +102,8 @@ class InfoGuideCard extends StatelessWidget {
                       title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
                         fontSize: 13.5,
                         fontWeight: FontWeight.bold,
                         color: getThemeColor(context, light: Colors.black87, dark: Colors.white),
@@ -118,7 +117,8 @@ class InfoGuideCard extends StatelessWidget {
                       subTitle,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
                         fontSize: 10.5,
                         fontWeight: FontWeight.w400,
                         color: getThemeColor(context, light: Colors.black54, dark: Colors.white60),

@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 Widget buildTasbeehCounter(int count, VoidCallback onTap) {
   return GestureDetector(
@@ -15,14 +13,14 @@ Widget buildTasbeehCounter(int count, VoidCallback onTap) {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(color: Colors.black26, blurRadius: 10, offset: Offset(5, 5)),
         ],
       ),
       child: Center(
         child: Text(
           "$count",
-          style: GoogleFonts.poppins(fontSize: 50, color: Colors.white, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontFamily: 'Poppins', fontSize: 50, color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
     ),

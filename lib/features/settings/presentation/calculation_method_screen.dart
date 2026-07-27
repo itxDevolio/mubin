@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../../core/app_colors.dart';
 import '../../../core/services/settings_controller.dart';
 import '../../../core/services/haptic_feedback.dart';
@@ -17,9 +16,10 @@ class CalculationMethodScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Calculation Method",
-          style: GoogleFonts.poppins(
+          style: TextStyle(
+            fontFamily: 'Poppins',
             fontWeight: FontWeight.w600,
             fontSize: 18,
           ),
@@ -74,18 +74,20 @@ class CalculationMethodScreen extends ConsumerWidget {
                         children: [
                           Text(
                             method['name']!,
-                            style: GoogleFonts.poppins(
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
                               fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                               fontSize: 15,
                               color: isDark ? Colors.white : Colors.black87,
                             ),
                           ),
                           if (isSelected)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 4.0),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 4.0),
                               child: Text(
                                 "Currently Active",
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
                                   fontSize: 11,
                                   color: AppColors.primaryTeal,
                                   fontWeight: FontWeight.w600,

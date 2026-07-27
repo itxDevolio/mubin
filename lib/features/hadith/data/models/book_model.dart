@@ -25,15 +25,11 @@ class BookModel extends BookEntity {
       'sahih-bukhari': 'صحیح بخاری',
       'sahih-muslim': 'صحیح مسلم',
       'al-tirmidhi': 'جامع ترمذی',
-      'sunan-abi-dawood': 'سنن ابی داؤد',
-      'sunan-an-nasai': 'سنن نسائی',
-      'sunan-ibn-majah': 'سنن ابن ماجہ',
-      'mishkat-al-masabih': 'مشکوۃ المصابیح',
-      'musnad-ahmad': 'مسند احمد',
-      'al-adab-al-mufrad': 'الادب المفرد',
-      'bulugh-al-maram': 'بلوغ المرام',
-      'riyad-as-salihin': 'ریاض الصالحین',
-      'shama-il-tirmidhi': 'شمائل ترمذی',
+      'abu-dawood': 'سنن ابی داؤد',
+      'sunan-nasai': 'سنن نسائی',
+      'ibn-e-majah': 'سنن ابن ماجہ',
+      'mishkat': 'مشکوۃ المصابیح',
+
     };
     return urduNames[slug] ?? defaultName;
   }

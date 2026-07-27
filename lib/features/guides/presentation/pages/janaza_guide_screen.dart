@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/app_colors.dart';
 import '../../../../core/services/settings_controller.dart';
 import 'janaza_detail_screen.dart';
@@ -19,7 +18,7 @@ class JanazaGuideScreen extends ConsumerWidget {
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
+        title: const Text(
 "Funeral Prayer (Janaza)",
 
         ),
@@ -29,12 +28,12 @@ class JanazaGuideScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
              "Select Category",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            Text(
+            const Text(
               "Supplications differ slightly for adults and children.",
 
             ),

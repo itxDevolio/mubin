@@ -29,7 +29,8 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObserver {
+class _HomeScreenState extends ConsumerState<HomeScreen>
+    with WidgetsBindingObserver {
   DateTime _currentDate = DateTime.now();
 
   @override
@@ -108,7 +109,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
                   });
                   ref.invalidate(locationProvider);
                   await ref.refresh(prayerTimesProvider(_currentDate).future);
-                  
+
                   // Reschedule notifications on refresh
                   await NotificationService().scheduleAllNotifications();
                 },
@@ -197,8 +198,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
                                 FeatureCard(
                                   title: "Qibla",
                                   icon: FlutterIslamicIcons.qibla2,
-                                  onTap: () {// Example navigation
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) =>  QiblaPage()));},
+                                  onTap: () {
+                                    // Example navigation
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => QiblaPage(),
+                                      ),
+                                    );
+                                  },
                                 ),
                                 const SizedBox(width: 8),
                                 FeatureCard(
@@ -240,13 +248,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
                                     title: "Funeral Prayer Guide",
                                     subTitle:
                                         "Step-by-step authentic method and supplications.",
-                                    imageUrl:
-                                        "assets/app_logos/funeral.png",
+                                    imageUrl: "assets/app_logos/funeral.png",
                                     onTap: () {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => const JanazaGuideScreen(),
+                                          builder: (context) =>
+                                              const JanazaGuideScreen(),
                                         ),
                                       );
                                     },
@@ -255,13 +263,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
                                     title: "Istikhara Prayer Guide",
                                     subTitle:
                                         "Seek Allah's counsel for your important decisions.",
-                                    imageUrl:
-                                        "assets/app_logos/istikhara.png",
+                                    imageUrl: "assets/app_logos/istikhara.png",
                                     onTap: () {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => const IstikharaGuideScreen(),
+                                          builder: (context) =>
+                                              const IstikharaGuideScreen(),
                                         ),
                                       );
                                     },
@@ -270,18 +278,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObse
                                     title: "Traveler's Prayer ",
                                     subTitle:
                                         "Guidelines and method for shortening prayers during travel.",
-                                    imageUrl:
-                                        "assets/app_logos/qasar.png",
+                                    imageUrl: "assets/app_logos/qasar.png",
                                     onTap: () {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => const QasarGuideScreen(),
+                                          builder: (context) =>
+                                              const QasarGuideScreen(),
                                         ),
                                       );
                                     },
                                   ),
-
                                 ],
                               ),
                             ),

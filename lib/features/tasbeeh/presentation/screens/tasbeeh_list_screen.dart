@@ -3,7 +3,6 @@ import 'package:mubin/core/services/haptic_feedback.dart';
 import 'package:mubin/core/services/settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'tasbeeh_screen.dart';
 
 class TasbeehListScreen extends ConsumerWidget {
@@ -32,7 +31,7 @@ class TasbeehListScreen extends ConsumerWidget {
     {
       'id': 't3',
       'titleAr':
-          'لَا إِلَهَ إِلَّا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ',
+          'لَا إِلَهَ إِلَّا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى کُلِّ شَيْءٍ قَدِيرٌ',
       'meaningEn':
           'None has the right to be worshipped but Allah alone, Who has no partner. His is the dominion, His is all praise, and He is capable of all things.',
       'meaningUr':
@@ -118,7 +117,7 @@ class TasbeehListScreen extends ConsumerWidget {
     {
       'id': 't11',
       'titleAr':
-          'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ، عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ',
+          'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ، عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ کَلِمَاتِهِ',
       'meaningEn':
           'Glory and praise be to Allah, as many times as the number of His creation, to the extent of His pleasure, to the weight of His Throne, and the ink of His words.',
       'meaningUr':
@@ -183,18 +182,23 @@ class TasbeehListScreen extends ConsumerWidget {
     },
     {
       'id': 't16',
-      'titleAr': 'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ لَكَ بِذَنْبِي فَاغْفِرْ لِي، فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ',
-      'meaningEn': 'O Allah, You are my Lord, there is no god but You. You created me and I am Your servant, and I am on Your covenant and promise as much as I can. I seek refuge in You from the evil of what I have done. I acknowledge Your favor upon me, and I acknowledge my sin, so forgive me, for there is none who forgives sins except You.',
-      'meaningUr': 'اے اللہ! تو میرا رب ہے، تیرے سوا کوئی معبود نہیں۔ تو نے مجھے پیدا کیا اور میں تیرا بندہ ہوں، اور میں اپنی استطاعت کے مطابق تیرے عہد اور تیرے وعدے پر قائم ہوں۔ میں اپنے کیے ہوئے برے کاموں کے شر سے تیری پناہ مانگتا ہوں۔ میں اپنے اوپر تیری نعمتوں کا اقرار کرتا ہوں اور اپنے گناہوں کا اعتراف کرتا ہوں، پس تو مجھے معاف کر دے، کیونکہ تیرے سوا کوئی گناہوں کو معاف نہیں کر سکتا۔',
-      'fazilatEn': 'Whoever recites it during the day with firm faith in it and dies on the same day before the evening, he will be from the people of Paradise.',
-      'fazilatUr': 'جو شخص اسے دن کے وقت پختہ ایمان کے ساتھ پڑھے اور شام ہونے سے پہلے اسی دن مر جائے، وہ جنتیوں میں سے ہے۔',
+      'titleAr':
+          'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ لَكَ بِذَنْبِي فَاغْفِرْ لِي، فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ',
+      'meaningEn':
+          'O Allah, You are my Lord, there is no god but You. You created me and I am Your servant, and I am on Your covenant and promise as much as I can. I seek refuge in You from the evil of what I have done. I acknowledge Your favor upon me, and I acknowledge my sin, so forgive me, for there is none who forgives sins except You.',
+      'meaningUr':
+          'اے اللہ! تو میرا رب ہے، تیرے سوا کوئی معبود نہیں۔ تو نے مجھے پیدا کیا اور میں تیرا بندہ ہوں، اور میں اپنی استطاعت کے مطابق تیرے عہد اور تیرے وعدے پر قائم ہوں۔ میں اپنے کیے ہوئے برے کاموں کے شر سے تیری پناہ مانگتا ہوں۔ میں اپنے اوپر تیری نعمتوں کا اقرار کرتا ہوں اور اپنے گناہوں کا اعتراف کرتا ہوں، پس تو مجھے معاف کر دے، کیونکہ تیرے سوا کوئی گناہوں کو معاف نہیں کر سکتا۔',
+      'fazilatEn':
+          'Whoever recites it during the day with firm faith in it and dies on the same day before the evening, he will be from the people of Paradise.',
+      'fazilatUr':
+          'جو شخص اسے دن کے وقت پختہ ایمان کے ساتھ پڑھے اور شام ہونے سے پہلے اسی دن مر جائے، وہ جنتیوں میں سے ہے۔',
       'reference': 'Sahih al-Bukhari 6306',
     },
 
     {
       'id': 't17',
       'titleAr':
-          'لَا إِلَهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ',
+          'لَا إِلَهَ إِلَّا أَنْتَ سُبْحَانَکَ إِنِّي کُنْتُ مِنَ الظَّالِمِينَ',
       'meaningEn':
           'There is no god but You, glory be to You, indeed I have been of the wrongdoers.',
       'meaningUr':
@@ -221,7 +225,7 @@ class TasbeehListScreen extends ConsumerWidget {
     {
       'id': 't19',
       'titleAr':
-          'اللَّهُمَّ إِنِّي أَعُوذُ بِرِضَاكَ مِنْ سَخَطِكَ، وَبِمُعَافَاتِكَ مِنْ عُقُوبَتِكَ',
+          'اللَّهُمَّ إِنِّي أَعُوذُ بِرِضَاکَ مِنْ سَخَطِکَ، وَبِمُعَافَاتِکَ مِنْ عُقُوبَتِکَ',
       'meaningEn':
           'O Allah, I seek refuge in Your pleasure from Your anger, and in Your pardon from Your punishment.',
       'meaningUr':
@@ -234,7 +238,7 @@ class TasbeehListScreen extends ConsumerWidget {
     },
     {
       'id': 't20',
-      'titleAr': 'يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ',
+      'titleAr': 'يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِکَ أَسْتَغِيثُ',
       'meaningEn':
           'O Ever-Living, O Sustainer of all, in Your mercy I seek relief.',
       'meaningUr':
@@ -247,7 +251,7 @@ class TasbeehListScreen extends ConsumerWidget {
     },
     {
       'id': 't21',
-      'titleAr': 'اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي',
+      'titleAr': 'اللَّهُمَّ إِنَّکَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي',
       'meaningEn':
           'O Allah, You are Pardoning, You love to pardon, so pardon me.',
       'meaningUr':
@@ -260,14 +264,18 @@ class TasbeehListScreen extends ConsumerWidget {
     },
     {
       "id": "t22",
-      "titleAr": "اللَّهُمَّ لَكَ الْحَمْدُ كُلُّهُ، وَلَكَ الْمُلْكُ كُلُّهُ، وَبِيَدِكَ الْخَيْرُ كُلُّهُ، وَإِلَيْكَ يُرْجَعُ الْأَمْرُ كُلُّهُ",
-      "meaningEn": "O Allah, all praise is for You, all dominion is Yours, all good is in Your hands, and all matters return to You.",
-      "meaningUr": "اے اللہ! تمام تعریف تیرے لیے ہے، تمام بادشاہت تیری ہے، تمام بھلائی تیرے ہاتھ میں ہے اور تمام معاملات تیری طرف لوٹتے ہیں۔",
-      "fazilatEn": "A majestic praise taught by an angel to Hudhayfah (R.A) during prayer, which the Prophet (ﷺ) later approved and authenticated.",
-      "fazilatUr": "ایک عظیم الشان حمد جو دورانِ نماز ایک فرشتے نے حضرت حذیفہؓ کو سکھائی، اور بعد میں نبی کریم ﷺ نے اس کی تصدیق اور تائید فرمائی۔",
-      "reference": "Musnad Ahmad 23355, Shu'ab al-Iman (Al-Bayhaqi)"
-    }
-
+      "titleAr":
+          "اللَّهُمَّ لَکَ الْحَمْدُ کُلُّهُ، وَلَکَ الْمُلْکُ کُلُّهُ، وَبِيَدِکَ الْخَيْرُ کُلُّهُ، وَإِلَيْکَ يُرْجَعُ الْأَمْرُ کُلُّهُ",
+      "meaningEn":
+          "O Allah, all praise is for You, all dominion is Yours, all good is in Your hands, and all matters return to You.",
+      "meaningUr":
+          "اے اللہ! تمام تعریف تیرے لیے ہے، تمام بادشاہت تیری ہے، تمام بھلائی تیرے ہاتھ میں ہے اور تمام معاملات تیری طرف لوٹتے ہیں۔",
+      "fazilatEn":
+          "A majestic praise taught by an angel to Hudhayfah (R.A) during prayer, which the Prophet (ﷺ) later approved and authenticated.",
+      "fazilatUr":
+          "ایک عظیم الشان حمد جو دورانِ نماز ایک فرشتے نے حضرت حذیفہؓ کو سکھائی، اور بعد میں نبی کریم ﷺ نے اس کی تصدیق اور تائید فرمائی۔",
+      "reference": "Musnad Ahmad 23355, Shu'ab al-Iman (Al-Bayhaqi)",
+    },
   ];
 
   @override
@@ -328,10 +336,10 @@ class TasbeehListScreen extends ConsumerWidget {
                     Center(
                       child: Text(
                         item['titleAr']!,
-                        style: GoogleFonts.amiri(
+                        style: const TextStyle(
+                          fontFamily: 'Amiri',
                           color: AppColors.primaryTeal,
                           fontSize: 22,
-                          fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -341,7 +349,8 @@ class TasbeehListScreen extends ConsumerWidget {
                     Text(
                       isUrdu ? item['meaningUr']! : item['meaningEn']!,
                       style: isUrdu
-                          ? GoogleFonts.notoNastaliqUrdu(
+                          ? const TextStyle(
+                              fontFamily: 'NotoNastaliqUrdu',
                               fontSize: 14,
                               height: 1.8,
                             )
@@ -354,9 +363,10 @@ class TasbeehListScreen extends ConsumerWidget {
                     Text(
                       isUrdu ? item['fazilatUr']! : item['fazilatEn']!,
                       style: isUrdu
-                          ? GoogleFonts.notoNastaliqUrdu(
+                          ? const TextStyle(
+                              fontFamily: 'NotoNastaliqUrdu',
                               fontSize: 13,
-                              color: Colors.grey[700],
+                              color: Color(0xFF616161), // grey[700]
                             )
                           : const TextStyle(
                               fontSize: 12,

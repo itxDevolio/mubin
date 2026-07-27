@@ -11,7 +11,6 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.8
   flutter_islamic_icons: ^1.0.2
-  google_fonts: ^8.1.0
   font_awesome_flutter: ^11.0.0
   cached_network_image: ^3.4.1
   intl: ^0.20.2
@@ -58,3 +57,17 @@ flutter:
   uses-material-design: true
   assets:
     - assets/app_logos/
+
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 100
+        - asset: assets/fonts/Poppins-Regular.ttf
+          weight: 300
+    - family: Amiri
+      fonts:
+        - asset: assets/fonts/AmiriQuran-Regular.ttf
+    - family: NotoNastaliqUrdu
+      fonts:
+        - asset: assets/fonts/NotoNastaliqUrdu-VariableFont_wght.ttf

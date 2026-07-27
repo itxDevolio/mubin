@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mubin/core/services/dark_and_light_theme.dart';
-import 'package:google_fonts/google_fonts.dart'; // Add this package import
 import '../../domain/entities/verse.dart';
 
 class VerseTileWidget extends StatelessWidget {
@@ -68,10 +67,11 @@ class VerseTileWidget extends StatelessWidget {
               verse.textArabic,
               textDirection: TextDirection.rtl,
               textAlign: TextAlign.right,
-              style: GoogleFonts.amiriQuran(
+              style: const TextStyle(
+                fontFamily: 'Amiri',
                 fontSize: 24,
                 height: 2.0,
-                color: const Color(0xFF2C3E50),
+                color: Color(0xFF2C3E50),
               ),
             ),
           ],

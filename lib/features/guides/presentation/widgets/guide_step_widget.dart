@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/app_colors.dart';
 import '../../domain/entities/guide_step.dart';
 
@@ -35,8 +34,8 @@ class GuideStepWidget extends ConsumerWidget {
                   isUrdu ? step.titleUr : step.titleEn,
                   textAlign: isUrdu ? TextAlign.right : TextAlign.left,
                   style: isUrdu 
-                    ? GoogleFonts.notoNastaliqUrdu(fontSize: 19, fontWeight: FontWeight.bold, height: 1.6)
-                    : const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: -0.5),
+                    ? const TextStyle(fontFamily: 'NotoNastaliqUrdu', fontSize: 19, fontWeight: FontWeight.bold, height: 1.6)
+                    : const TextStyle(fontFamily: 'Poppins', fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: -0.5),
                 ),
               ),
               const SizedBox(width: 16),
@@ -62,8 +61,8 @@ class GuideStepWidget extends ConsumerWidget {
                   isUrdu ? step.contentUr : step.contentEn,
                   textAlign: isUrdu ? TextAlign.right : TextAlign.left,
                   style: isUrdu 
-                    ? GoogleFonts.notoNastaliqUrdu(fontSize: 15, color: isDark ? Colors.white70 : Colors.black87, height: 2.3)
-                    : TextStyle(fontSize: 15, color: isDark ? Colors.white70 : Colors.black87, height: 1.7),
+                    ? TextStyle(fontFamily: 'NotoNastaliqUrdu', fontSize: 15, color: isDark ? Colors.white70 : Colors.black87, height: 2.3)
+                    : TextStyle(fontFamily: 'Poppins', fontSize: 15, color: isDark ? Colors.white70 : Colors.black87, height: 1.7),
                 ),
 
                 // Arabic Prayer Card
@@ -88,7 +87,8 @@ class GuideStepWidget extends ConsumerWidget {
                       step.arabic!,
                       textAlign: TextAlign.center,
                       textDirection: TextDirection.rtl,
-                      style: GoogleFonts.amiri(
+                      style: TextStyle(
+                        fontFamily: 'Amiri',
                         fontSize: 20,
                         height: 2.2,
                         fontWeight: FontWeight.bold,
@@ -105,14 +105,14 @@ class GuideStepWidget extends ConsumerWidget {
                     step.translationUr!,
                     textDirection: TextDirection.rtl,
                     textAlign: TextAlign.right,
-                    style: GoogleFonts.notoNastaliqUrdu(fontSize: 14, height: 2.4, color: AppColors.primaryTeal),
+                    style: const TextStyle(fontFamily: 'NotoNastaliqUrdu', fontSize: 14, height: 2.4, color: AppColors.primaryTeal),
                   ),
                 ],
                 if (!isUrdu && step.translationEn != null) ...[
                   const SizedBox(height: 18),
                   Text(
                     step.translationEn!,
-                    style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic, color: AppColors.primaryTeal.withOpacity(0.9), height: 1.6),
+                    style: TextStyle(fontFamily: 'Poppins', fontSize: 14, fontStyle: FontStyle.italic, color: AppColors.primaryTeal.withOpacity(0.9), height: 1.6),
                   ),
                 ],
 
@@ -134,8 +134,8 @@ class GuideStepWidget extends ConsumerWidget {
                         child: Text(
                            "Reference: ${step.reference}",
                           style: isUrdu 
-                            ? GoogleFonts.notoNastaliqUrdu(fontSize: 12, color: Colors.grey.shade600)
-                            : TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.grey.shade600, letterSpacing: 0.5),
+                            ? TextStyle(fontFamily: 'NotoNastaliqUrdu', fontSize: 12, color: Colors.grey.shade600)
+                            : TextStyle(fontFamily: 'Poppins', fontSize: 11, fontWeight: FontWeight.w600, color: Colors.grey.shade600, letterSpacing: 0.5),
                         ),
                       ),
                     ],

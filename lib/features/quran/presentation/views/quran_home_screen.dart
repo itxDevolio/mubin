@@ -159,7 +159,8 @@ class QuranHomeScreen extends ConsumerWidget {
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const QuranAudioPlayerScreen(),
+                            builder: (context) =>
+                                const QuranAudioPlayerScreen(),
                           ),
                         ),
                       ),
@@ -213,8 +214,8 @@ class QuranHomeScreen extends ConsumerWidget {
             Text(
               title,
               style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                fontSize: 16,
                 letterSpacing: 0.3,
                 color: isDark
                     ? AppColors.textPrimaryDark
@@ -230,6 +231,7 @@ class QuranHomeScreen extends ConsumerWidget {
 
 class _LoadingPlaceholder extends StatelessWidget {
   const _LoadingPlaceholder();
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -254,12 +256,9 @@ class _LoadingPlaceholder extends StatelessWidget {
 class _ErrorPlaceholder extends StatelessWidget {
   final String error;
   final VoidCallback? onRetry;
-  
-  const _ErrorPlaceholder({
-    required this.error,
-    this.onRetry,
-  });
-  
+
+  const _ErrorPlaceholder({required this.error, this.onRetry});
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;

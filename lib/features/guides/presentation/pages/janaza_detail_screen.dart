@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
 import '../../../../core/app_colors.dart';
 import '../../../../core/services/settings_controller.dart';
@@ -29,7 +28,7 @@ class JanazaDetailScreen extends ConsumerWidget {
               ? (isAdult ? "نمازِ جنازہ (بالغ)" : "نمازِ جنازہ (نابالغ)")
               : (isAdult ? "Adult Funeral Prayer" : "Child Funeral Prayer"),
             style: isUrdu
-              ? GoogleFonts.notoNastaliqUrdu(fontWeight: FontWeight.bold, fontSize: 18)
+              ? const TextStyle(fontFamily: 'NotoNastaliqUrdu', fontWeight: FontWeight.bold, fontSize: 18)
               : const TextStyle(fontWeight: FontWeight.bold),
           ),
           bottom: TabBar(

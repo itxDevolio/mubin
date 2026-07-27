@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:just_audio_background/just_audio_background.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/data/latest.dart' as tzdata;
 import 'package:timezone/timezone.dart' as tz;
 
+import 'core/app_colors.dart';
 import 'core/constant/db_consts.dart';
 import 'core/services/notification_service.dart';
 import 'core/services/settings_controller.dart';
@@ -63,9 +63,6 @@ void main() async {
 
   // Start App immediately to avoid white screen
   runApp(const ProviderScope(child: MubinApp()));
-
-  // Background Initializations (Don't block UI start)
-  _initServices();
 }
 
 Future<void> _initServices() async {
@@ -87,9 +84,6 @@ Future<void> _initServices() async {
     final notificationService = NotificationService();
     await notificationService.init();
 
-    // Pre-fetch fonts
-    await AppTypography.prefetchFonts();
-
     // Schedule notifications (will request permissions if needed)
     await notificationService.scheduleAllNotifications();
   } catch (e) {
@@ -97,12 +91,71 @@ Future<void> _initServices() async {
   }
 }
 
-class MubinApp extends ConsumerWidget {
+class MubinApp extends ConsumerStatefulWidget {
   const MubinApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MubinApp> createState() => _MubinAppState();
+}
+
+class _MubinAppState extends ConsumerState<MubinApp> {
+  bool _isInitialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initApp();
+  }
+
+  Future<void> _initApp() async {
+    // Perform all critical initializations here
+    await _initServices();
+    if (mounted) {
+      setState(() {
+        _isInitialized = true;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final settings = ref.watch(settingsControllerProvider);
+
+    if (!_isInitialized) {
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: AppThemeData.lightTheme,
+        darkTheme: AppThemeData.darkTheme,
+        themeMode: settings.themeMode,
+        home: Scaffold(
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/app_logos/mubin_app_logo.png',
+                  width: 120,
+                  height: 120,
+                ),
+                const SizedBox(height: 24),
+                const CircularProgressIndicator(
+                  color: AppColors.primaryTeal,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  "Initializing Mubin...",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.primaryTeal,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
 
     return MaterialApp(
       title: 'Mubin',

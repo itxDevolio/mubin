@@ -2,7 +2,6 @@ import 'package:mubin/core/app_colors.dart';
 import 'package:mubin/core/services/haptic_feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:quran/quran.dart' as quran;
 import 'audio_playing_screen.dart';
 import '../controllers/surah_juz_controller.dart';
@@ -339,7 +338,8 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
                               const SizedBox(width: 12),
                               Text(
                                 surah.nameArabic,
-                                style: GoogleFonts.amiri(
+                                style: TextStyle(
+                                  fontFamily: 'Amiri',
                                   fontSize: 22,
                                   fontWeight: FontWeight.w500,
                                   color: isCurrent
@@ -370,4 +370,3 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
     );
   }
 }
-

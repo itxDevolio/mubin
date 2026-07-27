@@ -36,9 +36,9 @@ class NotificationService {
       ),
     );
 
-    // ✅ FIXED: New IDs ensure Android refreshes channel settings (Sound/Importance)
+    // ✅ FIXED: Using v2 ID to force channel update and adding error handling
     const prayerChannel = AndroidNotificationChannel(
-      'mubin_prayer_v1', 
+      'mubin_prayer_v2',
       'Prayer Notifications',
       description: 'Salah time alerts with Adhan sound',
       importance: Importance.max,
@@ -147,38 +147,57 @@ class NotificationService {
       if (scheduledTime.isAfter(nowTime)) {
         final id = (dayOffset * 100) + i;
         
-        await _notificationsPlugin.zonedSchedule(
-          id: id,
-          title: '🕌 Salah Time: $name',
-          body: 'It is time for $name prayer. Success is in Salah.',
-          scheduledDate: scheduledTime,
-          notificationDetails: NotificationDetails(
-            android: AndroidNotificationDetails(
-              'mubin_prayer_v1',
-              'Prayer Notifications',
-              importance: Importance.max,
-              priority: Priority.max,
-              sound: const RawResourceAndroidNotificationSound('adhan_sound'),
-              fullScreenIntent: true,
-              category: AndroidNotificationCategory.alarm,
-              color: AppColors.primaryTeal,
-              visibility: NotificationVisibility.public,
-              styleInformation: BigTextStyleInformation(
-                'It is time for $name prayer. "Indeed, prayer has been decreed upon the believers a decree of specified times." (4:103)',
-                contentTitle: '🕌 Salah Time: $name',
+        try {
+          await _notificationsPlugin.zonedSchedule(
+            id: id,
+            title: '🕌 Salah Time: $name',
+            body: 'It is time for $name prayer. Success is in Salah.',
+            scheduledDate: scheduledTime,
+            notificationDetails: NotificationDetails(
+              android: AndroidNotificationDetails(
+                'mubin_prayer_v2',
+                'Prayer Notifications',
+                importance: Importance.max,
+                priority: Priority.max,
+                sound: const RawResourceAndroidNotificationSound('adhan_sound'),
+                fullScreenIntent: true,
+                category: AndroidNotificationCategory.alarm,
+                color: AppColors.primaryTeal,
+                visibility: NotificationVisibility.public,
+                styleInformation: BigTextStyleInformation(
+                  'It is time for $name prayer. "Indeed, prayer has been decreed upon the believers a decree of specified times." (4:103)',
+                  contentTitle: '🕌 Salah Time: $name',
+                ),
+              ),
+              iOS: const DarwinNotificationDetails(
+                presentAlert: true,
+                presentBadge: true,
+                presentSound: true,
+                sound: 'adhan_sound.m4a',
+                interruptionLevel: InterruptionLevel.critical,
               ),
             ),
-            iOS: const DarwinNotificationDetails(
-              presentAlert: true,
-              presentBadge: true,
-              presentSound: true,
-              sound: 'adhan_sound.m4a',
-              interruptionLevel: InterruptionLevel.critical,
+            androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+          );
+        } catch (e) {
+          // Fallback if custom sound fails
+          await _notificationsPlugin.zonedSchedule(
+            id: id,
+            title: '🕌 Salah Time: $name',
+            body: 'It is time for $name prayer.',
+            scheduledDate: scheduledTime,
+            notificationDetails: const NotificationDetails(
+              android: AndroidNotificationDetails(
+                'mubin_prayer_v2',
+                'Prayer Notifications',
+                importance: Importance.max,
+                priority: Priority.max,
+              ),
             ),
-          ),
-          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-
-        );
+            androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+          );
+          debugPrint("Error scheduling notification with sound: $e");
+        }
       }
     }
 

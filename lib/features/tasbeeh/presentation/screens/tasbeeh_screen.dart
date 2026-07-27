@@ -3,15 +3,18 @@ import 'package:mubin/core/services/haptic_feedback.dart';
 import 'package:mubin/core/services/settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../providers/tasbeeh_provider.dart';
 import '../widgets/real_tasbeeh_beads_widget.dart';
 
 class TasbeehScreen extends ConsumerWidget {
   final String dhikrId;
-  final String dhikrTitle; 
+  final String dhikrTitle;
 
-  const TasbeehScreen({super.key, required this.dhikrId, required this.dhikrTitle});
+  const TasbeehScreen({
+    super.key,
+    required this.dhikrId,
+    required this.dhikrTitle,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,11 +25,17 @@ class TasbeehScreen extends ConsumerWidget {
     final bool isUrdu = settings.language == 'ur';
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundLight,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Tasbeeh Counter",
-          style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18),
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -66,7 +75,7 @@ class TasbeehScreen extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Spacer(flex: 2),
-                  
+
                   // Arabic Text Display (Dynamic & Elegant)
                   Hero(
                     tag: 'dhikr_$dhikrId',
@@ -74,8 +83,9 @@ class TasbeehScreen extends ConsumerWidget {
                       color: Colors.transparent,
                       child: Text(
                         dhikrTitle,
-                        style: GoogleFonts.amiri(
-                          fontSize: constraints.maxWidth * 0.1,
+                        style: TextStyle(
+                          fontFamily: 'Amiri',
+                          fontSize: 20,
                           color: AppColors.primaryTeal,
                           height: 1.2,
                         ),
@@ -83,12 +93,15 @@ class TasbeehScreen extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // Modern Large Counter with Neon Glow effect
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 22,
+                      vertical: 12,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.primaryTeal.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(30),
@@ -99,15 +112,17 @@ class TasbeehScreen extends ConsumerWidget {
                     ),
                     child: Text(
                       "$count",
-                      style: GoogleFonts.poppins(
-                        fontSize: constraints.maxWidth * 0.2, 
-                        fontWeight: FontWeight.w800,
-                        color: isDark ? Colors.white : AppColors.textPrimaryLight,
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: constraints.maxWidth * 0.1,
+                        color: isDark
+                            ? Colors.white
+                            : AppColors.textPrimaryLight,
                         letterSpacing: -2,
                       ),
                     ),
                   ),
-                  
+
                   const Spacer(),
 
                   // Animated Real Tasbeeh Beads Widget
@@ -116,14 +131,14 @@ class TasbeehScreen extends ConsumerWidget {
                     onTap: () {
                       hapticFeedBack();
                       notifier.increment();
-                    }
+                    },
                   ),
 
                   const Spacer(flex: 2),
-                  
+
                   // Animated Instruction
                   _buildInstruction(isDark, isUrdu),
-                  
+
                   const SizedBox(height: 40),
                 ],
               ),

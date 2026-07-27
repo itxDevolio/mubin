@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/app_colors.dart';
 import '../../../../core/services/settings_controller.dart';
 import '../../domain/entities/shifa_entity.dart';
@@ -60,12 +59,14 @@ class _ShifaDetailScreenState extends ConsumerState<ShifaDetailScreen>
 
     // Poppins font for English, NotoNastaliq for Urdu
     TextStyle bodyStyle = isUrdu
-        ? GoogleFonts.notoNastaliqUrdu(
+        ? TextStyle(
+            fontFamily: 'NotoNastaliqUrdu',
             fontSize: 14,
             height: 2.0,
             color: isDark ? Colors.white70 : Colors.black87,
           )
-        : GoogleFonts.poppins(
+        : TextStyle(
+            fontFamily: 'Poppins',
             fontSize: 15,
             height: 1.6,
             color: isDark ? Colors.white70 : Colors.black87,
@@ -78,8 +79,8 @@ class _ShifaDetailScreenState extends ConsumerState<ShifaDetailScreen>
         title: Text(
           isUrdu ? widget.dua.titleUr : widget.dua.titleEn,
           style: isUrdu
-              ? GoogleFonts.notoNastaliqUrdu(fontWeight: FontWeight.bold)
-              : GoogleFonts.poppins(fontWeight: FontWeight.bold),
+              ? const TextStyle(fontFamily: 'NotoNastaliqUrdu', fontWeight: FontWeight.bold)
+              : const TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(
@@ -102,7 +103,8 @@ class _ShifaDetailScreenState extends ConsumerState<ShifaDetailScreen>
               child: Text(
                 widget.dua.arabic,
                 textAlign: TextAlign.center,
-                style: GoogleFonts.amiriQuran(
+                style: TextStyle(
+                  fontFamily: 'Amiri',
                   fontSize: 22,
                   height: 2.2,
                   color: isDark ? Colors.white : Colors.black87,
@@ -138,7 +140,7 @@ class _ShifaDetailScreenState extends ConsumerState<ShifaDetailScreen>
                 ),
                 child: Text(
                   'Ref: ${widget.dua.reference}',
-                  style: GoogleFonts.poppins(fontSize: 10, color: Colors.grey),
+                  style: const TextStyle(fontFamily: 'Poppins', fontSize: 10, color: Colors.grey),
                 ),
               ),
             ),
@@ -175,14 +177,15 @@ class _ShifaDetailScreenState extends ConsumerState<ShifaDetailScreen>
                     ),
                     child: Center(
                       child: _count == 0
-                          ? Icon(
+                          ? const Icon(
                               Icons.check_circle_rounded,
                               size: 50,
                               color: Colors.green,
                             )
                           : Text(
                               '$_count',
-                              style: GoogleFonts.poppins(
+                              style: const TextStyle(
+                                fontFamily: 'Poppins',
                                 fontSize: 32,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.primaryTeal,
@@ -219,7 +222,8 @@ class _TranslationSection extends StatelessWidget {
       children: [
         Text(
           title,
-          style: GoogleFonts.poppins(
+          style: const TextStyle(
+            fontFamily: 'Poppins',
             fontWeight: FontWeight.w700,
             color: AppColors.primaryTeal,
             fontSize: 12,
@@ -255,7 +259,8 @@ class _InstructionSection extends StatelessWidget {
         children: [
           Text(
             'Instructions',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
+              fontFamily: 'Poppins',
               fontWeight: FontWeight.bold,
               color: Colors.amber.shade800,
               fontSize: 12,
@@ -265,8 +270,8 @@ class _InstructionSection extends StatelessWidget {
           Text(
             text,
             style: isUrdu
-                ? GoogleFonts.notoNastaliqUrdu(fontSize: 12)
-                : GoogleFonts.poppins(fontSize: 12),
+                ? const TextStyle(fontFamily: 'NotoNastaliqUrdu', fontSize: 12)
+                : const TextStyle(fontFamily: 'Poppins', fontSize: 12),
           ),
         ],
       ),

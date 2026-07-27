@@ -1,10 +1,8 @@
 import 'package:mubin/core/app_colors.dart';
-import 'package:mubin/core/widgets/glass_loading_overlay.dart';
 import 'package:mubin/core/utils/quran_utils.dart';
 import 'package:mubin/core/services/settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:quran/quran.dart' as quran;
 import 'mushaf_view_screen.dart';
 
@@ -17,20 +15,6 @@ class JuzListScreen extends ConsumerStatefulWidget {
 
 class _JuzListScreenState extends ConsumerState<JuzListScreen> {
   String _searchQuery = '';
-  bool _fontsLoaded = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _checkFonts();
-  }
-
-  Future<void> _checkFonts() async {
-    await GoogleFonts.pendingFonts();
-    if (mounted) {
-      setState(() => _fontsLoaded = true);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,258 +60,250 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: Stack(
+      body: Column(
         children: [
-          Column(
-            children: [
-              // Premium Styled Search Bar
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 12.0,
+          // Premium Styled Search Bar
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 12.0,
+            ),
+            child: TextField(
+              onChanged: (val) => setState(() => _searchQuery = val),
+              style: TextStyle(
+                color: isDark
+                    ? AppColors.textPrimaryDark
+                    : AppColors.textPrimaryLight,
+                fontSize: 14,
+              ),
+              decoration: InputDecoration(
+                hintText: 'Search Juz / Para...',
+                hintStyle: TextStyle(
+                  color: isDark
+                      ? AppColors.textSecondaryDark
+                      : AppColors.textSecondaryLight,
+                  fontSize: 14,
                 ),
-                child: TextField(
-                  onChanged: (val) => setState(() => _searchQuery = val),
-                  style: TextStyle(
+                prefixIcon: const Icon(
+                  Icons.search_rounded,
+                  color: AppColors.primaryTeal,
+                  size: 22,
+                ),
+                filled: true,
+                fillColor: isDark
+                    ? AppColors.surfaceDark
+                    : AppColors.surfaceLight,
+                contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide.none,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide(
                     color: isDark
-                        ? AppColors.textPrimaryDark
-                        : AppColors.textPrimaryLight,
-                    fontSize: 14,
+                        ? AppColors.borderDark
+                        : AppColors.borderLight,
+                    width: 1,
                   ),
-                  decoration: InputDecoration(
-                    hintText: 'Search Juz / Para...',
-                    hintStyle: TextStyle(
-                      color: isDark
-                          ? AppColors.textSecondaryDark
-                          : AppColors.textSecondaryLight,
-                      fontSize: 14,
-                    ),
-                    prefixIcon: const Icon(
-                      Icons.search_rounded,
-                      color: AppColors.primaryTeal,
-                      size: 22,
-                    ),
-                    filled: true,
-                    fillColor: isDark
-                        ? AppColors.surfaceDark
-                        : AppColors.surfaceLight,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 14),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide.none,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(
-                        color: isDark
-                            ? AppColors.borderDark
-                            : AppColors.borderLight,
-                        width: 1,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: const BorderSide(
-                        color: AppColors.primaryTeal,
-                        width: 1.2,
-                      ),
-                    ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: const BorderSide(
+                    color: AppColors.primaryTeal,
+                    width: 1.2,
                   ),
                 ),
               ),
+            ),
+          ),
 
-              // Juz List Section
-              Expanded(
-                child: filteredJuz.isEmpty && _searchQuery.isNotEmpty
-                    ? Center(
+          // Juz List Section
+          Expanded(
+            child: filteredJuz.isEmpty && _searchQuery.isNotEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.search_off_rounded,
+                          size: 48,
+                          color: isDark
+                              ? AppColors.textSecondaryDark
+                              : AppColors.textSecondaryLight,
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          'No Juz found for "$_searchQuery"',
+                          style: TextStyle(
+                            color: isDark
+                                ? AppColors.textSecondaryDark
+                                : AppColors.textSecondaryLight,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : filteredJuz.isEmpty
+                    ? const Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
-                              Icons.search_off_rounded,
-                              size: 48,
-                              color: isDark
-                                  ? AppColors.textSecondaryDark
-                                  : AppColors.textSecondaryLight,
+                            CircularProgressIndicator(
+                              color: AppColors.primaryTeal,
                             ),
-                            const SizedBox(height: 12),
+                            const SizedBox(height: 16),
                             Text(
-                              'No Juz found for "$_searchQuery"',
+                              'Loading Juz...',
                               style: TextStyle(
-                                color: isDark
-                                    ? AppColors.textSecondaryDark
-                                    : AppColors.textSecondaryLight,
-                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
                               ),
                             ),
                           ],
                         ),
                       )
-                    : filteredJuz.isEmpty
-                        ? Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const CircularProgressIndicator(
-                                  color: AppColors.primaryTeal,
-                                ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  'Loading Juz...',
-                                  style: TextStyle(
-                                    color: isDark
-                                        ? AppColors.textSecondaryDark
-                                        : AppColors.textSecondaryLight,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                        : ListView.separated(
-                        itemCount: filteredJuz.length,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        physics: const BouncingScrollPhysics(),
-                        separatorBuilder: (context, index) => Divider(
-                          color: isDark
-                              ? AppColors.borderDark
-                              : AppColors.borderLight,
-                          height: 1,
-                          thickness: 0.8,
-                        ),
-                        itemBuilder: (context, index) {
-                          final juzNumber = filteredJuz[index];
+                    : ListView.separated(
+                    itemCount: filteredJuz.length,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    physics: const BouncingScrollPhysics(),
+                    separatorBuilder: (context, index) => Divider(
+                      color: isDark
+                          ? AppColors.borderDark
+                          : AppColors.borderLight,
+                      height: 1,
+                      thickness: 0.8,
+                    ),
+                    itemBuilder: (context, index) {
+                      final juzNumber = filteredJuz[index];
 
-                          // Explicit Names Parsing
-                          final juzEnglishName =
-                              QuranUtils.juzNamesEnglish[juzNumber - 1];
-                          final juzArabicName =
-                              QuranUtils.juzNamesArabic[juzNumber - 1];
+                      // Explicit Names Parsing
+                      final juzEnglishName =
+                          QuranUtils.juzNamesEnglish[juzNumber - 1];
+                      final juzArabicName =
+                          QuranUtils.juzNamesArabic[juzNumber - 1];
 
-                          return InkWell(
-                            onTap: () {
-                              final Map<int, List<int>> juzData =
-                                  Map<int, List<int>>.from(
-                                    quran.getSurahAndVersesFromJuz(juzNumber),
-                                  );
-                              int startingSurah = juzData.keys.first;
-                              int startingVerse = juzData[startingSurah]!.first;
-                              int calculatedPage = quran.getPageNumber(
-                                startingSurah,
-                                startingVerse,
+                      return InkWell(
+                        onTap: () {
+                          final Map<int, List<int>> juzData =
+                              Map<int, List<int>>.from(
+                                quran.getSurahAndVersesFromJuz(juzNumber),
                               );
+                          int startingSurah = juzData.keys.first;
+                          int startingVerse = juzData[startingSurah]!.first;
+                          int calculatedPage = quran.getPageNumber(
+                            startingSurah,
+                            startingVerse,
+                          );
 
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => MushafViewScreen(
-                                    initialPage: calculatedPage,
-                                    shouldUpdateProgress: false,
-                                  ),
-                                ),
-                              );
-                            },
-                            borderRadius: BorderRadius.circular(12),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 14.0,
-                                horizontal: 4.0,
-                              ),
-                              child: Row(
-                                children: [
-                                  // Elegant Indexed Number Badge
-                                  Container(
-                                    width: 40,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                      color: isDark
-                                          ? AppColors.primaryTeal.withValues(alpha: 0.12)
-                                          : AppColors.primaryTeal.withValues(alpha: 0.08),
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                        color: AppColors.primaryTeal.withValues(
-                                          alpha: 0.2,
-                                        ),
-                                        width: 1,
-                                      ),
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      '$juzNumber',
-                                      style: const TextStyle(
-                                        color: AppColors.primaryTeal,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 16),
-
-                                  // Text Content Area (English/Transliteration details)
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          juzEnglishName,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                            color: isDark
-                                                ? AppColors.textPrimaryDark
-                                                : AppColors.textPrimaryLight,
-                                            letterSpacing: 0.2,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          "Juz $juzNumber",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: isDark
-                                                ? AppColors.textSecondaryDark
-                                                : AppColors.textSecondaryLight,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
-                                  // Pure Arabic Text Display on Right Side
-                                  Text(
-                                    juzArabicName,
-                                    style: GoogleFonts.amiri(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500,
-                                      color: isDark
-                                          ? AppColors.accentGold
-                                          : AppColors.primaryTeal,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-
-                                  Icon(
-                                    Icons.arrow_forward_ios_rounded,
-                                    size: 12,
-                                    color: isDark
-                                        ? AppColors.textSecondaryDark
-                                        : AppColors.textSecondaryLight,
-                                  ),
-                                ],
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MushafViewScreen(
+                                initialPage: calculatedPage,
+                                shouldUpdateProgress: false,
                               ),
                             ),
                           );
                         },
-                      ),
-              ),
-            ],
+                        borderRadius: BorderRadius.circular(12),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 14.0,
+                            horizontal: 4.0,
+                          ),
+                          child: Row(
+                            children: [
+                              // Elegant Indexed Number Badge
+                              Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color: isDark
+                                      ? AppColors.primaryTeal.withValues(alpha: 0.12)
+                                      : AppColors.primaryTeal.withValues(alpha: 0.08),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: AppColors.primaryTeal.withValues(
+                                      alpha: 0.2,
+                                    ),
+                                    width: 1,
+                                  ),
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  '$juzNumber',
+                                  style: const TextStyle(
+                                    color: AppColors.primaryTeal,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+
+                              // Text Content Area (English/Transliteration details)
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      juzEnglishName,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        color: isDark
+                                            ? AppColors.textPrimaryDark
+                                            : AppColors.textPrimaryLight,
+                                        letterSpacing: 0.2,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      "Juz $juzNumber",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: isDark
+                                            ? AppColors.textSecondaryDark
+                                            : AppColors.textSecondaryLight,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              // Pure Arabic Text Display on Right Side
+                              Text(
+                                juzArabicName,
+                                style: TextStyle(
+                                  fontFamily: 'Amiri',
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                  color: isDark
+                                      ? AppColors.accentGold
+                                      : AppColors.primaryTeal,
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+
+                              Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: 12,
+                                color: isDark
+                                    ? AppColors.textSecondaryDark
+                                    : AppColors.textSecondaryLight,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
           ),
-          if (!_fontsLoaded)
-            const GlassLoadingOverlay(message: 'Syncing Quranic Scripts...'),
         ],
       ),
     );

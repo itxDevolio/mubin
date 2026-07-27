@@ -1,7 +1,6 @@
 import 'package:mubin/core/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'mushaf_view_screen.dart';
 import '../controllers/bookmark_controller.dart';
 
@@ -161,7 +160,8 @@ class BookmarkListScreen extends ConsumerWidget {
                                           : AppColors.textPrimaryLight,
                                       letterSpacing: 0.2,
                                     )
-                                  : GoogleFonts.amiri(
+                                  : TextStyle(
+                                      fontFamily: 'Amiri',
                                       fontSize: 18,
                                       fontWeight: FontWeight.w500,
                                       color: isDark

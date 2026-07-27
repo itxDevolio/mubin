@@ -10,7 +10,6 @@ import 'package:mubin/core/services/settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:adhan_dart/adhan_dart.dart';
 
 class PrayerCard extends ConsumerWidget {
@@ -37,7 +36,8 @@ class PrayerCard extends ConsumerWidget {
         Prayer active = d.currentPrayer(date: date.toLocal());
 
         final settings = ref.watch(settingsControllerProvider);
-        final bool isAnyNotificationEnabled = settings.notificationsEnabled &&
+        final bool isAnyNotificationEnabled =
+            settings.notificationsEnabled &&
             (settings.fajrNotification ||
                 settings.dhuhrNotification ||
                 settings.asrNotification ||
@@ -50,10 +50,18 @@ class PrayerCard extends ConsumerWidget {
           margin: const EdgeInsets.all(16),
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: getThemeColor(context, light: Colors.white, dark: Colors.black54),
+            color: getThemeColor(
+              context,
+              light: Colors.white,
+              dark: Colors.black54,
+            ),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: getThemeColor(context, light: Colors.black.withValues(alpha: 0.05), dark: Colors.white.withValues(alpha: 0.08)),
+              color: getThemeColor(
+                context,
+                light: Colors.black.withValues(alpha: 0.05),
+                dark: Colors.white.withValues(alpha: 0.08),
+              ),
             ),
           ),
           child: Column(
@@ -79,9 +87,10 @@ class PrayerCard extends ConsumerWidget {
                             getHijriDate(),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.poppins(
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
                               fontSize: 13,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w500,
                               color: themeDark(context)
                                   ? Colors.white
                                   : Colors.black87,
@@ -104,7 +113,8 @@ class PrayerCard extends ConsumerWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const NotificationSettingsScreen(),
+                            builder: (context) =>
+                                const NotificationSettingsScreen(),
                           ),
                         );
                       },

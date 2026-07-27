@@ -18,7 +18,8 @@ class UserProfileWidget extends StatelessWidget {
             Text(
               "Mubin",
               style: TextStyle(
-                fontWeight: FontWeight.bold, 
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Poppins',
                 fontSize: 20,
                 color: AppColors.primaryTeal,
               ),

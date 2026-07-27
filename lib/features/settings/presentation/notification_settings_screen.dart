@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../../core/app_colors.dart';
 import '../../../core/services/settings_controller.dart';
 import '../../../core/services/haptic_feedback.dart';
@@ -10,7 +9,8 @@ class NotificationSettingsScreen extends ConsumerWidget {
   const NotificationSettingsScreen({super.key});
 
   TextStyle _getStyle({double fontSize = 14, FontWeight? fontWeight, Color? color, double? height}) {
-    return GoogleFonts.poppins(
+    return TextStyle(
+      fontFamily: 'Poppins',
       fontSize: fontSize,
       fontWeight: fontWeight,
       color: color,
@@ -124,7 +124,8 @@ class NotificationSettingsScreen extends ConsumerWidget {
           const SizedBox(width: 8),
           Text(
             title,
-            style: GoogleFonts.poppins(
+            style: const TextStyle(
+              fontFamily: 'Poppins',
               fontSize: 12,
               fontWeight: FontWeight.w800,
               color: AppColors.primaryTeal,

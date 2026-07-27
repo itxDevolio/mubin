@@ -2,7 +2,6 @@ import 'package:mubin/core/app_colors.dart';
 import 'package:mubin/core/services/settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:quran/quran.dart' as quran;
 import '../../domain/entities/verse.dart';
 import '../controllers/bookmark_controller.dart';
@@ -10,6 +9,7 @@ import '../controllers/quran_audio_player_controller.dart';
 
 class VerseBottomSheet extends ConsumerWidget {
   final Verse verse;
+
   const VerseBottomSheet({super.key, required this.verse});
 
   @override
@@ -70,7 +70,9 @@ class VerseBottomSheet extends ConsumerWidget {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
-                            color: Theme.of(context).textTheme.titleLarge?.color,
+                            color: Theme.of(
+                              context,
+                            ).textTheme.titleLarge?.color,
                           ),
                         ),
                         Text(
@@ -159,8 +161,9 @@ class VerseBottomSheet extends ConsumerWidget {
               Text(
                 verse.textArabic,
                 textAlign: TextAlign.center,
-                style: GoogleFonts.amiriQuran(
-                  fontSize: 24,
+                style: TextStyle(
+                  fontFamily: 'Amiri',
+                  fontSize: 20,
                   height: 1.8,
                   color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
@@ -170,13 +173,12 @@ class VerseBottomSheet extends ConsumerWidget {
               const Divider(),
               const SizedBox(height: 12),
               Text(
-                 'Translation:',
+                'Translation:',
                 style: TextStyle(
-                  fontSize: 13,
+                  fontSize: 12,
                   color: isDark
                       ? AppColors.textSecondaryDark
                       : AppColors.textSecondaryLight,
-                  fontWeight: FontWeight.w600,
                 ),
               ),
               const SizedBox(height: 8),
@@ -184,14 +186,16 @@ class VerseBottomSheet extends ConsumerWidget {
                 verse.translation,
                 textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
                 style: isUrdu
-                    ? GoogleFonts.notoNastaliqUrdu(
-                        fontSize: 18,
+                    ? TextStyle(
+                        fontFamily: 'NotoNastaliqUrdu',
+                        fontSize: 14,
                         height: 2.2,
                         color: Theme.of(context).textTheme.bodyLarge?.color,
                       )
                     : TextStyle(
-                        fontSize: 16,
+                        fontSize: 12,
                         height: 1.5,
+                        fontWeight: FontWeight.w300,
                         color: Theme.of(context).textTheme.bodyLarge?.color,
                       ),
               ),
