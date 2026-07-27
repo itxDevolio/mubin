@@ -1,4 +1,4 @@
-package com.devolio.mubin
+package com.devolio.mubin.app
 
 import com.ryanheise.audioservice.AudioServiceActivity
 
