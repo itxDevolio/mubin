@@ -1,6 +1,7 @@
 import 'package:adhan_dart/adhan_dart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tzdata;
@@ -22,7 +23,8 @@ class NotificationService {
   Future<void> init() async {
     tzdata.initializeTimeZones();
 
-    const androidInit = AndroidInitializationSettings('@mipmap/launcher_icon');
+    // ✅ Using ic_launcher for better compatibility across devices as small icon
+    const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosInit = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
@@ -36,23 +38,27 @@ class NotificationService {
       ),
     );
 
-    // ✅ FIXED: Using v2 ID to force channel update and adding error handling
+    // ✅ FIXED: Using v3 ID for improved device compatibility and banner visibility
     const prayerChannel = AndroidNotificationChannel(
-      'mubin_prayer_v2',
+      'mubin_prayer_v3',
       'Prayer Notifications',
       description: 'Salah time alerts with Adhan sound',
       importance: Importance.max,
       playSound: true,
       sound: RawResourceAndroidNotificationSound('adhan_sound'),
       audioAttributesUsage: AudioAttributesUsage.alarm,
+      enableVibration: true,
+      showBadge: true,
     );
 
     const adhkarChannel = AndroidNotificationChannel(
-      'mubin_adhkar_v1',
+      'mubin_adhkar_v2',
       'Adhkar Reminders',
       description: 'Morning and Evening Adhkar notifications',
-      importance: Importance.high,
+      importance: Importance.max, // Max importance for head-up display (banner)
       playSound: true,
+      enableVibration: true,
+      showBadge: true,
     );
 
     await _notificationsPlugin
@@ -146,16 +152,17 @@ class NotificationService {
 
       if (scheduledTime.isAfter(nowTime)) {
         final id = (dayOffset * 100) + i;
+        final timeString = DateFormat.jm().format(time);
         
         try {
           await _notificationsPlugin.zonedSchedule(
             id: id,
-            title: '🕌 Salah Time: $name',
+            title: '$name Prayer - $timeString',
             body: 'It is time for $name prayer. Success is in Salah.',
             scheduledDate: scheduledTime,
             notificationDetails: NotificationDetails(
               android: AndroidNotificationDetails(
-                'mubin_prayer_v2',
+                'mubin_prayer_v3',
                 'Prayer Notifications',
                 importance: Importance.max,
                 priority: Priority.max,
@@ -164,9 +171,12 @@ class NotificationService {
                 category: AndroidNotificationCategory.alarm,
                 color: AppColors.primaryTeal,
                 visibility: NotificationVisibility.public,
+                ticker: 'Prayer Reminder: $name',
+                icon: 'ic_launcher_foreground',
+                largeIcon: const DrawableResourceAndroidBitmap('@mipmap/launcher_icon'),
                 styleInformation: BigTextStyleInformation(
                   'It is time for $name prayer. "Indeed, prayer has been decreed upon the believers a decree of specified times." (4:103)',
-                  contentTitle: '🕌 Salah Time: $name',
+                  contentTitle: '$name Prayer - $timeString',
                 ),
               ),
               iOS: const DarwinNotificationDetails(
@@ -183,12 +193,12 @@ class NotificationService {
           // Fallback if custom sound fails
           await _notificationsPlugin.zonedSchedule(
             id: id,
-            title: '🕌 Salah Time: $name',
+            title: '$name Prayer - $timeString',
             body: 'It is time for $name prayer.',
             scheduledDate: scheduledTime,
             notificationDetails: const NotificationDetails(
               android: AndroidNotificationDetails(
-                'mubin_prayer_v2',
+                'mubin_prayer_v3',
                 'Prayer Notifications',
                 importance: Importance.max,
                 priority: Priority.max,
@@ -220,21 +230,29 @@ class NotificationService {
     final parts = timeStr.split(':');
     final adhkarDt = DateTime(date.year, date.month, date.day, int.parse(parts[0]), int.parse(parts[1]));
     final scheduledDate = tz.TZDateTime.from(adhkarDt, tz.local);
+    final formattedTime = DateFormat.jm().format(adhkarDt);
 
     if (scheduledDate.isAfter(tz.TZDateTime.now(tz.local))) {
       await _notificationsPlugin.zonedSchedule(
         id: (dayOffset * 100) + subId,
-        title: '${type == 'Morning' ? '☀️' : '🌙'} $type Adhkar',
+        title: '$type Adhkar - $formattedTime',
         body: 'Time for your $type adhkar reminders.',
         scheduledDate: scheduledDate,
         notificationDetails: NotificationDetails(
           android: AndroidNotificationDetails(
-            'mubin_adhkar_v1',
+            'mubin_adhkar_v2',
             'Adhkar Reminders',
-            importance: Importance.high,
-            priority: Priority.high,
+            importance: Importance.max,
+            priority: Priority.max,
             color: AppColors.primaryTeal,
             visibility: NotificationVisibility.public,
+            ticker: '$type Adhkar Reminder',
+            icon: 'ic_launcher_foreground',
+            largeIcon: const DrawableResourceAndroidBitmap('@mipmap/launcher_icon'),
+            styleInformation: BigTextStyleInformation(
+              'Time for your $type adhkar reminders. Stay connected with your Creator.',
+              contentTitle: '$type Adhkar - $formattedTime',
+            ),
           ),
           iOS: const DarwinNotificationDetails(
             presentAlert: true,
@@ -243,7 +261,6 @@ class NotificationService {
           ),
         ),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-
       );
     }
   }

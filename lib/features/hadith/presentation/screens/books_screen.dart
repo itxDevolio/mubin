@@ -33,7 +33,8 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
           style: TextStyle(
             letterSpacing: 0.5,
             fontWeight: FontWeight.bold,
-            fontFamily: 'Poppins'
+            fontFamily:
+                'Poppins'
                 '',
             color: isDark
                 ? AppColors.textPrimaryDark
@@ -203,7 +204,9 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                                       color: isDark
                                           ? Colors.white
                                           : AppColors.textPrimaryLight,
-                                      fontFamily: isUrdu ? 'NotoNastaliqUrdu' : null,
+                                      fontFamily: isUrdu
+                                          ? 'NotoNastaliqUrdu'
+                                          : null,
                                     ),
                                     textAlign: isUrdu
                                         ? TextAlign.right
