@@ -2,6 +2,9 @@ import 'package:adhan_dart/adhan_dart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
+import 'package:mubin/features/adhkar/data/models/adhkar_constants.dart';
+import 'package:mubin/features/adhkar/presentation/screens/adhkar_list_screen.dart';
+import 'package:mubin/main.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tzdata;
@@ -32,10 +35,37 @@ class NotificationService {
     );
 
     await _notificationsPlugin.initialize(
-    settings:   const InitializationSettings(
+      settings: const InitializationSettings(
         android: androidInit,
         iOS: iosInit,
       ),
+      onDidReceiveNotificationResponse: (NotificationResponse response) {
+        final payload = response.payload;
+        if (payload == null || navigatorKey.currentState == null) return;
+
+        if (payload == 'prayer') {
+          // Home screen is the default, so we just pop to it or do nothing if already there
+          navigatorKey.currentState?.popUntil((route) => route.isFirst);
+        } else if (payload == 'adhkar_morning') {
+          navigatorKey.currentState?.push(
+            MaterialPageRoute(
+              builder: (_) => AdhkarListScreen(
+                dhikrList: AdhkarConstants.morningAdhkar,
+                title: 'Morning Adhkar',
+              ),
+            ),
+          );
+        } else if (payload == 'adhkar_evening') {
+          navigatorKey.currentState?.push(
+            MaterialPageRoute(
+              builder: (_) => AdhkarListScreen(
+                dhikrList: AdhkarConstants.eveningAdhkar,
+                title: 'Evening Adhkar',
+              ),
+            ),
+          );
+        }
+      },
     );
 
     // ✅ FIXED: Using v3 ID for improved device compatibility and banner visibility
@@ -152,13 +182,15 @@ class NotificationService {
 
       if (scheduledTime.isAfter(nowTime)) {
         final id = (dayOffset * 100) + i;
-        final timeString = DateFormat.jm().format(time);
+        // ✅ Using scheduledTime (TZDateTime) for accurate local time display
+        final timeString = DateFormat.jm().format(scheduledTime);
         
         try {
           await _notificationsPlugin.zonedSchedule(
             id: id,
             title: '$name Prayer - $timeString',
             body: 'It is time for $name prayer. Success is in Salah.',
+            payload: 'prayer',
             scheduledDate: scheduledTime,
             notificationDetails: NotificationDetails(
               android: AndroidNotificationDetails(
@@ -195,6 +227,7 @@ class NotificationService {
             id: id,
             title: '$name Prayer - $timeString',
             body: 'It is time for $name prayer.',
+            payload: 'prayer',
             scheduledDate: scheduledTime,
             notificationDetails: const NotificationDetails(
               android: AndroidNotificationDetails(
@@ -230,13 +263,15 @@ class NotificationService {
     final parts = timeStr.split(':');
     final adhkarDt = DateTime(date.year, date.month, date.day, int.parse(parts[0]), int.parse(parts[1]));
     final scheduledDate = tz.TZDateTime.from(adhkarDt, tz.local);
-    final formattedTime = DateFormat.jm().format(adhkarDt);
+    // ✅ Using scheduledDate (TZDateTime) for accurate local time display
+    final formattedTime = DateFormat.jm().format(scheduledDate);
 
     if (scheduledDate.isAfter(tz.TZDateTime.now(tz.local))) {
       await _notificationsPlugin.zonedSchedule(
         id: (dayOffset * 100) + subId,
         title: '$type Adhkar - $formattedTime',
         body: 'Time for your $type adhkar reminders.',
+        payload: type == 'Morning' ? 'adhkar_morning' : 'adhkar_evening',
         scheduledDate: scheduledDate,
         notificationDetails: NotificationDetails(
           android: AndroidNotificationDetails(

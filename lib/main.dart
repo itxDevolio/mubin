@@ -30,6 +30,8 @@ void callbackDispatcher() {
   });
 }
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -159,6 +161,7 @@ class _MubinAppState extends ConsumerState<MubinApp> {
 
     return MaterialApp(
       title: 'Mubin',
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       theme: AppThemeData.lightTheme,
       darkTheme: AppThemeData.darkTheme,
