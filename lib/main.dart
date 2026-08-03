@@ -11,6 +11,7 @@ import 'core/services/notification_service.dart';
 import 'core/services/settings_controller.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/app_typography.dart';
+import 'features/splash/presentation/screens/splash_screen.dart';
 import 'home/ui/screens/home_screen.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -111,7 +112,17 @@ class _MubinAppState extends ConsumerState<MubinApp> {
 
   Future<void> _initApp() async {
     // Perform all critical initializations here
+    final startTime = DateTime.now();
+    
     await _initServices();
+
+    // Ensure splash screen shows for at least 4.5 seconds for a smooth animation experience
+    final endTime = DateTime.now();
+    final elapsed = endTime.difference(startTime);
+    if (elapsed < const Duration(milliseconds: 4500)) {
+      await Future.delayed(Duration(milliseconds: 4500 - elapsed.inMilliseconds));
+    }
+
     if (mounted) {
       setState(() {
         _isInitialized = true;
@@ -129,33 +140,7 @@ class _MubinAppState extends ConsumerState<MubinApp> {
         theme: AppThemeData.lightTheme,
         darkTheme: AppThemeData.darkTheme,
         themeMode: settings.themeMode,
-        home: Scaffold(
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/app_logos/mubin_app_logo.png',
-                  width: 120,
-                  height: 120,
-                ),
-                const SizedBox(height: 24),
-                const CircularProgressIndicator(
-                  color: AppColors.primaryTeal,
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  "Initializing Mubin...",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.primaryTeal,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+        home: const SplashScreen(),
       );
     }
 

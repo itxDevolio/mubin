@@ -8,6 +8,7 @@ import 'package:mubin/features/settings/presentation/calculation_method_screen.d
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -161,20 +162,10 @@ class SettingsScreen extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 30),
-          _buildSectionHeader('SUPPORT & MISSION'),
+          _buildSectionHeader('SUPPORT OUR MISSION'),
           _buildSettingsCard(
             isDark,
             children: [
-              _buildSettingsTile(
-                icon: Icons.favorite_rounded,
-                title: 'Support Our Mission',
-                subtitle: 'Help us keep the app ad-free',
-                isDark: isDark,
-                onTap: () {
-                  hapticFeedBack();
-                  _showSupportDialog(context, isDark);
-                },
-              ),
               _buildDivider(isDark),
               _buildSettingsTile(
                 icon: Icons.ios_share_rounded,
@@ -184,17 +175,19 @@ class SettingsScreen extends ConsumerWidget {
                 onTap: () {
                   hapticFeedBack();
                   // Share logic
+                  _shareApp();
                 },
               ),
               _buildDivider(isDark),
               _buildSettingsTile(
                 icon: Icons.star_outline_rounded,
                 title: 'Rate & Review',
-                subtitle: 'Support us on the Play Store',
+                subtitle: 'Enjoying the app? Let us know!',
                 isDark: isDark,
                 onTap: () {
                   hapticFeedBack();
                   // Store link logic
+                  _launchPlayStore();
                 },
               ),
             ],
@@ -219,7 +212,7 @@ class SettingsScreen extends ConsumerWidget {
                 isDark: isDark,
                 onTap: () {
                   hapticFeedBack();
-                  // Policy link logic
+                  _launchPrivacyPolicy();
                 },
               ),
             ],
@@ -348,49 +341,6 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  void _showSupportDialog(BuildContext context, bool isDark) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
-        title: Text(
-          'Support Our Mission',
-          style: _getStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Help us keep Mubin ad-free and building tools for the Ummah.',
-              style: _getStyle(fontSize: 14, height: 1.8),
-            ),
-            const SizedBox(height: 24),
-            _buildSupportOption(
-              icon: Icons.chat_rounded,
-              title: 'WhatsApp',
-              color: Colors.green,
-              onTap: () => _launchWhatsApp(),
-            ),
-            const SizedBox(height: 12),
-            _buildSupportOption(
-              icon: Icons.email_rounded,
-              title: 'Email',
-              color: AppColors.primaryTeal,
-              onTap: () => _launchEmail(),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Close', style: _getStyle(color: Colors.grey)),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildSupportOption({
     required IconData icon,
     required String title,
@@ -497,7 +447,11 @@ class SettingsScreen extends ConsumerWidget {
               const SizedBox(height: 24),
               const Text(
                 'Select Reciter',
-                style: TextStyle(fontFamily: 'Poppins', fontSize: 18, fontWeight: FontWeight.w900),
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                ),
               ),
               const SizedBox(height: 16),
               Flexible(
@@ -578,7 +532,11 @@ class SettingsScreen extends ConsumerWidget {
           backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
           title: const Text(
             'Select Language',
-            style: TextStyle(fontFamily: 'Poppins', fontSize: 18, fontWeight: FontWeight.w900),
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 18,
+              fontWeight: FontWeight.w900,
+            ),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -629,7 +587,11 @@ class SettingsScreen extends ConsumerWidget {
           backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
           title: const Text(
             'Select Theme',
-            style: TextStyle(fontFamily: 'Poppins', fontSize: 18, fontWeight: FontWeight.w900),
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 18,
+              fontWeight: FontWeight.w900,
+            ),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -747,7 +709,11 @@ class SettingsScreen extends ConsumerWidget {
           backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
           title: const Text(
             'Select Madhab',
-            style: TextStyle(fontFamily: 'Poppins', fontSize: 18, fontWeight: FontWeight.w900),
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 18,
+              fontWeight: FontWeight.w900,
+            ),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -834,5 +800,36 @@ class SettingsScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _launchPlayStore() async {
+    const String packageName = 'com.devolio.mubin.app';
+    final Uri playStoreUrl = Uri.parse(
+      'https://play.google.com/store/apps/details?id=$packageName',
+    );
+
+    if (!await launchUrl(playStoreUrl, mode: LaunchMode.externalApplication)) {
+      debugPrint('Could not launch Play Store');
+    }
+  }
+
+  Future<void> _launchPrivacyPolicy() async {
+    final Uri privacyPolicyUrl = Uri.parse(
+      'https://sites.google.com/view/privacy-policy-mubin/home',
+    );
+
+    if (!await launchUrl(privacyPolicyUrl, mode: LaunchMode.externalApplication)) {
+      debugPrint('Could not launch Privacy Policy');
+    }
+  }
+
+
+  Future<void> _shareApp() async {
+    const String packageName = 'com.devolio.mubin.app';
+    final String shareText =
+        'Check out Mubin — your companion for prayer times, adhan alerts, adhkar reminders, and qibla direction. Download now:\n\n'
+        'https://play.google.com/store/apps/details?id=$packageName';
+
+    await Share.share(shareText, subject: 'Mubin - Islamic Prayer Companion App');
   }
 }
