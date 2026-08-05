@@ -26,19 +26,10 @@ class QiblaNotifier extends StateNotifier<QiblaState> {
 
   Future<void> _init() async {
     try {
-      // Get last known position first for faster startup (non-blocking)
-      Position? position = await Geolocator.getLastKnownPosition();
+      state = state.copyWith(isLoading: true);
       
-      // Fetching fresh location can be slow, so we do it asynchronously
-      if (position == null) {
-        position = await _repository.getCurrentLocation();
-      } else {
-        // Still trigger a fresh location update in the background
-        _repository.getCurrentLocation().then((freshPos) {
-           _updateDirection(freshPos);
-        });
-      }
-
+      // Fetch fresh location for pinpoint accuracy
+      final position = await _repository.getCurrentLocation();
       _updateDirection(position);
       
       _compassSubscription = _repository.getCompassStream().listen((event) {

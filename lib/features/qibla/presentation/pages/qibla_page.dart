@@ -46,7 +46,7 @@ class QiblaPage extends ConsumerWidget {
                       const CircularProgressIndicator.adaptive(),
                       const SizedBox(height: 24),
                       Text(
-                        "Initializing Compass...",
+                        "Fetching Precise Location...",
                         style: TextStyle(
                           color: theme.colorScheme.onSurface.withOpacity(0.6),
                           fontSize: 14,
