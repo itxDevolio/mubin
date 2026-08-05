@@ -153,7 +153,9 @@ class SettingsController extends StateNotifier<SettingsState> {
       final status = await Permission.notification.request();
       await Permission.scheduleExactAlarm.request();
       
-      if (status.isDenied) {
+      // If permission is permanently denied, we should probably inform the user,
+      // but if just denied, we don't enable the toggle.
+      if (status.isDenied || status.isPermanentlyDenied) {
         return;
       }
     }
@@ -163,7 +165,8 @@ class SettingsController extends StateNotifier<SettingsState> {
     
     state = state.copyWith(notificationsEnabled: value);
     
-    NotificationService().scheduleAllNotifications();
+    // Ensure notifications are scheduled immediately
+    await NotificationService().scheduleAllNotifications();
   }
 
   Future<void> updateNotificationSetting(String key, bool value) async {

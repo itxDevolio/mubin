@@ -1,6 +1,7 @@
 import 'package:adhan_dart/adhan_dart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:mubin/features/adhkar/data/models/adhkar_constants.dart';
 import 'package:mubin/features/adhkar/presentation/screens/adhkar_list_screen.dart';
@@ -85,7 +86,8 @@ class NotificationService {
       'mubin_adhkar_v2',
       'Adhkar Reminders',
       description: 'Morning and Evening Adhkar notifications',
-      importance: Importance.max, // Max importance for head-up display (banner)
+      importance: Importance.max,
+      // Max importance for head-up display (banner)
       playSound: true,
       enableVibration: true,
       showBadge: true,
@@ -113,27 +115,50 @@ class NotificationService {
 
     if (!enabled) return;
 
-    // Safety: Ensure Timezone is correctly set
-    try {
-      if (tz.local.name == 'UTC') {
-        tz.setLocalLocation(tz.getLocation('Asia/Karachi'));
-      }
-    } catch (_) {}
+    // Request necessary permissions for scheduling notifications
+    final status = await Permission.notification.status;
+    if (status.isDenied || status.isLimited) {
+      await Permission.notification.request();
+    }
 
-    // Request necessary permissions for scheduling exact alarms
-    await Permission.notification.request();
+    // Request necessary permissions for scheduling exact alarms (Android 12+)
     if (await Permission.scheduleExactAlarm.isDenied) {
       await Permission.scheduleExactAlarm.request();
     }
-    
+
     // Request battery optimization exemption for reliability
     if (await Permission.ignoreBatteryOptimizations.isDenied) {
       await Permission.ignoreBatteryOptimizations.request();
     }
 
-    final double? lat = box.get('lat');
-    final double? lng = box.get('lng');
-    if (lat == null || lng == null) return;
+    // Safety: Ensure Timezone is correctly set
+    try {
+      if (tz.local.name == 'UTC') {
+        // Fallback to Karachi if timezone is not set,
+        // ideally this should be set to the user's actual timezone in init()
+        tz.setLocalLocation(tz.getLocation('Asia/Karachi'));
+      }
+    } catch (_) {}
+
+    double? lat = box.get('lat');
+    double? lng = box.get('lng');
+
+    // If location is missing, try to fetch it to avoid returning early
+    if (lat == null || lng == null) {
+      try {
+        final position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.low,
+          timeLimit: const Duration(seconds: 5),
+        );
+        lat = position.latitude;
+        lng = position.longitude;
+        await box.put('lat', lat);
+        await box.put('lng', lng);
+      } catch (e) {
+        debugPrint("Location not available for scheduling: $e");
+        return;
+      }
+    }
 
     final prayerService = PrayerService();
     final now = DateTime.now();
@@ -144,7 +169,9 @@ class NotificationService {
     for (int i = 0; i < 10; i++) {
       final scheduleDate = now.add(Duration(days: i));
       final prayerTimes = await prayerService.getPrayerTime(
-        lat, lng, isHanafi,
+        lat,
+        lng,
+        isHanafi,
         date: scheduleDate,
         methodKey: methodKey,
       );
@@ -174,7 +201,10 @@ class NotificationService {
       final time = times[name];
       if (time == null) continue;
 
-      final bool isEnabled = box.get('${name.toLowerCase()}Notification', defaultValue: true);
+      final bool isEnabled = box.get(
+        '${name.toLowerCase()}Notification',
+        defaultValue: true,
+      );
       if (!isEnabled) continue;
 
       final scheduledTime = tz.TZDateTime.from(time, tz.local);
@@ -182,7 +212,7 @@ class NotificationService {
 
       if (scheduledTime.isAfter(nowTime)) {
         final id = (dayOffset * 100) + i;
-        
+
         try {
           await _notificationsPlugin.zonedSchedule(
             id: id,
@@ -203,7 +233,9 @@ class NotificationService {
                 visibility: NotificationVisibility.public,
                 ticker: 'Prayer Reminder: $name',
                 icon: 'ic_launcher_foreground',
-                largeIcon: const DrawableResourceAndroidBitmap('@mipmap/launcher_icon'),
+                largeIcon: const DrawableResourceAndroidBitmap(
+                  '@mipmap/launcher_icon',
+                ),
                 styleInformation: BigTextStyleInformation(
                   'It is time for $name prayer. "Indeed, prayer has been decreed upon the believers at specified times." (4:103)',
                   contentTitle: name,
@@ -244,10 +276,22 @@ class NotificationService {
 
     // Schedule Adhkar Reminders
     if (box.get('morningAdhkarNotification', defaultValue: true)) {
-      await _scheduleAdhkar(dayOffset, date, box.get('morningAdhkarTime', defaultValue: '07:00'), 'Morning', 50);
+      await _scheduleAdhkar(
+        dayOffset,
+        date,
+        box.get('morningAdhkarTime', defaultValue: '07:00'),
+        'Morning',
+        50,
+      );
     }
     if (box.get('eveningAdhkarNotification', defaultValue: true)) {
-      await _scheduleAdhkar(dayOffset, date, box.get('eveningAdhkarTime', defaultValue: '17:00'), 'Evening', 60);
+      await _scheduleAdhkar(
+        dayOffset,
+        date,
+        box.get('eveningAdhkarTime', defaultValue: '17:00'),
+        'Evening',
+        60,
+      );
     }
   }
 
@@ -259,7 +303,13 @@ class NotificationService {
     int subId,
   ) async {
     final parts = timeStr.split(':');
-    final adhkarDt = DateTime(date.year, date.month, date.day, int.parse(parts[0]), int.parse(parts[1]));
+    final adhkarDt = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      int.parse(parts[0]),
+      int.parse(parts[1]),
+    );
     final scheduledDate = tz.TZDateTime.from(adhkarDt, tz.local);
 
     if (scheduledDate.isAfter(tz.TZDateTime.now(tz.local))) {
@@ -279,7 +329,9 @@ class NotificationService {
             visibility: NotificationVisibility.public,
             ticker: '$type Adhkar Reminder',
             icon: 'ic_launcher_foreground',
-            largeIcon: const DrawableResourceAndroidBitmap('@mipmap/launcher_icon'),
+            largeIcon: const DrawableResourceAndroidBitmap(
+              '@mipmap/launcher_icon',
+            ),
             styleInformation: BigTextStyleInformation(
               'Take a moment for your $type adhkar and find peace in remembrance.',
               contentTitle: '$type Adhkar',
