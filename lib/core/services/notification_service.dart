@@ -182,14 +182,12 @@ class NotificationService {
 
       if (scheduledTime.isAfter(nowTime)) {
         final id = (dayOffset * 100) + i;
-        // ✅ Using scheduledTime (TZDateTime) for accurate local time display
-        final timeString = DateFormat.jm().format(scheduledTime);
         
         try {
           await _notificationsPlugin.zonedSchedule(
             id: id,
-            title: '$name Prayer - $timeString',
-            body: 'It is time for $name prayer. Success is in Salah.',
+            title: name,
+            body: 'Success is in Salah',
             payload: 'prayer',
             scheduledDate: scheduledTime,
             notificationDetails: NotificationDetails(
@@ -207,8 +205,8 @@ class NotificationService {
                 icon: 'ic_launcher_foreground',
                 largeIcon: const DrawableResourceAndroidBitmap('@mipmap/launcher_icon'),
                 styleInformation: BigTextStyleInformation(
-                  'It is time for $name prayer. "Indeed, prayer has been decreed upon the believers a decree of specified times." (4:103)',
-                  contentTitle: '$name Prayer - $timeString',
+                  'It is time for $name prayer. "Indeed, prayer has been decreed upon the believers at specified times." (4:103)',
+                  contentTitle: name,
                 ),
               ),
               iOS: const DarwinNotificationDetails(
@@ -225,8 +223,8 @@ class NotificationService {
           // Fallback if custom sound fails
           await _notificationsPlugin.zonedSchedule(
             id: id,
-            title: '$name Prayer - $timeString',
-            body: 'It is time for $name prayer.',
+            title: name,
+            body: 'Success is in Salah',
             payload: 'prayer',
             scheduledDate: scheduledTime,
             notificationDetails: const NotificationDetails(
@@ -263,14 +261,12 @@ class NotificationService {
     final parts = timeStr.split(':');
     final adhkarDt = DateTime(date.year, date.month, date.day, int.parse(parts[0]), int.parse(parts[1]));
     final scheduledDate = tz.TZDateTime.from(adhkarDt, tz.local);
-    // ✅ Using scheduledDate (TZDateTime) for accurate local time display
-    final formattedTime = DateFormat.jm().format(scheduledDate);
 
     if (scheduledDate.isAfter(tz.TZDateTime.now(tz.local))) {
       await _notificationsPlugin.zonedSchedule(
         id: (dayOffset * 100) + subId,
-        title: '$type Adhkar - $formattedTime',
-        body: 'Time for your $type adhkar reminders.',
+        title: '$type Adhkar',
+        body: 'Stay connected with your Creator',
         payload: type == 'Morning' ? 'adhkar_morning' : 'adhkar_evening',
         scheduledDate: scheduledDate,
         notificationDetails: NotificationDetails(
@@ -285,8 +281,8 @@ class NotificationService {
             icon: 'ic_launcher_foreground',
             largeIcon: const DrawableResourceAndroidBitmap('@mipmap/launcher_icon'),
             styleInformation: BigTextStyleInformation(
-              'Time for your $type adhkar reminders. Stay connected with your Creator.',
-              contentTitle: '$type Adhkar - $formattedTime',
+              'Take a moment for your $type adhkar and find peace in remembrance.',
+              contentTitle: '$type Adhkar',
             ),
           ),
           iOS: const DarwinNotificationDetails(
