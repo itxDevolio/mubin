@@ -87,6 +87,48 @@ class NotificationSettingsScreen extends ConsumerWidget {
             ),
           ]),
           const SizedBox(height: 32),
+          _buildSectionHeader("PRAYER EXPERIENCE", Icons.settings_suggest_rounded),
+          _buildSettingsCard(isDark, [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Auto-open App",
+                          style: _getStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: isDark ? Colors.white.withOpacity(0.9) : Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          "Automatically opens the app when prayer notification arrives for a full-screen experience.",
+                          style: _getStyle(
+                            fontSize: 12,
+                            color: isDark ? Colors.white.withOpacity(0.5) : Colors.black54,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  CustomIslamicSwitch(
+                    value: settings.autoOpenOnPrayer,
+                    onChanged: (val) {
+                      hapticFeedBack();
+                      controller.updateNotificationSetting('autoOpenOnPrayer', val);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ]),
+          const SizedBox(height: 32),
           _buildSectionHeader("ADHKAR REMINDERS", Icons.auto_awesome_rounded),
           _buildSettingsCard(isDark, [
             _buildAdhkarTile(

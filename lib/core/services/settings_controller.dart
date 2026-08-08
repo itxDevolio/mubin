@@ -26,6 +26,7 @@ class SettingsState {
   final bool ishaNotification;
   final bool morningAdhkarNotification;
   final bool eveningAdhkarNotification;
+  final bool autoOpenOnPrayer;
   
   // Custom Adhkar Times (Stored as "HH:mm")
   final String morningAdhkarTime;
@@ -46,6 +47,7 @@ class SettingsState {
     this.ishaNotification = true,
     this.morningAdhkarNotification = true,
     this.eveningAdhkarNotification = true,
+    this.autoOpenOnPrayer = true,
     this.morningAdhkarTime = '07:00',
     this.eveningAdhkarTime = '17:00',
   }) : currentReciter = currentReciter ?? availableReciters.first;
@@ -65,6 +67,7 @@ class SettingsState {
     bool? ishaNotification,
     bool? morningAdhkarNotification,
     bool? eveningAdhkarNotification,
+    bool? autoOpenOnPrayer,
     String? morningAdhkarTime,
     String? eveningAdhkarTime,
   }) {
@@ -83,6 +86,7 @@ class SettingsState {
       ishaNotification: ishaNotification ?? this.ishaNotification,
       morningAdhkarNotification: morningAdhkarNotification ?? this.morningAdhkarNotification,
       eveningAdhkarNotification: eveningAdhkarNotification ?? this.eveningAdhkarNotification,
+      autoOpenOnPrayer: autoOpenOnPrayer ?? this.autoOpenOnPrayer,
       morningAdhkarTime: morningAdhkarTime ?? this.morningAdhkarTime,
       eveningAdhkarTime: eveningAdhkarTime ?? this.eveningAdhkarTime,
     );
@@ -113,6 +117,7 @@ class SettingsController extends StateNotifier<SettingsState> {
     final bool isha = box.get('ishaNotification', defaultValue: true);
     final bool morningAdhkar = box.get('morningAdhkarNotification', defaultValue: true);
     final bool eveningAdhkar = box.get('eveningAdhkarNotification', defaultValue: true);
+    final bool autoOpen = box.get('autoOpenOnPrayer', defaultValue: true);
     
     final String morningTime = box.get('morningAdhkarTime', defaultValue: '07:00');
     final String eveningTime = box.get('eveningAdhkarTime', defaultValue: '17:00');
@@ -142,6 +147,7 @@ class SettingsController extends StateNotifier<SettingsState> {
       ishaNotification: isha,
       morningAdhkarNotification: morningAdhkar,
       eveningAdhkarNotification: eveningAdhkar,
+      autoOpenOnPrayer: autoOpen,
       morningAdhkarTime: morningTime,
       eveningAdhkarTime: eveningTime,
     );
@@ -181,6 +187,7 @@ class SettingsController extends StateNotifier<SettingsState> {
       case 'ishaNotification': state = state.copyWith(ishaNotification: value); break;
       case 'morningAdhkarNotification': state = state.copyWith(morningAdhkarNotification: value); break;
       case 'eveningAdhkarNotification': state = state.copyWith(eveningAdhkarNotification: value); break;
+      case 'autoOpenOnPrayer': state = state.copyWith(autoOpenOnPrayer: value); break;
     }
     
     NotificationService().scheduleAllNotifications();

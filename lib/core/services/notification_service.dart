@@ -207,6 +207,8 @@ class NotificationService {
       );
       if (!isEnabled) continue;
 
+      final bool autoOpen = box.get('autoOpenOnPrayer', defaultValue: true);
+
       final scheduledTime = tz.TZDateTime.from(time, tz.local);
       final nowTime = tz.TZDateTime.now(tz.local);
 
@@ -227,7 +229,7 @@ class NotificationService {
                 importance: Importance.max,
                 priority: Priority.max,
                 sound: const RawResourceAndroidNotificationSound('adhan_sound'),
-                fullScreenIntent: true,
+                fullScreenIntent: autoOpen,
                 category: AndroidNotificationCategory.alarm,
                 color: AppColors.primaryTeal,
                 visibility: NotificationVisibility.public,
@@ -259,12 +261,13 @@ class NotificationService {
             body: 'Success is in Salah',
             payload: 'prayer',
             scheduledDate: scheduledTime,
-            notificationDetails: const NotificationDetails(
+            notificationDetails: NotificationDetails(
               android: AndroidNotificationDetails(
                 'mubin_prayer_v3',
                 'Prayer Notifications',
                 importance: Importance.max,
                 priority: Priority.max,
+                fullScreenIntent: autoOpen,
               ),
             ),
             androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
