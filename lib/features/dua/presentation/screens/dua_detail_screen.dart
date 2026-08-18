@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/app_colors.dart';
 import '../../../../core/services/settings_controller.dart';
 import '../../domain/entities/dua_entity.dart';
+import '../../../../core/widgets/ad_banner_widget.dart';
 
 class DuaDetailScreen extends ConsumerWidget {
   final DuaEntity dua;
@@ -170,6 +171,8 @@ class DuaDetailScreen extends ConsumerWidget {
                 ),
               ),
 
+            const SizedBox(height: 20),
+            const AdBannerWidget(),
             const SizedBox(height: 30),
           ],
         ),

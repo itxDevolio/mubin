@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/tasbeeh_provider.dart';
 import '../widgets/real_tasbeeh_beads_widget.dart';
+import '../../../../core/widgets/ad_banner_widget.dart';
 
 class TasbeehScreen extends ConsumerWidget {
   final String dhikrId;
@@ -74,7 +75,9 @@ class TasbeehScreen extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Spacer(flex: 2),
+                  const Spacer(flex: 1),
+                  const AdBannerWidget(),
+                  const Spacer(flex: 1),
 
                   // Arabic Text Display (Dynamic & Elegant)
                   Hero(

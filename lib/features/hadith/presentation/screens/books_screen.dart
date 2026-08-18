@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../controller/data_provider.dart';
 import 'chapters_screen.dart';
+import '../../../../core/widgets/ad_banner_widget.dart';
 
 class BooksScreen extends ConsumerStatefulWidget {
   const BooksScreen({super.key});
@@ -140,7 +141,7 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                 }
 
                 return ListView.separated(
-                  itemCount: filteredBooks.length,
+                  itemCount: filteredBooks.length + 1,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 8,
@@ -149,6 +150,12 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                   separatorBuilder: (context, index) =>
                       const SizedBox(height: 12),
                   itemBuilder: (context, index) {
+                    if (index == filteredBooks.length) {
+                      return const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16.0),
+                        child: AdBannerWidget(),
+                      );
+                    }
                     final book = filteredBooks[index];
                     final String displayTitle = isUrdu
                         ? book.bookNameUrdu

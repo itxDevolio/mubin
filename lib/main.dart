@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:timezone/data/latest.dart' as tzdata;
@@ -82,6 +83,9 @@ Future<void> _initServices() async {
       androidNotificationOngoing: true,
       androidNotificationIcon: 'mipmap/launcher_icon',
     );
+
+    // Initialize AdMob
+    await MobileAds.instance.initialize();
 
     // Initialize Notifications
     final notificationService = NotificationService();

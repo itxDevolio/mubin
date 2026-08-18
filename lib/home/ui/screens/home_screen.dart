@@ -20,6 +20,7 @@ import '../widgets/feature_card.dart';
 import '../widgets/guide_card.dart';
 import '../widgets/user_profile_widget.dart';
 import '../widgets/prayer_card.dart';
+import '../../../core/widgets/ad_banner_widget.dart';
 
 // FIX: ConsumerWidget ko ConsumerStatefulWidget se replace kiya kyunki isme state (_currentDate) use ho rahi hai
 class HomeScreen extends ConsumerStatefulWidget {
@@ -293,6 +294,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                               ),
                             ),
                             const SizedBox(height: 20),
+                            const AdBannerWidget(),
+                            const SizedBox(height: 10),
                           ],
                         ),
                       ),

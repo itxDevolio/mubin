@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/dhikr_entity.dart';
 import '../controller/adhkar_provider.dart';
+import '../../../../core/widgets/ad_banner_widget.dart';
 
 class AdhkarListScreen extends ConsumerStatefulWidget {
   final List<DhikrEntity> dhikrList;
@@ -43,6 +44,13 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
         final isCompleted = remaining == 0;
         final bool showTranslation = dhikr.english.isNotEmpty || dhikr.urdu.isNotEmpty;
 
+        final bool isMorningEvening = widget.title.contains('Morning') || widget.title.contains('Evening');
+        final bool isSleeping = widget.title.contains('Sleeping');
+        
+        // 1-based positions as requested: 10, 12, 14, 16, 20 for Morning/Evening; 5 for Sleeping
+        final bool shouldShowAd = (isMorningEvening && [10, 12, 14, 16, 20].contains(index + 1)) || 
+                                 (isSleeping && index + 1 == 5);
+
         return Scaffold(
           backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
           appBar: AppBar(
@@ -73,6 +81,10 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    if (shouldShowAd) ...[
+                      const AdBannerWidget(),
+                      const SizedBox(height: 20),
+                    ],
                     if ((isUrdu ? dhikr.fazilatUrdu : dhikr.fazilatEnglish) != null)
                       _buildTag(isUrdu ? dhikr.fazilatUrdu! : dhikr.fazilatEnglish!, isUrdu),
 

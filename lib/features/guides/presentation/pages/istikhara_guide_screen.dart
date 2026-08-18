@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/services/settings_controller.dart';
 import '../widgets/guide_step_widget.dart';
 import '../../data/models/istikhara_data.dart';
+import '../../../../core/widgets/ad_banner_widget.dart';
 
 class IstikharaGuideScreen extends ConsumerWidget {
   const IstikharaGuideScreen({super.key});
@@ -27,9 +28,15 @@ class IstikharaGuideScreen extends ConsumerWidget {
       body: ListView.builder(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-        itemCount: IstikharaData.getSteps().length,
+        itemCount: IstikharaData.getSteps().length + 1,
         itemBuilder: (context, index) {
           final steps = IstikharaData.getSteps();
+          if (index == steps.length) {
+            return const Padding(
+              padding: EdgeInsets.only(top: 20.0),
+              child: AdBannerWidget(),
+            );
+          }
           return GuideStepWidget(step: steps[index], isUrdu: isUrdu);
         },
       ),

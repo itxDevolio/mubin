@@ -4,6 +4,7 @@ import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
 import '../../../../core/app_colors.dart';
 import '../../../../core/services/settings_controller.dart';
 import 'janaza_detail_screen.dart';
+import '../../../../core/widgets/ad_banner_widget.dart';
 
 class JanazaGuideScreen extends ConsumerWidget {
   const JanazaGuideScreen({super.key});
@@ -61,6 +62,9 @@ class JanazaGuideScreen extends ConsumerWidget {
                 ),
               ),
             ),
+            const Spacer(),
+            const AdBannerWidget(),
+            const SizedBox(height: 10),
           ],
         ),
       ),

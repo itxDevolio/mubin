@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/app_colors.dart';
 import '../../../../core/services/settings_controller.dart';
 import '../../domain/entities/shifa_entity.dart';
+import '../../../../core/widgets/ad_banner_widget.dart';
 
 class ShifaDetailScreen extends ConsumerStatefulWidget {
   final ShifaEntity dua;
@@ -144,6 +145,10 @@ class _ShifaDetailScreenState extends ConsumerState<ShifaDetailScreen>
                 ),
               ),
             ),
+            const SizedBox(height: 20),
+
+            // Banner Ad center of reference and instruction
+            const AdBannerWidget(),
             const SizedBox(height: 20),
 
             // Instructions

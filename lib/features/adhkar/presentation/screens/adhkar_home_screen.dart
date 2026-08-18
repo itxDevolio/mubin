@@ -7,6 +7,7 @@ import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/models/adhkar_constants.dart';
 import 'adhkar_list_screen.dart';
+import '../../../../core/widgets/ad_banner_widget.dart';
 
 class AdhkarHomeScreen extends ConsumerWidget {
   const AdhkarHomeScreen({super.key});
@@ -82,6 +83,8 @@ class AdhkarHomeScreen extends ConsumerWidget {
                   return _buildCategoryCard(context, category, isUrdu, isDark);
                 },
               ),
+              const SizedBox(height: 20),
+              const AdBannerWidget(),
               const SizedBox(height: 30),
             ],
           ),

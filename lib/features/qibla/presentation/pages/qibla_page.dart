@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/qibla_compass_widget.dart';
 import '../controller/qibla_controller.dart';
+import '../../../../core/widgets/ad_banner_widget.dart';
 
 class QiblaPage extends ConsumerWidget {
   const QiblaPage({super.key});
@@ -111,6 +112,8 @@ class QiblaPage extends ConsumerWidget {
                         ),
                       ),
                       const SizedBox(height: 20),
+                      const AdBannerWidget(),
+                      const SizedBox(height: 10),
                     ],
                   ),
                 ),

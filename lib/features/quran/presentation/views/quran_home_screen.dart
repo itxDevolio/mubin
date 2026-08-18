@@ -9,6 +9,7 @@ import 'surah_list_screen.dart';
 import 'juz_list_screen.dart';
 import 'bookmark_list_screen.dart';
 import 'quran_audio_player_screen.dart';
+import '../../../../core/widgets/ad_banner_widget.dart';
 
 class QuranHomeScreen extends ConsumerWidget {
   const QuranHomeScreen({super.key});
@@ -169,6 +170,8 @@ class QuranHomeScreen extends ConsumerWidget {
                 },
               ),
               const SizedBox(height: 24),
+              const AdBannerWidget(),
+              const SizedBox(height: 16),
             ],
           ),
         ),

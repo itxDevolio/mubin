@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/services/settings_controller.dart';
 import '../widgets/guide_step_widget.dart';
 import '../../data/models/qasar_data.dart';
+import '../../../../core/widgets/ad_banner_widget.dart';
 
 class QasarGuideScreen extends ConsumerWidget {
   const QasarGuideScreen({super.key});
@@ -29,8 +30,14 @@ class QasarGuideScreen extends ConsumerWidget {
       body: ListView.builder(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-        itemCount: steps.length,
+        itemCount: steps.length + 1,
         itemBuilder: (context, index) {
+          if (index == steps.length) {
+            return const Padding(
+              padding: EdgeInsets.only(top: 20.0),
+              child: AdBannerWidget(),
+            );
+          }
           return GuideStepWidget(step: steps[index], isUrdu: isUrdu);
         },
       ),

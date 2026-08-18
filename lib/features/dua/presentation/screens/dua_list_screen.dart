@@ -5,6 +5,7 @@ import '../../../../core/services/settings_controller.dart';
 import '../controller/dua_notifier.dart';
 import '../../domain/entities/dua_entity.dart';
 import 'dua_detail_screen.dart';
+import '../../../../core/widgets/ad_banner_widget.dart';
 
 class DuaListScreen extends ConsumerWidget {
   const DuaListScreen({super.key});
@@ -97,8 +98,14 @@ class _DuaListView extends StatelessWidget {
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       physics: const BouncingScrollPhysics(),
-      itemCount: duas.length,
+      itemCount: duas.length + 1,
       itemBuilder: (context, index) {
+        if (index == duas.length) {
+          return const Padding(
+            padding: EdgeInsets.symmetric(vertical: 16.0),
+            child: AdBannerWidget(),
+          );
+        }
         final dua = duas[index];
         return DuaTile(dua: dua, isUrdu: isUrdu);
       },
