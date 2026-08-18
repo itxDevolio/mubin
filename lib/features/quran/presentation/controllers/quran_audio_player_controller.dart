@@ -280,8 +280,8 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
       album: "Al-Quran",
       title: title,
       artist: artist,
-      // Fix: Use the standard asset format that just_audio_background expects
-      artUri: Uri.parse("assets/app_logos/mubin_app_logo.png"),
+      // Fix: Use the standard asset format that just_audio_background expects for assets
+      artUri: Uri.parse("asset:///assets/app_logos/mubin_app_logo.png"),
     );
 
     if (surahNumber != null) {
