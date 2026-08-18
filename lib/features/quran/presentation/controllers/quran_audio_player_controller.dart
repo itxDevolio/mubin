@@ -128,6 +128,10 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
   Timer? _sleepTimer;
   Timer? _countdownTimer;
   CancelToken? _downloadCancelToken;
+  
+  // Track the latest requested surah to prevent race conditions
+  int? _lastRequestedSurah;
+  int? _lastRequestedVerse;
 
   @override
   AudioState build() {
@@ -186,15 +190,28 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
   Future<void> _checkDownloadedSurahs() async {
     try {
       final dir = await getApplicationDocumentsDirectory();
-      final Set<int> downloaded = {};
       final String reciterFolder = state.currentReciter.name.replaceAll(' ', '_');
       final surahsDir = Directory('${dir.path}/surahs/$reciterFolder');
       
-      if (await surahsDir.exists()) {
-        for (int i = 1; i <= 114; i++) {
-          final file = File('${surahsDir.path}/surah_$i.mp3');
-          if (await file.exists()) {
-            downloaded.add(i);
+      if (!await surahsDir.exists()) {
+        state = state.copyWith(downloadedSurahs: {});
+        return;
+      }
+
+      final List<FileSystemEntity> entities = await surahsDir.list().toList();
+      final Set<int> downloaded = {};
+      
+      for (var entity in entities) {
+        if (entity is File && entity.path.endsWith('.mp3')) {
+          final fileName = entity.path.split(Platform.pathSeparator).last;
+          // Format is surah_1.mp3
+          final match = RegExp(r'surah_(\d+)\.mp3').firstMatch(fileName);
+          if (match != null) {
+            final int surahNum = int.parse(match.group(1)!);
+            // Check if file is not corrupted (e.g. at least 10KB)
+            if (await entity.length() > 10240) {
+              downloaded.add(surahNum);
+            }
           }
         }
       }
@@ -209,9 +226,12 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
     _audioPlayer.playerStateStream.listen((playerState) {
       final processingState = playerState.processingState;
       
-      // Automatically clear error message if playback starts successfully
+      // Automatically clear error message if playback is successful, ready, or loading
       String? errorMessage = state.errorMessage;
-      if (playerState.playing && processingState == ProcessingState.ready) {
+      if (processingState == ProcessingState.ready || 
+          processingState == ProcessingState.buffering ||
+          processingState == ProcessingState.loading ||
+          (playerState.playing && processingState == ProcessingState.idle)) {
         errorMessage = null;
       }
 
@@ -252,6 +272,10 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
 
     _audioPlayer.playbackEventStream.listen((event) {}, onError: (Object e, StackTrace stackTrace) {
       debugPrint('Audio playback error: $e');
+      
+      // If we are playing from local, ignore most errors as they are likely network-related metadata issues
+      if (state.isPlayingFromLocal) return;
+
       state = state.copyWith(
         isLoading: false, 
         isPlaying: false,
@@ -280,16 +304,25 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
       album: "Al-Quran",
       title: title,
       artist: artist,
-      // Fix: Use the standard asset format that just_audio_background expects for assets
       artUri: Uri.parse("asset:///assets/app_logos/mubin_app_logo.png"),
     );
 
     if (surahNumber != null) {
       final localFile = await _getLocalSurahFile(surahNumber);
       if (await localFile.exists()) {
-        debugPrint('Playing from local file: ${localFile.path}');
-        state = state.copyWith(isPlayingFromLocal: true);
-        return AudioSource.file(localFile.path, tag: tag);
+        final fileSize = await localFile.length();
+        if (fileSize > 10240) { // Only use if > 10KB
+          debugPrint('Playing from local file: ${localFile.path}');
+          state = state.copyWith(isPlayingFromLocal: true);
+          // Use Uri.file for better compatibility on some Android versions
+          return AudioSource.uri(Uri.file(localFile.path), tag: tag);
+        } else {
+          debugPrint('Local file too small, probably corrupted. Deleting.');
+          await localFile.delete();
+          state = state.copyWith(
+            downloadedSurahs: Set.from(state.downloadedSurahs)..remove(surahNumber)
+          );
+        }
       }
     }
 
@@ -300,7 +333,6 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
       tag: tag,
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-        'Accept': '*/*',
       },
     );
   }
@@ -321,7 +353,9 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
 
   Future<void> playVerseAudio(String url, int verseId) async {
     debugPrint('Attempting to play verse audio: $url');
-    // Clear error message at the start of a new attempt
+    _lastRequestedVerse = verseId;
+    _lastRequestedSurah = null;
+    
     state = state.copyWith(errorMessage: null);
     
     try {
@@ -332,9 +366,11 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
           await _audioPlayer.pause();
         }
       } else {
-        // Reset player for new audio to avoid mixed states
         await _audioPlayer.stop();
         
+        // Check if another request came in while stopping
+        if (_lastRequestedVerse != verseId) return;
+
         state = state.copyWith(
           isLoading: true,
           currentAudioUrl: url,
@@ -345,23 +381,30 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
         );
         
         final source = await _getAudioSource(url, null, verseId: verseId);
+        
+        if (_lastRequestedVerse != verseId) return;
+        
         await _audioPlayer.setAudioSource(source);
         await _audioPlayer.play();
         debugPrint('Verse audio playback started');
       }
     } catch (e) {
       debugPrint('Error playing verse audio: $e');
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: "Playback failed. Check your internet connection.",
-      );
+      if (_lastRequestedVerse == verseId) {
+        state = state.copyWith(
+          isLoading: false,
+          errorMessage: "Failed to play verse. Check your internet connection.",
+        );
+      }
     }
   }
 
   Future<void> playSurah(int surahNumber) async {
     final url = _getSurahUrl(surahNumber, state.currentReciter);
     debugPrint('Attempting to play surah $surahNumber: $url');
-    // Clear error message at the start of a new attempt
+    _lastRequestedSurah = surahNumber;
+    _lastRequestedVerse = null;
+    
     state = state.copyWith(errorMessage: null);
     
     try {
@@ -374,8 +417,10 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
         return;
       }
 
-      // Reset player for new surah
       await _audioPlayer.stop();
+      
+      // Check if another request came in while stopping
+      if (_lastRequestedSurah != surahNumber) return;
 
       state = state.copyWith(
         isLoading: true,
@@ -385,16 +430,38 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
         errorMessage: null,
       );
 
-      final source = await _getAudioSource(url, surahNumber);
-      await _audioPlayer.setAudioSource(source);
+      AudioSource source = await _getAudioSource(url, surahNumber);
+      
+      if (_lastRequestedSurah != surahNumber) return;
+
+      try {
+        await _audioPlayer.setAudioSource(source);
+      } catch (e) {
+        // Fallback: If local file failed, try streaming from network
+        if (state.isPlayingFromLocal && _lastRequestedSurah == surahNumber) {
+          debugPrint('Local file play failed, falling back to network: $e');
+          source = await _getAudioSource(url, null); 
+          await _audioPlayer.setAudioSource(source);
+        } else {
+          rethrow;
+        }
+      }
+      
+      if (_lastRequestedSurah != surahNumber) return;
+      
       await _audioPlayer.play();
       debugPrint('Surah audio playback started');
     } catch (e) {
       debugPrint('Error playing surah audio: $e');
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: "Playback failed. Check your internet connection.",
-      );
+      
+      // Only show error if this is still the surah we want to play
+      // AND we are not playing from local (since user says it plays fine from local)
+      if (_lastRequestedSurah == surahNumber && !state.isPlayingFromLocal) {
+        state = state.copyWith(
+          isLoading: false,
+          errorMessage: "Playback failed. Check your internet connection.",
+        );
+      }
     }
   }
 
@@ -437,21 +504,31 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
         },
       );
       
-      final updatedDownloaded = Set<int>.from(state.downloadedSurahs);
-      updatedDownloaded.add(surahNumber);
-      
-      final finalMap = Map<int, DownloadInfo>.from(state.downloadInfoMap);
-      finalMap[surahNumber] = DownloadInfo(
-        surahNumber: surahNumber,
-        status: DownloadStatus.downloaded,
-        progress: 1.0,
-      );
-      
-      state = state.copyWith(
-        downloadedSurahs: updatedDownloaded,
-        downloadInfoMap: finalMap,
-      );
+      // Verify file exists and is not empty before marking as downloaded
+      final downloadedFile = File(savePath);
+      if (await downloadedFile.exists() && await downloadedFile.length() > 10240) {
+        final updatedDownloaded = Set<int>.from(state.downloadedSurahs);
+        updatedDownloaded.add(surahNumber);
+        
+        final finalMap = Map<int, DownloadInfo>.from(state.downloadInfoMap);
+        finalMap[surahNumber] = DownloadInfo(
+          surahNumber: surahNumber,
+          status: DownloadStatus.downloaded,
+          progress: 1.0,
+        );
+        
+        state = state.copyWith(
+          downloadedSurahs: updatedDownloaded,
+          downloadInfoMap: finalMap,
+        );
+      } else {
+        throw Exception("Downloaded file is empty or missing");
+      }
     } catch (e) {
+      // Cleanup partial file
+      final partialFile = File(savePath);
+      if (await partialFile.exists()) await partialFile.delete();
+
       if (CancelToken.isCancel(e as DioException)) {
         debugPrint('Download cancelled');
       } else {

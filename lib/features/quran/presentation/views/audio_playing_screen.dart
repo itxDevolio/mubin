@@ -376,7 +376,7 @@ class AudioPlayingScreen extends ConsumerWidget {
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        if (audioState.errorMessage != null) ...[
+                        if (audioState.errorMessage != null && !audioState.isPlaying && !audioState.isLoading) ...[
                           const SizedBox(height: 12),
                           Container(
                             padding: const EdgeInsets.symmetric(
