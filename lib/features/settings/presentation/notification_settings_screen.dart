@@ -8,7 +8,12 @@ import '../../../core/widgets/custom_islamic_switch.dart';
 class NotificationSettingsScreen extends ConsumerWidget {
   const NotificationSettingsScreen({super.key});
 
-  TextStyle _getStyle({double fontSize = 14, FontWeight? fontWeight, Color? color, double? height}) {
+  TextStyle _getStyle({
+    double fontSize = 14,
+    FontWeight? fontWeight,
+    Color? color,
+    double? height,
+  }) {
     return TextStyle(
       fontFamily: 'Poppins',
       fontSize: fontSize,
@@ -25,7 +30,9 @@ class NotificationSettingsScreen extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      backgroundColor: isDark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
           "Notifications",
@@ -54,40 +61,52 @@ class NotificationSettingsScreen extends ConsumerWidget {
             _buildSettingTile(
               "Fajr",
               settings.fajrNotification,
-              (val) => controller.updateNotificationSetting('fajrNotification', val),
+              (val) =>
+                  controller.updateNotificationSetting('fajrNotification', val),
               isDark,
             ),
             _buildDivider(isDark),
             _buildSettingTile(
               "Dhuhr",
               settings.dhuhrNotification,
-              (val) => controller.updateNotificationSetting('dhuhrNotification', val),
+              (val) => controller.updateNotificationSetting(
+                'dhuhrNotification',
+                val,
+              ),
               isDark,
             ),
             _buildDivider(isDark),
             _buildSettingTile(
               "Asr",
               settings.asrNotification,
-              (val) => controller.updateNotificationSetting('asrNotification', val),
+              (val) =>
+                  controller.updateNotificationSetting('asrNotification', val),
               isDark,
             ),
             _buildDivider(isDark),
             _buildSettingTile(
               "Maghrib",
               settings.maghribNotification,
-              (val) => controller.updateNotificationSetting('maghribNotification', val),
+              (val) => controller.updateNotificationSetting(
+                'maghribNotification',
+                val,
+              ),
               isDark,
             ),
             _buildDivider(isDark),
             _buildSettingTile(
               "Isha",
               settings.ishaNotification,
-              (val) => controller.updateNotificationSetting('ishaNotification', val),
+              (val) =>
+                  controller.updateNotificationSetting('ishaNotification', val),
               isDark,
             ),
           ]),
           const SizedBox(height: 32),
-          _buildSectionHeader("PRAYER EXPERIENCE", Icons.settings_suggest_rounded),
+          _buildSectionHeader(
+            "PRAYER EXPERIENCE",
+            Icons.settings_suggest_rounded,
+          ),
           _buildSettingsCard(isDark, [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -102,7 +121,9 @@ class NotificationSettingsScreen extends ConsumerWidget {
                           style: _getStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
-                            color: isDark ? Colors.white.withOpacity(0.9) : Colors.black87,
+                            color: isDark
+                                ? Colors.white.withOpacity(0.9)
+                                : Colors.black87,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -110,7 +131,9 @@ class NotificationSettingsScreen extends ConsumerWidget {
                           "Automatically opens the app when prayer notification arrives for a full-screen experience.",
                           style: _getStyle(
                             fontSize: 12,
-                            color: isDark ? Colors.white.withOpacity(0.5) : Colors.black54,
+                            color: isDark
+                                ? Colors.white.withOpacity(0.5)
+                                : Colors.black54,
                           ),
                         ),
                       ],
@@ -121,7 +144,10 @@ class NotificationSettingsScreen extends ConsumerWidget {
                     value: settings.autoOpenOnPrayer,
                     onChanged: (val) {
                       hapticFeedBack();
-                      controller.updateNotificationSetting('autoOpenOnPrayer', val);
+                      controller.updateNotificationSetting(
+                        'autoOpenOnPrayer',
+                        val,
+                      );
                     },
                   ),
                 ],
@@ -136,8 +162,16 @@ class NotificationSettingsScreen extends ConsumerWidget {
               "Morning Adhkar",
               settings.morningAdhkarNotification,
               settings.morningAdhkarTime,
-              (val) => controller.updateNotificationSetting('morningAdhkarNotification', val),
-              () => _pickTime(context, ref, 'morningAdhkarTime', settings.morningAdhkarTime),
+              (val) => controller.updateNotificationSetting(
+                'morningAdhkarNotification',
+                val,
+              ),
+              () => _pickTime(
+                context,
+                ref,
+                'morningAdhkarTime',
+                settings.morningAdhkarTime,
+              ),
               isDark,
             ),
             _buildDivider(isDark),
@@ -146,8 +180,16 @@ class NotificationSettingsScreen extends ConsumerWidget {
               "Evening Adhkar",
               settings.eveningAdhkarNotification,
               settings.eveningAdhkarTime,
-              (val) => controller.updateNotificationSetting('eveningAdhkarNotification', val),
-              () => _pickTime(context, ref, 'eveningAdhkarTime', settings.eveningAdhkarTime),
+              (val) => controller.updateNotificationSetting(
+                'eveningAdhkarNotification',
+                val,
+              ),
+              () => _pickTime(
+                context,
+                ref,
+                'eveningAdhkarTime',
+                settings.eveningAdhkarTime,
+              ),
               isDark,
             ),
           ]),
@@ -182,10 +224,14 @@ class NotificationSettingsScreen extends ConsumerWidget {
   Widget _buildSettingsCard(bool isDark, List<Widget> children) {
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? Colors.white.withOpacity(0.05) : Colors.white.withOpacity(0.7),
+        color: isDark
+            ? Colors.white.withOpacity(0.05)
+            : Colors.white.withOpacity(0.7),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: isDark ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05),
+          color: isDark
+              ? Colors.white.withOpacity(0.1)
+              : Colors.black.withOpacity(0.05),
         ),
         boxShadow: [
           BoxShadow(
@@ -199,14 +245,24 @@ class NotificationSettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildMasterSwitch(BuildContext context, SettingsState settings, SettingsController controller, bool isDark) {
+  Widget _buildMasterSwitch(
+    BuildContext context,
+    SettingsState settings,
+    SettingsController controller,
+    bool isDark,
+  ) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: settings.notificationsEnabled 
-            ? [AppColors.primaryTeal, AppColors.darkTeal]
-            : [isDark ? Colors.white.withOpacity(0.05) : Colors.white, isDark ? Colors.white.withOpacity(0.1) : Colors.grey.withOpacity(0.05)],
+          colors: settings.notificationsEnabled
+              ? [AppColors.primaryTeal, AppColors.darkTeal]
+              : [
+                  isDark ? Colors.white.withOpacity(0.05) : Colors.white,
+                  isDark
+                      ? Colors.white.withOpacity(0.1)
+                      : Colors.grey.withOpacity(0.05),
+                ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -220,8 +276,12 @@ class NotificationSettingsScreen extends ConsumerWidget {
             ),
         ],
         border: Border.all(
-          color: settings.notificationsEnabled ? Colors.white.withOpacity(0.2) : (isDark ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05)),
-        )
+          color: settings.notificationsEnabled
+              ? Colors.white.withOpacity(0.2)
+              : (isDark
+                    ? Colors.white.withOpacity(0.1)
+                    : Colors.black.withOpacity(0.05)),
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -235,15 +295,23 @@ class NotificationSettingsScreen extends ConsumerWidget {
                   style: _getStyle(
                     fontWeight: FontWeight.w800,
                     fontSize: 16,
-                    color: settings.notificationsEnabled ? Colors.white : (isDark ? Colors.white.withOpacity(0.9) : Colors.black87),
+                    color: settings.notificationsEnabled
+                        ? Colors.white
+                        : (isDark
+                              ? Colors.white.withOpacity(0.9)
+                              : Colors.black87),
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  settings.notificationsEnabled ? "System is fully active" : "All notifications are currently paused",
+                  settings.notificationsEnabled
+                      ? "System is fully active"
+                      : "All notifications are currently paused",
                   style: _getStyle(
                     fontSize: 12,
-                    color: settings.notificationsEnabled ? Colors.white.withOpacity(0.7) : Colors.grey,
+                    color: settings.notificationsEnabled
+                        ? Colors.white.withOpacity(0.7)
+                        : Colors.grey,
                   ),
                 ),
               ],
@@ -261,13 +329,18 @@ class NotificationSettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSettingTile(String title, bool value, Function(bool) onChanged, bool isDark) {
+  Widget _buildSettingTile(
+    String title,
+    bool value,
+    Function(bool) onChanged,
+    bool isDark,
+  ) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       title: Text(
         title,
         style: _getStyle(
-          fontSize: 15, 
+          fontSize: 15,
           fontWeight: FontWeight.w600,
           color: isDark ? Colors.white.withOpacity(0.9) : Colors.black87,
         ),
@@ -283,13 +356,13 @@ class NotificationSettingsScreen extends ConsumerWidget {
   }
 
   Widget _buildAdhkarTile(
-    BuildContext context, 
-    String title, 
-    bool value, 
-    String time, 
+    BuildContext context,
+    String title,
+    bool value,
+    String time,
     Function(bool) onChanged,
     VoidCallback onTimeTap,
-    bool isDark
+    bool isDark,
   ) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
@@ -303,9 +376,11 @@ class NotificationSettingsScreen extends ConsumerWidget {
                 Text(
                   title,
                   style: _getStyle(
-                    fontSize: 15, 
+                    fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: isDark ? Colors.white.withOpacity(0.9) : Colors.black87,
+                    color: isDark
+                        ? Colors.white.withOpacity(0.9)
+                        : Colors.black87,
                   ),
                 ),
                 const SizedBox(height: 6),
@@ -314,15 +389,24 @@ class NotificationSettingsScreen extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(10),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
-                      color: value ? AppColors.primaryTeal.withOpacity(0.1) : Colors.grey.withOpacity(0.1),
+                      color: value
+                          ? AppColors.primaryTeal.withOpacity(0.1)
+                          : Colors.grey.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.access_time_filled_rounded, size: 14, color: value ? AppColors.primaryTeal : Colors.grey),
+                        Icon(
+                          Icons.access_time_filled_rounded,
+                          size: 14,
+                          color: value ? AppColors.primaryTeal : Colors.grey,
+                        ),
                         const SizedBox(width: 6),
                         Text(
                           time,
@@ -354,16 +438,26 @@ class NotificationSettingsScreen extends ConsumerWidget {
   Widget _buildDivider(bool isDark) {
     return Divider(
       height: 1,
-      color: isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.03),
+      color: isDark
+          ? Colors.white.withOpacity(0.05)
+          : Colors.black.withOpacity(0.03),
       indent: 20,
       endIndent: 20,
     );
   }
 
-  Future<void> _pickTime(BuildContext context, WidgetRef ref, String key, String currentTime) async {
+  Future<void> _pickTime(
+    BuildContext context,
+    WidgetRef ref,
+    String key,
+    String currentTime,
+  ) async {
     final parts = currentTime.split(':');
-    final initialTime = TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
-    
+    final initialTime = TimeOfDay(
+      hour: int.parse(parts[0]),
+      minute: int.parse(parts[1]),
+    );
+
     final picked = await showTimePicker(
       context: context,
       initialTime: initialTime,
@@ -373,7 +467,9 @@ class NotificationSettingsScreen extends ConsumerWidget {
             colorScheme: ColorScheme.light(
               primary: AppColors.primaryTeal,
               onPrimary: Colors.white,
-              surface: Theme.of(context).brightness == Brightness.dark ? AppColors.surfaceDark : Colors.white,
+              surface: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.surfaceDark
+                  : Colors.white,
             ),
           ),
           child: child!,

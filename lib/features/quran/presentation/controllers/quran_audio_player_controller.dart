@@ -304,7 +304,7 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
       album: "Al-Quran",
       title: title,
       artist: artist,
-      artUri: Uri.parse("asset:///assets/app_logos/mubin_app_logo.png"),
+      // Removed artUri to fix asset loading error and improve stability in release builds
     );
 
     if (surahNumber != null) {
@@ -345,7 +345,8 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
 
   String _getSurahUrl(int surahNumber, Reciter reciter) {
     if (reciter.name == "Mishary Rashid Alafasy") {
-      return quran.getAudioURLBySurah(surahNumber);
+      // Force HTTPS to avoid cleartext issues in release mode
+      return quran.getAudioURLBySurah(surahNumber).replaceFirst('http://', 'https://');
     }
     final numStr = surahNumber.toString().padLeft(3, '0');
     return "${reciter.urlPrefix}$numStr.mp3";
@@ -353,13 +354,15 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
 
   Future<void> playVerseAudio(String url, int verseId) async {
     debugPrint('Attempting to play verse audio: $url');
+    // Force HTTPS for verse audio too
+    final String secureUrl = url.replaceFirst('http://', 'https://');
     _lastRequestedVerse = verseId;
     _lastRequestedSurah = null;
     
     state = state.copyWith(errorMessage: null);
     
     try {
-      if (state.currentAudioUrl == url && state.playingVerseId == verseId) {
+      if (state.currentAudioUrl == secureUrl && state.playingVerseId == verseId) {
         if (!state.isPlaying) {
           await _audioPlayer.play();
         } else {
@@ -373,14 +376,14 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
 
         state = state.copyWith(
           isLoading: true,
-          currentAudioUrl: url,
+          currentAudioUrl: secureUrl,
           playingVerseId: verseId,
           currentSurahNumber: null,
           errorMessage: null,
           isPlayingFromLocal: false,
         );
         
-        final source = await _getAudioSource(url, null, verseId: verseId);
+        final source = await _getAudioSource(secureUrl, null, verseId: verseId);
         
         if (_lastRequestedVerse != verseId) return;
         
