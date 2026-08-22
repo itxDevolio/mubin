@@ -11,7 +11,11 @@ class AdhkarListScreen extends ConsumerStatefulWidget {
   final List<DhikrEntity> dhikrList;
   final String title;
 
-  const AdhkarListScreen({super.key, required this.dhikrList, required this.title});
+  const AdhkarListScreen({
+    super.key,
+    required this.dhikrList,
+    required this.title,
+  });
 
   @override
   ConsumerState<AdhkarListScreen> createState() => _AdhkarListScreenState();
@@ -40,21 +44,33 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
       itemBuilder: (context, index) {
         final dhikr = widget.dhikrList[index];
         final currentCount = ref.watch(adhkarCountProvider(dhikr.id));
-        final remaining = (dhikr.targetCount - currentCount).clamp(0, dhikr.targetCount);
+        final remaining = (dhikr.targetCount - currentCount).clamp(
+          0,
+          dhikr.targetCount,
+        );
         final isCompleted = remaining == 0;
-        final bool showTranslation = dhikr.english.isNotEmpty || dhikr.urdu.isNotEmpty;
+        final bool showTranslation =
+            dhikr.english.isNotEmpty || dhikr.urdu.isNotEmpty;
 
-        final bool isMorningEvening = widget.title.contains('Morning') || widget.title.contains('Evening');
+        final bool isMorningEvening =
+            widget.title.contains('Morning') ||
+            widget.title.contains('Evening');
         final bool isSleeping = widget.title.contains('Sleeping');
-        
+
         // 1-based positions as requested: 10, 12, 14, 16, 20 for Morning/Evening; 5 for Sleeping
-        final bool shouldShowAd = (isMorningEvening && [10, 12, 14, 16, 20].contains(index + 1)) || 
-                                 (isSleeping && index + 1 == 5);
+        final bool shouldShowAd =
+            (isMorningEvening && [10, 12, 14, 16, 20].contains(index + 1)) ||
+            (isSleeping && index + 1 == 5);
 
         return Scaffold(
-          backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+          backgroundColor: isDark
+              ? AppColors.backgroundDark
+              : AppColors.backgroundLight,
           appBar: AppBar(
-            title: Text(widget.title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            title: Text(
+              widget.title,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            ),
             backgroundColor: Colors.transparent,
             elevation: 0,
             centerTitle: true,
@@ -62,7 +78,14 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Center(
-                  child: Text("${_currentIndex + 1}/${widget.dhikrList.length}", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.primaryTeal)),
+                  child: Text(
+                    "${_currentIndex + 1}/${widget.dhikrList.length}",
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primaryTeal,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -76,7 +99,10 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
             },
             child: Center(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 20,
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -85,15 +111,24 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
                       const AdBannerWidget(),
                       const SizedBox(height: 20),
                     ],
-                    if ((isUrdu ? dhikr.fazilatUrdu : dhikr.fazilatEnglish) != null)
-                      _buildTag(isUrdu ? dhikr.fazilatUrdu! : dhikr.fazilatEnglish!, isUrdu),
+                    if ((isUrdu ? dhikr.fazilatUrdu : dhikr.fazilatEnglish) !=
+                        null)
+                      _buildTag(
+                        isUrdu ? dhikr.fazilatUrdu! : dhikr.fazilatEnglish!,
+                        isUrdu,
+                      ),
 
                     const SizedBox(height: 40),
 
                     // Arabic Text
                     Text(
                       dhikr.arabic,
-                      style: const TextStyle(fontFamily: 'Amiri', fontSize: 22, height: 2, color: AppColors.primaryTeal),
+                      style: const TextStyle(
+                        fontFamily: 'Amiri',
+                        fontSize: 22,
+                        height: 2,
+                        color: AppColors.primaryTeal,
+                      ),
                       textAlign: TextAlign.center,
                       textDirection: TextDirection.rtl,
                     ),
@@ -105,8 +140,20 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
                       Text(
                         isUrdu ? dhikr.urdu : dhikr.english,
                         style: isUrdu
-                            ? const TextStyle(fontFamily: 'NotoNastaliqUrdu', fontSize: 15, color: Colors.white70, height: 2.0)
-                            : TextStyle(fontSize: 14, color: isDark ? Colors.white60 : const Color(0xFF757575)), // grey[600]
+                            ?  TextStyle(
+                                fontFamily: 'NotoNastaliqUrdu',
+                                fontSize: 15,
+                                color: isDark
+                                    ? Colors.white60
+                                    : const Color(0xFF757575),
+                                height: 2.0,
+                              )
+                            : TextStyle(
+                                fontSize: 14,
+                                color: isDark
+                                    ? Colors.white60
+                                    : const Color(0xFF757575),
+                              ), // grey[600]
                         textAlign: TextAlign.center,
                       ),
                     ],
@@ -120,18 +167,28 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: isCompleted ? AppColors.primaryTeal.withValues(alpha: 0.1) : Colors.transparent,
+                        color: isCompleted
+                            ? AppColors.primaryTeal.withValues(alpha: 0.1)
+                            : Colors.transparent,
                         border: Border.all(
                           color: AppColors.primaryTeal.withValues(alpha: 0.3),
                           width: 1.5,
                         ),
                       ),
                       child: isCompleted
-                          ? const Icon(Icons.check, size: 40, color: AppColors.primaryTeal)
+                          ? const Icon(
+                              Icons.check,
+                              size: 40,
+                              color: AppColors.primaryTeal,
+                            )
                           : Text(
-                        "$remaining",
-                        style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w300, color: AppColors.primaryTeal),
-                      ),
+                              "$remaining",
+                              style: const TextStyle(
+                                fontSize: 32,
+                                fontWeight: FontWeight.w300,
+                                color: AppColors.primaryTeal,
+                              ),
+                            ),
                     ),
 
                     const SizedBox(height: 50),
@@ -139,7 +196,11 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
                     if (dhikr.reference != null)
                       Text(
                         dhikr.reference!,
-                        style: TextStyle(fontSize: 10, color: Colors.grey.withValues(alpha: 0.5), letterSpacing: 1.2),
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey.withValues(alpha: 0.5),
+                          letterSpacing: 1.2,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                   ],
@@ -155,8 +216,24 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
   Widget _buildTag(String text, bool isUrdu) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(color: AppColors.primaryTeal.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(20)),
-      child: Text(text, style: isUrdu ? const TextStyle(fontFamily: 'NotoNastaliqUrdu', fontSize: 11, color: AppColors.primaryTeal) : const TextStyle(fontSize: 11, color: AppColors.primaryTeal, fontStyle: FontStyle.italic)),
+      decoration: BoxDecoration(
+        color: AppColors.primaryTeal.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        text,
+        style: isUrdu
+            ? const TextStyle(
+                fontFamily: 'NotoNastaliqUrdu',
+                fontSize: 11,
+                color: AppColors.primaryTeal,
+              )
+            : const TextStyle(
+                fontSize: 11,
+                color: AppColors.primaryTeal,
+                fontStyle: FontStyle.italic,
+              ),
+      ),
     );
   }
 }
