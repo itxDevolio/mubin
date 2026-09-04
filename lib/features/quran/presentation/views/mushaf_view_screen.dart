@@ -171,16 +171,13 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
                       audioState.playingVerseId == verse.id &&
                       audioState.isPlaying;
 
-                  // 1. Surah Header & Bismillah Logic
+                  // 1. Surah Header Logic
                   if (verse.verseNumber == 1) {
                     spans.add(
                       WidgetSpan(
                         child: _buildSurahHeader(verse.surahNumber, isDark),
                       ),
                     );
-                    if (verse.surahNumber != 1 && verse.surahNumber != 9) {
-                      spans.add(WidgetSpan(child: _buildBismillah(isDark)));
-                    }
                   }
 
                   // 2. Verse Text Span
@@ -245,11 +242,24 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
                   );
                 }
 
-                return SingleChildScrollView(
-                  child: RichText(
-                    textAlign: TextAlign.justify,
-                    textDirection: TextDirection.rtl,
-                    text: TextSpan(children: spans),
+                return Center(
+                  child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: CustomPaint(
+                        painter: QuranLinesPainter(
+                          lineHeight: 20 * 2.3, // Match text height
+                          color: isDark ? Colors.white10 : Colors.black.withOpacity(0.05),
+                        ),
+                        child: RichText(
+                          textAlign: TextAlign.justify,
+                          textDirection: TextDirection.rtl,
+                          text: TextSpan(children: spans),
+                        ),
+                      ),
+                    ),
                   ),
                 );
               },
@@ -369,21 +379,6 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
     );
   }
 
-  Widget _buildBismillah(bool isDark) {
-    return Container(
-      width: double.infinity,
-      alignment: Alignment.center,
-      padding: const EdgeInsets.symmetric(vertical: 15),
-      child: Text(
-        quran.basmala,
-        style: TextStyle(
-          fontFamily: 'Amiri',
-          fontSize: 28,
-          color: isDark ? Colors.white : Colors.black87,
-        ),
-      ),
-    );
-  }
 
   String _getSurahName(int page) {
     try {
@@ -448,4 +443,29 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
     }
     return 1;
   }
+}
+
+class QuranLinesPainter extends CustomPainter {
+  final double lineHeight;
+  final Color color;
+
+  QuranLinesPainter({required this.lineHeight, required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 1.0;
+
+    // Draw horizontal lines across the page
+    for (double y = lineHeight; y < size.height; y += lineHeight) {
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+    }
+    
+    // Draw the last line at the bottom if needed
+    canvas.drawLine(Offset(0, size.height), Offset(size.width, size.height), paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
