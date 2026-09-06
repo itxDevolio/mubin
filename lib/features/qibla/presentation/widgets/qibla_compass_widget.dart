@@ -52,7 +52,7 @@ class QiblaCompassWidget extends ConsumerWidget {
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.greenAccent.withOpacity(0.15),
+                                  color: Colors.greenAccent.withValues(alpha: 0.15),
                                   blurRadius: 40,
                                   spreadRadius: 10,
                                 ),
@@ -68,7 +68,7 @@ class QiblaCompassWidget extends ConsumerWidget {
                             shape: BoxShape.circle,
                             border: Border.all(
                               color: theme.colorScheme.outlineVariant
-                                  .withOpacity(0.1),
+                                  .withValues(alpha: 0.1),
                               width: 1,
                             ),
                           ),
@@ -80,8 +80,8 @@ class QiblaCompassWidget extends ConsumerWidget {
                             begin: 0,
                             end: qiblaState.currentHeading,
                           ),
-                          duration: const Duration(milliseconds: 400),
-                          curve: Curves.easeOutCubic,
+                          duration: const Duration(milliseconds: 250), // Responsive but smooth
+                          curve: Curves.easeOut,
                           builder: (context, heading, child) {
                             return Transform.rotate(
                               angle: (heading * (pi / 180) * -1),
@@ -92,9 +92,9 @@ class QiblaCompassWidget extends ConsumerWidget {
                                     size: Size(size, size),
                                     painter: CompassDialPainter(
                                       color: theme.colorScheme.onSurface
-                                          .withOpacity(0.1),
+                                          .withValues(alpha: 0.1),
                                       tickColor: theme.colorScheme.onSurface
-                                          .withOpacity(0.2),
+                                          .withValues(alpha: 0.2),
                                     ),
                                   ),
                                   ..._buildCardinalDirections(theme, size),
@@ -112,11 +112,11 @@ class QiblaCompassWidget extends ConsumerWidget {
                                             color: qiblaState.isAligned
                                                 ? Colors.greenAccent.shade700
                                                 : theme.colorScheme.onSurface
-                                                      .withOpacity(0.8),
+                                                      .withValues(alpha: 0.8),
                                             shape: BoxShape.circle,
                                             boxShadow: [
                                               BoxShadow(
-                                                color: Colors.black.withOpacity(
+                                                color: Colors.black.withValues(alpha: 
                                                   0.15,
                                                 ),
                                                 blurRadius: 8,
@@ -145,7 +145,7 @@ class QiblaCompassWidget extends ConsumerWidget {
                                                     : theme
                                                           .colorScheme
                                                           .onSurface
-                                                          .withOpacity(0.15),
+                                                          .withValues(alpha: 0.15),
                                                 Colors.transparent,
                                               ],
                                             ),
@@ -172,7 +172,7 @@ class QiblaCompassWidget extends ConsumerWidget {
                               borderRadius: BorderRadius.circular(2),
                               color: qiblaState.isAligned
                                   ? Colors.greenAccent.shade700
-                                  : Colors.redAccent.withOpacity(0.8),
+                                  : Colors.redAccent.withValues(alpha: 0.8),
                             ),
                           ),
                         ),
@@ -208,22 +208,29 @@ class QiblaCompassWidget extends ConsumerWidget {
   }
 
   Widget _buildStatusHeader(dynamic state, ThemeData theme) {
+    String status = state.isAligned ? "ALIGNED" : "LOCATING";
+    Color statusColor = state.isAligned ? Colors.greenAccent.shade700 : AppColors.primaryTeal;
+    
+    // If accuracy is explicitly low (Android specific values usually 15+)
+    if (state.sensorAccuracy != null && state.sensorAccuracy! > 15) {
+      status = "CALIBRATE SENSOR";
+      statusColor = Colors.orangeAccent;
+    }
+
     return Column(
       children: [
         Text(
-          state.isAligned ? "ALIGNED" : "CALIBRATING",
+          status,
           style: TextStyle(
             fontSize: 11,
             letterSpacing: 4,
             fontWeight: FontWeight.w900,
-            color: state.isAligned
-                ? Colors.greenAccent.shade700
-                : AppColors.primaryTeal,
+            color: statusColor,
           ),
         ),
         const SizedBox(height: 6),
         Text(
-          state.isAligned ? "Mecca Found" : "Locating Qibla...",
+          state.isAligned ? "Mecca Found" : "Rotate Phone",
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w300,
@@ -243,10 +250,10 @@ class QiblaCompassWidget extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceVariant.withOpacity(0.15),
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: theme.colorScheme.outlineVariant.withOpacity(0.05),
+          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.05),
         ),
       ),
       child: Row(
@@ -276,7 +283,7 @@ class QiblaCompassWidget extends ConsumerWidget {
                     style: TextStyle(
                       fontSize: 20,
                       height: 1.2,
-                      color: theme.colorScheme.onSurface.withOpacity(0.4),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                     ),
                   ),
                 ],
@@ -288,7 +295,7 @@ class QiblaCompassWidget extends ConsumerWidget {
                   fontSize: 9,
                   letterSpacing: 2,
                   fontWeight: FontWeight.w900,
-                  color: theme.colorScheme.onSurface.withOpacity(0.3),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
                 ),
               ),
             ],
@@ -298,7 +305,7 @@ class QiblaCompassWidget extends ConsumerWidget {
             Container(
               width: 1,
               height: 40,
-              color: theme.colorScheme.outlineVariant.withOpacity(0.2),
+              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.2),
             ),
             const SizedBox(width: 24),
             Column(
@@ -334,19 +341,19 @@ class QiblaCompassWidget extends ConsumerWidget {
       _positionDirection(
         "E",
         90,
-        theme.colorScheme.onSurface.withOpacity(0.5),
+        theme.colorScheme.onSurface.withValues(alpha: 0.5),
         size,
       ),
       _positionDirection(
         "S",
         180,
-        theme.colorScheme.onSurface.withOpacity(0.5),
+        theme.colorScheme.onSurface.withValues(alpha: 0.5),
         size,
       ),
       _positionDirection(
         "W",
         270,
-        theme.colorScheme.onSurface.withOpacity(0.5),
+        theme.colorScheme.onSurface.withValues(alpha: 0.5),
         size,
       ),
     ];

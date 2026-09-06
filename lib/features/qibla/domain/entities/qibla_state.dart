@@ -5,6 +5,7 @@ class QiblaState {
   final bool isAligned;
   final bool needsCalibration;
   final bool isLoading;
+  final double? sensorAccuracy; // New field
 
   QiblaState({
     required this.qiblaDirection,
@@ -13,6 +14,7 @@ class QiblaState {
     required this.isAligned,
     this.needsCalibration = false,
     this.isLoading = true,
+    this.sensorAccuracy,
   });
 
   factory QiblaState.initial() {
@@ -23,6 +25,7 @@ class QiblaState {
       isAligned: false,
       needsCalibration: false,
       isLoading: true,
+      sensorAccuracy: null,
     );
   }
 
@@ -33,6 +36,7 @@ class QiblaState {
     bool? isAligned,
     bool? needsCalibration,
     bool? isLoading,
+    double? sensorAccuracy,
   }) {
     return QiblaState(
       qiblaDirection: qiblaDirection ?? this.qiblaDirection,
@@ -41,6 +45,7 @@ class QiblaState {
       isAligned: isAligned ?? this.isAligned,
       needsCalibration: needsCalibration ?? this.needsCalibration,
       isLoading: isLoading ?? this.isLoading,
+      sensorAccuracy: sensorAccuracy ?? this.sensorAccuracy,
     );
   }
 }

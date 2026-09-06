@@ -83,13 +83,13 @@ class QiblaPage extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
                     color: qiblaState.isAligned
-                        ? AppColors.success.withOpacity(isDarkMode ? 0.15 : 0.08)
-                        : primaryColor.withOpacity(isDarkMode ? 0.15 : 0.08),
+                        ? AppColors.success.withValues(alpha: isDarkMode ? 0.15 : 0.08)
+                        : primaryColor.withValues(alpha: isDarkMode ? 0.15 : 0.08),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: qiblaState.isAligned
-                          ? AppColors.success.withOpacity(0.3)
-                          : primaryColor.withOpacity(0.2),
+                          ? AppColors.success.withValues(alpha: 0.3)
+                          : primaryColor.withValues(alpha: 0.2),
                       width: 1,
                     ),
                   ),
@@ -198,7 +198,7 @@ class QiblaPage extends ConsumerWidget {
                 width: 80,
                 height: 40,
                 decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.accentGold.withOpacity(0.4), width: 2),
+                  border: Border.all(color: AppColors.accentGold.withValues(alpha: 0.4), width: 2),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Center(

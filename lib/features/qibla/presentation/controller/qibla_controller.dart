@@ -28,26 +28,41 @@ class QiblaNotifier extends StateNotifier<QiblaState> {
     try {
       state = state.copyWith(isLoading: true);
       
-      // Fetch fresh location for pinpoint accuracy
       final position = await _repository.getCurrentLocation();
       _updateDirection(position);
       
+      double smoothedHeading = 0;
+      const double alpha = 0.15; // Smoothing factor (0.1 to 0.3 is typical)
+
       _compassSubscription = _repository.getCompassStream().listen((event) {
         final heading = event.heading;
         if (heading == null) return;
 
-        final offset = (_qiblaDirection - heading + 360) % 360;
-        bool isAligned = (offset < 2 || offset > 358);
+        // Exponential Moving Average (EMA) for pinpoint stability
+        // Handling the 0/360 degree wrap-around during smoothing
+        if (state.currentHeading == 0 && smoothedHeading == 0) {
+          smoothedHeading = heading;
+        } else {
+          double diff = heading - smoothedHeading;
+          if (diff > 180) diff -= 360;
+          if (diff < -180) diff += 360;
+          smoothedHeading = (smoothedHeading + alpha * diff + 360) % 360;
+        }
+
+        final offset = (_qiblaDirection - smoothedHeading + 360) % 360;
+        // Pinpoint accuracy threshold (1.5 degrees)
+        bool isAligned = (offset < 1.5 || offset > 358.5);
         
         if (isAligned && !state.isAligned) {
-          HapticFeedback.heavyImpact();
+          HapticFeedback.mediumImpact();
         }
 
         state = state.copyWith(
-          currentHeading: heading,
+          currentHeading: smoothedHeading,
           offset: offset,
           isAligned: isAligned,
           isLoading: false,
+          sensorAccuracy: event.accuracy,
         );
       });
     } catch (e) {

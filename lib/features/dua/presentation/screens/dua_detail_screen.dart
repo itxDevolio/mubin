@@ -154,7 +154,7 @@ class DuaDetailScreen extends ConsumerWidget {
                     const SizedBox(width: 8),
                     Flexible(
                       child: Text(
-                        '${ "Ref: "}${dua.reference}',
+                        '${ " "}${dua.reference}',
                         style: TextStyle(
                           fontSize: 11,
                           color: Colors.grey.shade600,

@@ -140,7 +140,7 @@ class _ShifaDetailScreenState extends ConsumerState<ShifaDetailScreen>
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
-                  'Ref: ${widget.dua.reference}',
+                  '${widget.dua.reference}',
                   style: const TextStyle(fontFamily: 'Poppins', fontSize: 10, color: Colors.grey),
                 ),
               ),
