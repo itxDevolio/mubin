@@ -808,7 +808,7 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   Future<void> _launchPlayStore() async {
-    const String packageName = 'com.devolio.mubin.app';
+    const String packageName = 'com.devolio.app.mubin';
     final Uri playStoreUrl = Uri.parse(
       'https://play.google.com/store/apps/details?id=$packageName',
     );
@@ -830,7 +830,7 @@ class SettingsScreen extends ConsumerWidget {
 
 
   Future<void> _shareApp() async {
-    const String packageName = 'com.devolio.mubin.app';
+    const String packageName = 'com.devolio.app.mubin';
     final String shareText =
         'Check out Mubin — your companion for prayer times, adhan alerts, adhkar reminders, and qibla direction. Download now:\n\n'
         'https://play.google.com/store/apps/details?id=$packageName';

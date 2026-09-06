@@ -8,7 +8,7 @@
 PRODUCT_NAME = mubin
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.devolio.mubin.app
+PRODUCT_BUNDLE_IDENTIFIER = com.devolio.app.mubin
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2026 com.devolio. All rights reserved.

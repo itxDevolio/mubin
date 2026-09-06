@@ -11,7 +11,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await JustAudioBackground.init(
-    androidNotificationChannelId: 'com.devolio.mubin.app.channel.audio',
+    androidNotificationChannelId: 'com.devolio.app.mubin.channel.audio',
     androidNotificationChannelName: 'Quran Audio',
     androidNotificationOngoing: true,
     androidNotificationIcon: 'mipmap/launcher_icon',
