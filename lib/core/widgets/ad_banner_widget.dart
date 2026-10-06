@@ -15,7 +15,7 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
 
   // Replace this with your real Ad Unit ID from AdMob console
   final String adUnitId = Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/6300978111' // Android Test Banner ID
+      ? 'ca-app-pub-5751989678728366/8507363719' // Android Real Banner ID
       : 'ca-app-pub-3940256099942544/2934735716'; // iOS Test Banner ID
 
   @override
