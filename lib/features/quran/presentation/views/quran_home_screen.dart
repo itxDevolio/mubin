@@ -2,13 +2,13 @@ import 'package:mubin/core/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
-import '../controllers/quran_progress_controller.dart';
-import '../widgets/khatam_progress_card.dart';
-import 'mushaf_view_screen.dart';
-import 'surah_list_screen.dart';
-import 'juz_list_screen.dart';
-import 'bookmark_list_screen.dart';
-import 'quran_audio_player_screen.dart';
+import 'package:mubin/features/quran/presentation/controllers/quran_progress_controller.dart';
+import 'package:mubin/features/quran/presentation/widgets/khatam_progress_card.dart';
+import 'package:mubin/features/quran/presentation/views/mushaf_view_screen.dart';
+import 'package:mubin/features/quran/presentation/views/surah_list_screen.dart';
+import 'package:mubin/features/quran/presentation/views/juz_list_screen.dart';
+import 'package:mubin/features/quran/presentation/views/bookmark_list_screen.dart';
+import 'package:mubin/features/quran/presentation/views/quran_audio_player_screen.dart';
 import '../../../../core/widgets/ad_banner_widget.dart';
 
 class QuranHomeScreen extends ConsumerWidget {

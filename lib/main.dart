@@ -6,12 +6,10 @@ import 'package:just_audio_background/just_audio_background.dart';
 import 'package:timezone/data/latest.dart' as tzdata;
 import 'package:timezone/timezone.dart' as tz;
 
-import 'core/app_colors.dart';
 import 'core/constant/db_consts.dart';
 import 'core/services/notification_service.dart';
 import 'core/services/settings_controller.dart';
 import 'core/theme/app_theme.dart';
-import 'core/theme/app_typography.dart';
 import 'features/splash/presentation/screens/splash_screen.dart';
 import 'home/ui/screens/home_screen.dart';
 import 'package:workmanager/workmanager.dart';
@@ -36,6 +34,18 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Just Audio Background FIRST before runApp
+  try {
+    await JustAudioBackground.init(
+      androidNotificationChannelId: 'com.devolio.app.mubin.channel.audio',
+      androidNotificationChannelName: 'Quran Audio',
+      androidNotificationOngoing: true,
+      androidNotificationIcon: 'mipmap/launcher_icon',
+    );
+  } catch (e) {
+    debugPrint("JustAudioBackground init error: $e");
+  }
 
   // Initialize Workmanager
   await Workmanager().initialize(callbackDispatcher);
@@ -75,14 +85,6 @@ Future<void> _initServices() async {
     try {
       tz.setLocalLocation(tz.getLocation('Asia/Karachi'));
     } catch (_) {}
-
-    // Initialize Just Audio Background
-    await JustAudioBackground.init(
-      androidNotificationChannelId: 'com.devolio.app.mubin.channel.audio',
-      androidNotificationChannelName: 'Quran Audio',
-      androidNotificationOngoing: true,
-      androidNotificationIcon: 'mipmap/launcher_icon',
-    );
 
     // Initialize AdMob
     await MobileAds.instance.initialize();

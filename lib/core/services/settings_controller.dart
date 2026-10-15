@@ -1,7 +1,6 @@
-import 'package:flutter_riverpod/legacy.dart';
-import 'package:mubin/features/quran/domain/entities/reciter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mubin/features/quran/domain/entities/reciter.dart';
 import 'package:hive/hive.dart';
 import 'package:adhan_dart/adhan_dart.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -93,12 +92,9 @@ class SettingsState {
   }
 }
 
-class SettingsController extends StateNotifier<SettingsState> {
-  SettingsController() : super(SettingsState()) {
-    _loadSettings();
-  }
-
-  void _loadSettings() {
+class SettingsController extends Notifier<SettingsState> {
+  @override
+  SettingsState build() {
     final box = Hive.box(DbConstants.appBox);
 
     final String lang = box.get('language', defaultValue: 'en');
@@ -132,7 +128,7 @@ class SettingsController extends StateNotifier<SettingsState> {
       );
     }
 
-    state = state.copyWith(
+    return SettingsState(
       language: lang,
       currentReciter: reciter,
       keepPlayingInBackground: keepBg,
@@ -247,8 +243,8 @@ class SettingsController extends StateNotifier<SettingsState> {
 }
 
 final settingsControllerProvider =
-StateNotifierProvider<SettingsController, SettingsState>(
-      (ref) => SettingsController(),
+NotifierProvider<SettingsController, SettingsState>(
+      () => SettingsController(),
 );
 
 // Helper to get CalculationParameters from string

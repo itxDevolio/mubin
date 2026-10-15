@@ -8,7 +8,7 @@ import '../../../../core/services/settings_controller.dart';
 import '../controllers/bookmark_controller.dart';
 import '../controllers/mushaf_controller.dart';
 import '../controllers/surah_juz_controller.dart';
-import '../controllers/quran_audio_player_controller.dart';
+import 'package:mubin/features/quran/presentation/controllers/quran_audio_player_controller.dart';
 import '../controllers/quran_progress_controller.dart';
 import '../widgets/verse_bottom_sheet.dart';
 

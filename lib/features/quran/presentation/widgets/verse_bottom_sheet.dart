@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quran/quran.dart' as quran;
 import '../../domain/entities/verse.dart';
-import '../controllers/bookmark_controller.dart';
-import '../controllers/quran_audio_player_controller.dart';
+import 'package:mubin/features/quran/presentation/controllers/bookmark_controller.dart';
+import 'package:mubin/features/quran/presentation/controllers/quran_audio_player_controller.dart';
 
 class VerseBottomSheet extends ConsumerWidget {
   final Verse verse;

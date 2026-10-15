@@ -1,19 +1,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
 import '../../domain/entities/verse.dart';
-import 'quran_di_providers.dart'; // Make sure this contains the provider declaration below
+import 'quran_di_providers.dart';
 
-class BookmarkController extends StateNotifier<AsyncValue<List<Verse>>> {
-  final Ref _ref;
-
-  BookmarkController(this._ref) : super(const AsyncValue.loading()) {
-    loadBookmarks();
+class BookmarkController extends Notifier<AsyncValue<List<Verse>>> {
+  @override
+  AsyncValue<List<Verse>> build() {
+    Future.microtask(() => loadBookmarks());
+    return const AsyncValue.loading();
   }
 
   Future<void> loadBookmarks() async {
     try {
-      // FIX: Changed getQuranRepositoryProvider to quranRepositoryProvider
-      final list = await _ref
+      final list = await ref
           .read(quranRepositoryProvider)
           .getBookmarkedVerses();
       state = AsyncValue.data(list);
@@ -24,9 +22,8 @@ class BookmarkController extends StateNotifier<AsyncValue<List<Verse>>> {
 
   Future<void> toggleBookmarkState(Verse verse) async {
     try {
-      // FIX: Changed getQuranRepositoryProvider to quranRepositoryProvider
-      await _ref.read(quranRepositoryProvider).toggleBookmark(verse);
-      await loadBookmarks(); // Re-fetch updated items from local disk
+      await ref.read(quranRepositoryProvider).toggleBookmark(verse);
+      await loadBookmarks();
     } catch (e) {
       // Graceful error handling
     }
@@ -34,6 +31,6 @@ class BookmarkController extends StateNotifier<AsyncValue<List<Verse>>> {
 }
 
 final bookmarkControllerProvider =
-    StateNotifierProvider<BookmarkController, AsyncValue<List<Verse>>>((ref) {
-      return BookmarkController(ref);
-    });
+    NotifierProvider<BookmarkController, AsyncValue<List<Verse>>>(() {
+  return BookmarkController();
+});

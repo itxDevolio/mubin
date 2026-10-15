@@ -3,9 +3,9 @@ import 'package:mubin/core/services/haptic_feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quran/quran.dart' as quran;
-import 'audio_playing_screen.dart';
-import '../controllers/surah_juz_controller.dart';
-import '../controllers/quran_audio_player_controller.dart';
+import 'package:mubin/features/quran/presentation/controllers/quran_audio_player_controller.dart';
+import 'package:mubin/features/quran/presentation/controllers/surah_juz_controller.dart';
+import 'package:mubin/features/quran/presentation/views/audio_playing_screen.dart';
 
 class QuranAudioPlayerScreen extends ConsumerStatefulWidget {
   const QuranAudioPlayerScreen({super.key});
@@ -322,12 +322,7 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
                                   ),
                                   onPressed: () {
                                     hapticFeedBack();
-                                    ref
-                                        .read(
-                                          quranAudioPlayerControllerProvider
-                                              .notifier,
-                                        )
-                                        .downloadSurah(surah.number);
+                                    ref.read(quranAudioPlayerControllerProvider.notifier).downloadSurah(surah.number);
                                   },
                                   padding: EdgeInsets.zero,
                                   constraints: const BoxConstraints(),
@@ -367,6 +362,148 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
           ),
         ],
       ),
+      bottomNavigationBar: audioState.errorMessage != null && !audioState.isPlaying && !audioState.isLoading
+          ? Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
+                border: Border(
+                  top: BorderSide(
+                    color: Colors.red.withAlpha(80),
+                    width: 1,
+                  ),
+                ),
+              ),
+              child: SafeArea(
+                child: Row(
+                  children: [
+                    const Icon(Icons.wifi_off_rounded, color: Colors.red, size: 20),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        audioState.errorMessage!,
+                        style: const TextStyle(
+                          color: Colors.red,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        hapticFeedBack();
+                        ref.read(quranAudioPlayerControllerProvider.notifier).retryCurrentAudio();
+                      },
+                      icon: const Icon(Icons.refresh_rounded, size: 16),
+                      label: const Text("Retry", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryTeal,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          : (audioState.currentSurahNumber != null
+              ? Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
+                    border: Border(
+                      top: BorderSide(
+                        color: isDark ? AppColors.borderDark : AppColors.borderLight,
+                        width: 1,
+                      ),
+                    ),
+                  ),
+                  child: SafeArea(
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AudioPlayingScreen(),
+                          ),
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: const BoxDecoration(
+                              color: AppColors.primaryTeal,
+                              shape: BoxShape.circle,
+                            ),
+                            child: audioState.isLoading
+                                ? const Center(
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : Icon(
+                                    audioState.isPlaying
+                                        ? Icons.pause_rounded
+                                        : Icons.play_arrow_rounded,
+                                    color: Colors.white,
+                                    size: 24,
+                                  ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  quran.getSurahNameEnglish(audioState.currentSurahNumber!),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                    color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                                  ),
+                                ),
+                                Text(
+                                  audioState.currentReciter.name,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              audioState.isPlaying ? Icons.pause_circle_filled : Icons.play_circle_fill,
+                              color: AppColors.primaryTeal,
+                              size: 32,
+                            ),
+                            onPressed: () {
+                              hapticFeedBack();
+                              if (audioState.isPlaying) {
+                                ref.read(quranAudioPlayerControllerProvider.notifier).pauseAudio();
+                              } else {
+                                ref.read(quranAudioPlayerControllerProvider.notifier).resumeAudio();
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              : null),
     );
   }
 }

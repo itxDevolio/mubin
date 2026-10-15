@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
 import '../../domain/entities/surah.dart';
 import 'quran_di_providers.dart';
 
@@ -27,17 +26,16 @@ class SurahJuzState {
   }
 }
 
-class SurahJuzController extends StateNotifier<SurahJuzState> {
-  final Ref _ref;
-
-  SurahJuzController(this._ref)
-    : super(SurahJuzState(surahs: const AsyncValue.loading())) {
-    loadSurahs();
+class SurahJuzController extends Notifier<SurahJuzState> {
+  @override
+  SurahJuzState build() {
+    Future.microtask(() => loadSurahs());
+    return SurahJuzState(surahs: const AsyncValue.loading());
   }
 
   Future<void> loadSurahs() async {
     try {
-      final repo = _ref.read(quranRepositoryProvider);
+      final repo = ref.read(quranRepositoryProvider);
       final list = await repo.getSurahs();
       state = state.copyWith(
         surahs: AsyncValue.data(list),
@@ -71,6 +69,6 @@ class SurahJuzController extends StateNotifier<SurahJuzState> {
 }
 
 final surahJuzControllerProvider =
-    StateNotifierProvider<SurahJuzController, SurahJuzState>((ref) {
-      return SurahJuzController(ref);
-    });
+    NotifierProvider<SurahJuzController, SurahJuzState>(() {
+  return SurahJuzController();
+});

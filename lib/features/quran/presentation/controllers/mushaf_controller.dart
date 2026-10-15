@@ -1,13 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
 import '../../domain/entities/verse.dart';
 import '../../../../core/services/settings_controller.dart';
 import 'quran_di_providers.dart';
 
-class MushafController extends StateNotifier<Map<int, AsyncValue<List<Verse>>>> {
-  final Ref _ref;
-
-  MushafController(this._ref) : super(const {});
+class MushafController extends Notifier<Map<int, AsyncValue<List<Verse>>>> {
+  @override
+  Map<int, AsyncValue<List<Verse>>> build() {
+    return const {};
+  }
 
   Future<void> loadVersesForPage(int pageNumber, {bool silent = false}) async {
     // Basic range check
@@ -27,8 +27,8 @@ class MushafController extends StateNotifier<Map<int, AsyncValue<List<Verse>>>> 
     }
 
     try {
-      final repo = _ref.read(quranRepositoryProvider);
-      final lang = _ref.read(settingsControllerProvider).language;
+      final repo = ref.read(quranRepositoryProvider);
+      final lang = ref.read(settingsControllerProvider).language;
       final verses = await repo.getVerses(pageNumber, lang: lang);
       
       state = {...state, pageNumber: AsyncValue.data(verses)};
@@ -41,16 +41,8 @@ class MushafController extends StateNotifier<Map<int, AsyncValue<List<Verse>>>> 
     state = const {};
   }
 }
+
 final mushafControllerProvider =
-StateNotifierProvider<MushafController, Map<int, AsyncValue<List<Verse>>>>((ref) {
-  final controller = MushafController(ref);
-
-  // Listen to settings changes to clear cache
-  ref.listen<SettingsState>(settingsControllerProvider, (previous, next) {
-    if (previous?.language != next.language) {
-      controller.clearCache();
-    }
-  });
-
-  return controller;
+    NotifierProvider<MushafController, Map<int, AsyncValue<List<Verse>>>>(() {
+  return MushafController();
 });

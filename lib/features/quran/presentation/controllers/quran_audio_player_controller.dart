@@ -10,6 +10,8 @@ import 'package:just_audio_background/just_audio_background.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quran/quran.dart' as quran;
 
+import '../../../../core/services/settings_controller.dart';
+
 /// Download status for a surah
 enum DownloadStatus { notDownloaded, downloading, downloaded, failed }
 
@@ -129,13 +131,11 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
   Timer? _countdownTimer;
   CancelToken? _downloadCancelToken;
   
-  // Track the latest requested surah to prevent race conditions
   int? _lastRequestedSurah;
   int? _lastRequestedVerse;
 
   @override
   AudioState build() {
-    // Use read instead of watch to prevent full controller reset when settings change
     final settings = ref.read(settingsControllerProvider);
     final initialReciter = settings.currentReciter;
     final initialKeepBg = settings.keepPlayingInBackground;
@@ -147,7 +147,6 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
       WidgetsBinding.instance.addObserver(this);
     });
 
-    // Surgical updates for settings changes
     ref.listen<SettingsState>(settingsControllerProvider, (previous, next) {
       if (previous?.keepPlayingInBackground != next.keepPlayingInBackground) {
         state = state.copyWith(keepPlayingInBackground: next.keepPlayingInBackground);
@@ -172,8 +171,6 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
 
   void _setupAudioPlayer() {
     _audioPlayer.setAutomaticallyWaitsToMinimizeStalling(true);
-    // Explicitly set User-Agent for network requests to avoid being blocked by some servers
-    // and improve compatibility with streaming sources.
   }
 
   @override
@@ -182,7 +179,7 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
     if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
       if (!this.state.keepPlayingInBackground) {
         debugPrint('Stopping audio: Background play is disabled');
-        stopAudio(); // Full stop when app is minimized if background play is off
+        stopAudio();
       }
     }
   }
@@ -204,11 +201,9 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
       for (var entity in entities) {
         if (entity is File && entity.path.endsWith('.mp3')) {
           final fileName = entity.path.split(Platform.pathSeparator).last;
-          // Format is surah_1.mp3
           final match = RegExp(r'surah_(\d+)\.mp3').firstMatch(fileName);
           if (match != null) {
             final int surahNum = int.parse(match.group(1)!);
-            // Check if file is not corrupted (e.g. at least 10KB)
             if (await entity.length() > 10240) {
               downloaded.add(surahNum);
             }
@@ -226,7 +221,6 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
     _audioPlayer.playerStateStream.listen((playerState) {
       final processingState = playerState.processingState;
       
-      // Automatically clear error message if playback is successful, ready, or loading
       String? errorMessage = state.errorMessage;
       if (processingState == ProcessingState.ready || 
           processingState == ProcessingState.buffering ||
@@ -253,7 +247,6 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
           _audioPlayer.seek(Duration.zero);
           _audioPlayer.play();
         } else {
-          // Instead of stopAudio which clears state, just pause and seek to beginning
           _audioPlayer.pause();
           _audioPlayer.seek(Duration.zero);
         }
@@ -272,8 +265,6 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
 
     _audioPlayer.playbackEventStream.listen((event) {}, onError: (Object e, StackTrace stackTrace) {
       debugPrint('Audio playback error: $e');
-      
-      // If we are playing from local, ignore most errors as they are likely network-related metadata issues
       if (state.isPlayingFromLocal) return;
 
       state = state.copyWith(
@@ -304,20 +295,18 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
       album: "Al-Quran",
       title: title,
       artist: artist,
-      // Removed artUri to fix asset loading error and improve stability in release builds
     );
 
     if (surahNumber != null) {
       final localFile = await _getLocalSurahFile(surahNumber);
       if (await localFile.exists()) {
         final fileSize = await localFile.length();
-        if (fileSize > 10240) { // Only use if > 10KB
+        if (fileSize > 10240) {
           debugPrint('Playing from local file: ${localFile.path}');
           state = state.copyWith(isPlayingFromLocal: true);
-          // Use Uri.file for better compatibility on some Android versions
           return AudioSource.uri(Uri.file(localFile.path), tag: tag);
         } else {
-          debugPrint('Local file too small, probably corrupted. Deleting.');
+          debugPrint('Local file too small, deleting.');
           await localFile.delete();
           state = state.copyWith(
             downloadedSurahs: Set.from(state.downloadedSurahs)..remove(surahNumber)
@@ -331,9 +320,6 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
     return AudioSource.uri(
       Uri.parse(url),
       tag: tag,
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-      },
     );
   }
 
@@ -343,18 +329,30 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
     return File('${dir.path}/surahs/$reciterFolder/surah_$surahNumber.mp3');
   }
 
-  String _getSurahUrl(int surahNumber, Reciter reciter) {
-    if (reciter.name == "Mishary Rashid Alafasy") {
-      // Force HTTPS to avoid cleartext issues in release mode
-      return quran.getAudioURLBySurah(surahNumber).replaceFirst('http://', 'https://');
+  List<String> _getSurahUrls(int surahNumber, Reciter reciter) {
+    final numPadded = surahNumber.toString().padLeft(3, '0');
+    final numUnpadded = surahNumber.toString();
+
+    final List<String> urls = [
+      if (reciter.urlPrefix.isNotEmpty) "${reciter.urlPrefix}$numPadded.mp3",
+      "https://server8.mp3quran.net/afs/$numPadded.mp3",
+      "https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/$numUnpadded.mp3",
+    ];
+
+    return urls;
+  }
+
+  Future<void> retryCurrentAudio() async {
+    state = state.copyWith(errorMessage: null);
+    if (state.currentSurahNumber != null) {
+      await playSurah(state.currentSurahNumber!);
+    } else if (state.playingVerseId != null && state.currentAudioUrl != null) {
+      await playVerseAudio(state.currentAudioUrl!, state.playingVerseId!);
     }
-    final numStr = surahNumber.toString().padLeft(3, '0');
-    return "${reciter.urlPrefix}$numStr.mp3";
   }
 
   Future<void> playVerseAudio(String url, int verseId) async {
     debugPrint('Attempting to play verse audio: $url');
-    // Force HTTPS for verse audio too
     final String secureUrl = url.replaceFirst('http://', 'https://');
     _lastRequestedVerse = verseId;
     _lastRequestedSurah = null;
@@ -371,7 +369,6 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
       } else {
         await _audioPlayer.stop();
         
-        // Check if another request came in while stopping
         if (_lastRequestedVerse != verseId) return;
 
         state = state.copyWith(
@@ -384,7 +381,6 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
         );
         
         final source = await _getAudioSource(secureUrl, null, verseId: verseId);
-        
         if (_lastRequestedVerse != verseId) return;
         
         await _audioPlayer.setAudioSource(source);
@@ -396,6 +392,7 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
       if (_lastRequestedVerse == verseId) {
         state = state.copyWith(
           isLoading: false,
+          isPlaying: false,
           errorMessage: "Failed to play verse. Check your internet connection.",
         );
       }
@@ -403,15 +400,17 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
   }
 
   Future<void> playSurah(int surahNumber) async {
-    final url = _getSurahUrl(surahNumber, state.currentReciter);
-    debugPrint('Attempting to play surah $surahNumber: $url');
+    debugPrint('Attempting to play surah $surahNumber');
     _lastRequestedSurah = surahNumber;
     _lastRequestedVerse = null;
     
     state = state.copyWith(errorMessage: null);
-    
-    try {
-      if (state.currentAudioUrl == url && state.currentSurahNumber == surahNumber) {
+
+    // 1. Check local offline file
+    final localFile = await _getLocalSurahFile(surahNumber);
+    if (await localFile.exists() && await localFile.length() > 10240) {
+      final localUrl = localFile.path;
+      if (state.currentAudioUrl == localUrl && state.currentSurahNumber == surahNumber && !state.isLoading && state.errorMessage == null) {
         if (!state.isPlaying) {
           await _audioPlayer.play();
         } else {
@@ -421,50 +420,70 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
       }
 
       await _audioPlayer.stop();
-      
-      // Check if another request came in while stopping
       if (_lastRequestedSurah != surahNumber) return;
 
       state = state.copyWith(
         isLoading: true,
-        currentAudioUrl: url,
+        currentAudioUrl: localUrl,
         currentSurahNumber: surahNumber,
         playingVerseId: surahNumber * 1000,
         errorMessage: null,
+        isPlayingFromLocal: true,
       );
 
-      AudioSource source = await _getAudioSource(url, surahNumber);
-      
+      try {
+        final source = await _getAudioSource(localUrl, surahNumber);
+        if (_lastRequestedSurah != surahNumber) return;
+        await _audioPlayer.setAudioSource(source);
+        await _audioPlayer.play();
+        debugPrint('Surah offline playback started successfully');
+        return;
+      } catch (e) {
+        debugPrint('Local file playback error, falling back to online streams: $e');
+        state = state.copyWith(isPlayingFromLocal: false);
+      }
+    }
+
+    // 2. Online streaming failover
+    final candidateUrls = _getSurahUrls(surahNumber, state.currentReciter);
+    await _audioPlayer.stop();
+    if (_lastRequestedSurah != surahNumber) return;
+
+    state = state.copyWith(
+      isLoading: true,
+      currentSurahNumber: surahNumber,
+      playingVerseId: surahNumber * 1000,
+      errorMessage: null,
+      isPlayingFromLocal: false,
+    );
+
+    Object? lastError;
+    for (final url in candidateUrls) {
       if (_lastRequestedSurah != surahNumber) return;
 
       try {
+        debugPrint('Trying audio URL: $url');
+        state = state.copyWith(currentAudioUrl: url);
+        final source = await _getAudioSource(url, surahNumber);
+        if (_lastRequestedSurah != surahNumber) return;
+
         await _audioPlayer.setAudioSource(source);
+        await _audioPlayer.play();
+        debugPrint('Surah online playback started successfully with URL: $url');
+        return; // Success!
       } catch (e) {
-        // Fallback: If local file failed, try streaming from network
-        if (state.isPlayingFromLocal && _lastRequestedSurah == surahNumber) {
-          debugPrint('Local file play failed, falling back to network: $e');
-          source = await _getAudioSource(url, null); 
-          await _audioPlayer.setAudioSource(source);
-        } else {
-          rethrow;
-        }
+        debugPrint('Failed streaming URL $url: $e');
+        lastError = e;
       }
-      
-      if (_lastRequestedSurah != surahNumber) return;
-      
-      await _audioPlayer.play();
-      debugPrint('Surah audio playback started');
-    } catch (e) {
-      debugPrint('Error playing surah audio: $e');
-      
-      // Only show error if this is still the surah we want to play
-      // AND we are not playing from local (since user says it plays fine from local)
-      if (_lastRequestedSurah == surahNumber && !state.isPlayingFromLocal) {
-        state = state.copyWith(
-          isLoading: false,
-          errorMessage: "Playback failed. Check your internet connection.",
-        );
-      }
+    }
+
+    if (_lastRequestedSurah == surahNumber) {
+      debugPrint('All audio sources failed. Last error: $lastError');
+      state = state.copyWith(
+        isLoading: false,
+        isPlaying: false,
+        errorMessage: "Playback failed. Check your internet connection.",
+      );
     }
   }
 
@@ -472,7 +491,7 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
     if (state.downloadedSurahs.contains(surahNumber)) return;
     if (state.downloadInfoMap[surahNumber]?.status == DownloadStatus.downloading) return;
 
-    final url = _getSurahUrl(surahNumber, state.currentReciter);
+    final urls = _getSurahUrls(surahNumber, state.currentReciter);
     final dir = await getApplicationDocumentsDirectory();
     final String reciterFolder = state.currentReciter.name.replaceAll(' ', '_');
     final surahsDir = Directory('${dir.path}/surahs/$reciterFolder');
@@ -488,64 +507,67 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
     updatedMap[surahNumber] = DownloadInfo(surahNumber: surahNumber, status: DownloadStatus.downloading);
     state = state.copyWith(downloadInfoMap: updatedMap);
     
-    try {
-      await _dio.download(
-        url,
-        savePath,
-        cancelToken: _downloadCancelToken,
-        onReceiveProgress: (received, total) {
-          if (total != -1) {
-            final progress = received / total;
-            final updated = Map<int, DownloadInfo>.from(state.downloadInfoMap);
-            updated[surahNumber] = DownloadInfo(
-              surahNumber: surahNumber,
-              status: DownloadStatus.downloading,
-              progress: progress,
-            );
-            state = state.copyWith(downloadInfoMap: updated);
-          }
-        },
+    bool downloadSuccess = false;
+    Object? downloadError;
+
+    for (final url in urls) {
+      try {
+        await _dio.download(
+          url,
+          savePath,
+          cancelToken: _downloadCancelToken,
+          onReceiveProgress: (received, total) {
+            if (total != -1) {
+              final progress = received / total;
+              final updated = Map<int, DownloadInfo>.from(state.downloadInfoMap);
+              updated[surahNumber] = DownloadInfo(
+                surahNumber: surahNumber,
+                status: DownloadStatus.downloading,
+                progress: progress,
+              );
+              state = state.copyWith(downloadInfoMap: updated);
+            }
+          },
+        );
+
+        final downloadedFile = File(savePath);
+        if (await downloadedFile.exists() && await downloadedFile.length() > 10240) {
+          downloadSuccess = true;
+          break;
+        }
+      } catch (e) {
+        downloadError = e;
+        final partialFile = File(savePath);
+        if (await partialFile.exists()) await partialFile.delete();
+        if (CancelToken.isCancel(e as DioException)) break;
+      }
+    }
+
+    if (downloadSuccess) {
+      final updatedDownloaded = Set<int>.from(state.downloadedSurahs);
+      updatedDownloaded.add(surahNumber);
+      
+      final finalMap = Map<int, DownloadInfo>.from(state.downloadInfoMap);
+      finalMap[surahNumber] = DownloadInfo(
+        surahNumber: surahNumber,
+        status: DownloadStatus.downloaded,
+        progress: 1.0,
       );
       
-      // Verify file exists and is not empty before marking as downloaded
-      final downloadedFile = File(savePath);
-      if (await downloadedFile.exists() && await downloadedFile.length() > 10240) {
-        final updatedDownloaded = Set<int>.from(state.downloadedSurahs);
-        updatedDownloaded.add(surahNumber);
-        
-        final finalMap = Map<int, DownloadInfo>.from(state.downloadInfoMap);
-        finalMap[surahNumber] = DownloadInfo(
-          surahNumber: surahNumber,
-          status: DownloadStatus.downloaded,
-          progress: 1.0,
-        );
-        
-        state = state.copyWith(
-          downloadedSurahs: updatedDownloaded,
-          downloadInfoMap: finalMap,
-        );
-      } else {
-        throw Exception("Downloaded file is empty or missing");
-      }
-    } catch (e) {
-      // Cleanup partial file
-      final partialFile = File(savePath);
-      if (await partialFile.exists()) await partialFile.delete();
-
-      if (CancelToken.isCancel(e as DioException)) {
-        debugPrint('Download cancelled');
-      } else {
-        final errorMap = Map<int, DownloadInfo>.from(state.downloadInfoMap);
-        errorMap[surahNumber] = DownloadInfo(
-          surahNumber: surahNumber,
-          status: DownloadStatus.failed,
-          errorMessage: e.toString(),
-        );
-        state = state.copyWith(downloadInfoMap: errorMap);
-      }
-    } finally {
-      _downloadCancelToken = null;
+      state = state.copyWith(
+        downloadedSurahs: updatedDownloaded,
+        downloadInfoMap: finalMap,
+      );
+    } else {
+      final errorMap = Map<int, DownloadInfo>.from(state.downloadInfoMap);
+      errorMap[surahNumber] = DownloadInfo(
+        surahNumber: surahNumber,
+        status: DownloadStatus.failed,
+        errorMessage: downloadError?.toString() ?? "Download failed",
+      );
+      state = state.copyWith(downloadInfoMap: errorMap);
     }
+    _downloadCancelToken = null;
   }
 
   Future<void> cancelDownload(int surahNumber) async {
@@ -695,8 +717,12 @@ class QuranAudioPlayerController extends Notifier<AudioState> with WidgetsBindin
   }
 
   Future<void> resumeAudio() async {
-    state = state.copyWith(errorMessage: null);
-    await _audioPlayer.play();
+    if (state.errorMessage != null || state.currentAudioUrl == null) {
+      await retryCurrentAudio();
+    } else {
+      state = state.copyWith(errorMessage: null);
+      await _audioPlayer.play();
+    }
   }
 
   void setSleepTimer(int minutes) {

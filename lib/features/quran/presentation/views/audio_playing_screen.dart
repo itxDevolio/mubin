@@ -379,43 +379,68 @@ class AudioPlayingScreen extends ConsumerWidget {
                         if (audioState.errorMessage != null && !audioState.isPlaying && !audioState.isLoading) ...[
                           const SizedBox(height: 12),
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 8,
-                            ),
+                            padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: Colors.red.withAlpha(26),
-                              borderRadius: BorderRadius.circular(8),
+                              color: Colors.red.withAlpha(20),
+                              borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: Colors.red.withAlpha(77),
+                                color: Colors.red.withAlpha(70),
                               ),
                             ),
-                            child: Row(
+                            child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(
-                                  Icons.error_outline_rounded,
-                                  color: Colors.red,
-                                  size: 16,
-                                ),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  child: Text(
-                                    audioState.errorMessage!,
-                                    style: const TextStyle(
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.wifi_off_rounded,
                                       color: Colors.red,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
+                                      size: 18,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        audioState.errorMessage!,
+                                        style: const TextStyle(
+                                          color: Colors.red,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.close, size: 16, color: Colors.red),
+                                      onPressed: () {
+                                        ref.read(quranAudioPlayerControllerProvider.notifier).clearError();
+                                      },
+                                      padding: EdgeInsets.zero,
+                                      constraints: const BoxConstraints(),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton.icon(
+                                    onPressed: () {
+                                      hapticFeedBack();
+                                      ref.read(quranAudioPlayerControllerProvider.notifier).retryCurrentAudio();
+                                    },
+                                    icon: const Icon(Icons.refresh_rounded, size: 18),
+                                    label: const Text(
+                                      "Retry",
+                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.primaryTeal,
+                                      foregroundColor: Colors.white,
+                                      elevation: 0,
+                                      padding: const EdgeInsets.symmetric(vertical: 8),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.close, size: 16),
-                                  onPressed: () {
-                                    ref.read(quranAudioPlayerControllerProvider.notifier).clearError();
-                                  },
-                                  padding: EdgeInsets.zero,
-                                  constraints: const BoxConstraints(),
                                 ),
                               ],
                             ),

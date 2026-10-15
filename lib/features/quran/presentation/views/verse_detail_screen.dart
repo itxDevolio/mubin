@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/gestures.dart';
 import '../../domain/entities/verse.dart';
-import '../controllers/quran_audio_player_controller.dart';
+import 'package:mubin/features/quran/presentation/controllers/quran_audio_player_controller.dart';
 import '../widgets/verse_bottom_sheet.dart';
 
 class VerseDetailScreen extends ConsumerWidget {
