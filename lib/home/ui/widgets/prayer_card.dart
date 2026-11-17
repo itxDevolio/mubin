@@ -13,29 +13,36 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:adhan_dart/adhan_dart.dart';
 
 class PrayerCard extends ConsumerWidget {
-  final DateTime date; // HomeScreen se aane wali live date
+  final DateTime date;
 
   const PrayerCard({super.key, required this.date});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 🔥 Dynamic date parameter provider ko pass kiya taake cache refresh sync ho sake
     final prayer = ref.watch(prayerTimesProvider(date));
+    final settings = ref.watch(settingsControllerProvider);
+    final isUrdu = settings.language == 'ur';
 
     return prayer.when(
       data: (d) {
         if (d == null) {
-          return const Center(
+          return Center(
             child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text("Please enable location settings."),
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                isUrdu
+                    ? "براہِ کرم لوکیشن کی اجازت فراہم کریں۔"
+                    : "Please enable location settings.",
+                style: TextStyle(
+                  fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                ),
+              ),
             ),
           );
         }
 
         Prayer active = d.currentPrayer(date: date.toLocal());
 
-        final settings = ref.watch(settingsControllerProvider);
         final bool isAnyNotificationEnabled =
             settings.notificationsEnabled &&
             (settings.fajrNotification ||
@@ -69,10 +76,13 @@ class PrayerCard extends ConsumerWidget {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
                 children: [
                   Expanded(
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
+                      textDirection:
+                          isUrdu ? TextDirection.rtl : TextDirection.ltr,
                       children: [
                         Icon(
                           FlutterIslamicIcons.mosque,
@@ -87,6 +97,8 @@ class PrayerCard extends ConsumerWidget {
                             getHijriDate(),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
+                            textAlign:
+                                isUrdu ? TextAlign.right : TextAlign.left,
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 13,
@@ -140,37 +152,43 @@ class PrayerCard extends ConsumerWidget {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
                 children: [
                   PrayerTimeCard(
-                    prayerName: "Fajr",
+                    prayerName: isUrdu ? "فجر" : "Fajr",
                     prayerTime: d.fajr,
                     activePrayer: active,
                     currentCardPrayer: Prayer.fajr,
+                    isUrdu: isUrdu,
                   ),
                   PrayerTimeCard(
-                    prayerName: "Dhuhr",
+                    prayerName: isUrdu ? "ظہر" : "Dhuhr",
                     prayerTime: d.dhuhr,
                     activePrayer: active,
                     currentCardPrayer: Prayer.dhuhr,
+                    isUrdu: isUrdu,
                   ),
                   PrayerTimeCard(
-                    prayerName: "Asr",
+                    prayerName: isUrdu ? "عصر" : "Asr",
                     prayerTime: d.asr,
                     activePrayer: active,
                     currentCardPrayer: Prayer.asr,
+                    isUrdu: isUrdu,
                   ),
                   PrayerTimeCard(
-                    prayerName: "Maghrib",
+                    prayerName: isUrdu ? "مغرب" : "Maghrib",
                     prayerTime: d.maghrib,
                     activePrayer: active,
                     currentCardPrayer: Prayer.maghrib,
                     flexValue: 13,
+                    isUrdu: isUrdu,
                   ),
                   PrayerTimeCard(
-                    prayerName: "Isha",
+                    prayerName: isUrdu ? "عشاء" : "Isha",
                     prayerTime: d.isha,
                     activePrayer: active,
                     currentCardPrayer: Prayer.isha,
+                    isUrdu: isUrdu,
                   ),
                 ],
               ),

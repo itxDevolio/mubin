@@ -38,15 +38,12 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
     _currentPage = widget.initialPage;
     _pageController = PageController(initialPage: widget.initialPage - 1);
 
-    // Initial load
     _initScreen();
   }
 
   Future<void> _initScreen() async {
-    // Start data load
     _loadPages(_currentPage);
 
-    // Progress update
     if (widget.shouldUpdateProgress) {
       ref
           .read(quranProgressControllerProvider.notifier)
@@ -56,7 +53,6 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
 
   void _loadPages(int page) {
     ref.read(mushafControllerProvider.notifier).loadVersesForPage(page);
-    // Prefetch next page
     if (page < 604) {
       ref
           .read(mushafControllerProvider.notifier)
@@ -66,17 +62,14 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
 
   @override
   void dispose() {
-    // Sirf PageController dispose karein, ref yahan use na karein
     _pageController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Listen to settings for language changes
     ref.listen<SettingsState>(settingsControllerProvider, (previous, next) {
       if (previous?.language != next.language) {
-        // Refresh current page with new language
         _loadPages(_currentPage);
       }
     });
@@ -90,6 +83,7 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final currentLang = ref.watch(settingsControllerProvider).language;
+    final isUrdu = currentLang == 'ur';
     final bookmarkedIds = bookmarksState.maybeWhen(
       data: (list) => list.map((b) => b.id).toSet(),
       orElse: () => <int>{},
@@ -99,7 +93,7 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(
         children: [
-          // 1. Custom Top Bar (Replaces AppBar)
+          // 1. Custom Top Bar
           Container(
             padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top, bottom: 5),
             decoration: BoxDecoration(
@@ -123,25 +117,25 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
                   // 2. Juz Info
                   Expanded(
                     child: Text(
-                      currentLang == 'ur' 
-                        ? QuranUtils.juzNamesArabic[_getJuz(_currentPage) - 1]
+                      isUrdu 
+                        ? "پارہ ${_getJuz(_currentPage)}"
                         : QuranUtils.juzNamesEnglish[_getJuz(_currentPage) - 1],
                       style: TextStyle(
-                        fontSize: 11,
+                        fontSize: isUrdu ? 11 : 11,
                         fontWeight: FontWeight.w600,
                         color: isDark ? Colors.white60 : Colors.black54,
-                        fontFamily: currentLang == 'ur' ? 'Amiri' : null,
+                        fontFamily: isUrdu ? 'NotoNastaliqUrdu' : null,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  // 3. Page Number (Poppins, size 13)
+                  // 3. Page Number
                   Text(
-                    "$_currentPage",
-                    style: const TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 13,
+                    isUrdu ? "صفحہ $_currentPage" : "$_currentPage",
+                    style: TextStyle(
+                      fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                      fontSize: isUrdu ? 11 : 13,
                       fontWeight: FontWeight.bold,
                       color: AppColors.primaryTeal,
                     ),
@@ -149,7 +143,7 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
                   // 4. Surah Name
                   Expanded(
                     child: Text(
-                      currentLang == 'ur'
+                      isUrdu
                         ? quran.getSurahNameArabic(quran.getPageData(_currentPage).first['surah'])
                         : (_englishSurahNames[quran.getPageData(_currentPage).first['surah']] ?? "Surah"),
                       textAlign: TextAlign.right,
@@ -157,13 +151,12 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
                         color: isDark ? Colors.white60 : Colors.black54,
-                        fontFamily: currentLang == 'ur' ? 'Amiri' : null,
+                        fontFamily: isUrdu ? 'Amiri' : null,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  // Small extra space to balance the back button
                   const SizedBox(width: 10),
                 ],
               ),
@@ -337,45 +330,16 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
   // --- Helper Methods ---
   bool _isJuzStartPage(int page) {
     const juzPages = [
-      1,
-      22,
-      42,
-      62,
-      82,
-      102,
-      122,
-      142,
-      162,
-      182,
-      202,
-      222,
-      242,
-      262,
-      282,
-      302,
-      322,
-      342,
-      362,
-      382,
-      402,
-      422,
-      442,
-      462,
-      482,
-      502,
-      522,
-      542,
-      562,
-      582,
+      1, 22, 42, 62, 82, 102, 122, 142, 162, 182, 202, 222, 242, 262, 282, 302, 322, 342, 362, 382, 402, 422, 442, 462, 482, 502, 522, 542, 562, 582,
     ];
     return juzPages.contains(page);
   }
 
-
   Widget _buildStyledHeader(int surahNumber, double fontSize, bool isDark, double lineHeight, String lang) {
+    final isUrdu = lang == 'ur';
     return Container(
       width: double.infinity,
-      height: lineHeight, // Maintain the 16-line grid consistency
+      height: lineHeight,
       padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: AppColors.primaryTeal.withValues(alpha: 0.05),
@@ -391,10 +355,11 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
           // Left: Verse Count
           Expanded(
             child: Text(
-              "${quran.getVerseCount(surahNumber)}",
+              isUrdu ? "${quran.getVerseCount(surahNumber)} آیات" : "${quran.getVerseCount(surahNumber)} Verses",
               textAlign: TextAlign.left,
-              style: const TextStyle(
-                fontSize: 12,
+              style: TextStyle(
+                fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                fontSize: isUrdu ? 10 : 12,
                 color: AppColors.primaryTeal,
                 fontWeight: FontWeight.bold,
               ),
@@ -417,10 +382,13 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
           // Right: Revelation Place
           Expanded(
             child: Text(
-              quran.getPlaceOfRevelation(surahNumber),
+              isUrdu
+                ? (quran.getPlaceOfRevelation(surahNumber) == 'Makkah' ? 'مکی' : 'مدنی')
+                : quran.getPlaceOfRevelation(surahNumber),
               textAlign: TextAlign.right,
-              style: const TextStyle(
-                fontSize: 10,
+              style: TextStyle(
+                fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                fontSize: isUrdu ? 10 : 10,
                 color: AppColors.primaryTeal,
                 fontWeight: FontWeight.bold,
               ),
@@ -464,11 +432,6 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
     106: "Quraysh", 107: "Al-Ma'un", 108: "Al-Kawthar", 109: "Al-Kafirun", 110: "An-Nasr",
     111: "Al-Masad", 112: "Al-Ikhlas", 113: "Al-Falaq", 114: "An-Nas"
   };
-
-  String _toArabicNumbers(int number) {
-    const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
-    return number.toString().split('').map((d) => arabicDigits[int.parse(d)]).join();
-  }
 }
 
 class QuranLinesPainter extends CustomPainter {
@@ -490,9 +453,6 @@ class QuranLinesPainter extends CustomPainter {
       ..color = color
       ..strokeWidth = 0.8;
 
-    // If drawOnlyForContent is true, we only draw lines for the actual size of the widget
-    // But we still want to maintain the grid feeling.
-    // size.height will be the height of the RichText due to IntrinsicHeight.
     for (double y = lineHeight; y <= size.height + 2; y += lineHeight) {
       canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
     }

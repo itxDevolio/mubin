@@ -16,7 +16,6 @@ class SurahListScreen extends ConsumerStatefulWidget {
 class _SurahListScreenState extends ConsumerState<SurahListScreen> {
   @override
   Widget build(BuildContext context) {
-    // Listen to settings for language changes to refresh surah list
     ref.listen<SettingsState>(settingsControllerProvider, (previous, next) {
       if (previous?.language != next.language) {
         ref.read(surahJuzControllerProvider.notifier).loadSurahs();
@@ -24,6 +23,8 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
     });
 
     final quranState = ref.watch(surahJuzControllerProvider);
+    final settings = ref.watch(settingsControllerProvider);
+    final isUrdu = settings.language == 'ur';
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -32,8 +33,9 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
           : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-          'Surah List',
+          isUrdu ? 'سورتوں کی فہرست' : 'Surah List',
           style: TextStyle(
+            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
             color: isDark
@@ -57,7 +59,7 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
       ),
       body: Column(
         children: [
-          // Premium Search Bar
+          // Search Bar
           Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 16.0,
@@ -67,15 +69,18 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
               onChanged: (val) => ref
                   .read(surahJuzControllerProvider.notifier)
                   .searchSurah(val),
+              textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
               style: TextStyle(
+                fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
                 color: isDark
                     ? AppColors.textPrimaryDark
                     : AppColors.textPrimaryLight,
                 fontSize: 14,
               ),
               decoration: InputDecoration(
-                hintText: 'Search Surah...',
+                hintText: isUrdu ? 'سورت کا نام تلاش کریں...' : 'Search Surah...',
                 hintStyle: TextStyle(
+                  fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
                   color: isDark
                       ? AppColors.textSecondaryDark
                       : AppColors.textSecondaryLight,
@@ -123,8 +128,9 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
                 if (list.isEmpty) {
                   return Center(
                     child: Text(
-                      'No Surah found',
+                      isUrdu ? 'کوئی سورت نہیں ملی' : 'No Surah found',
                       style: TextStyle(
+                        fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
                         color: isDark
                             ? AppColors.textSecondaryDark
                             : AppColors.textSecondaryLight,
@@ -151,11 +157,11 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
                   itemBuilder: (context, index) {
                     final surah = list[index];
 
-                    // Fetching optimized data directly from global quran package instance
                     final totalVerses = quran.getVerseCount(surah.number);
-                    final revelationPlace = quran.getPlaceOfRevelation(
-                      surah.number,
-                    );
+                    final rawRevelation = quran.getPlaceOfRevelation(surah.number);
+                    final revelationPlace = isUrdu
+                        ? (rawRevelation == 'Makkah' ? "مکی" : "مدنی")
+                        : rawRevelation;
 
                     return InkWell(
                       onTap: () {
@@ -179,8 +185,10 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
                           horizontal: 4.0,
                         ),
                         child: Row(
+                          textDirection:
+                              isUrdu ? TextDirection.rtl : TextDirection.ltr,
                           children: [
-                            // Islamic Pattern Style Number Design
+                            // Number Badge
                             Container(
                               width: 40,
                               height: 40,
@@ -212,79 +220,61 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
                             ),
                             const SizedBox(width: 16),
 
-                            // Surah Details (Transliteration Name + Revelation Place & Verses)
+                            // Surah Details
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    surah.nameEnglish,
-                                    // Clean Roman English Name
+                                    isUrdu ? surah.nameArabic : surah.nameEnglish,
                                     style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16,
+                                      fontFamily: isUrdu ? 'Amiri' : 'Poppins',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: isUrdu ? 20 : 16,
                                       color: isDark
                                           ? AppColors.textPrimaryDark
                                           : AppColors.textPrimaryLight,
-                                      letterSpacing: 0.2,
+                                      letterSpacing: isUrdu ? 0 : 0.2,
                                     ),
                                   ),
                                   const SizedBox(height: 4),
-                                  Row(
-                                    children: [
-                                      // Revelation badge text (Meccan / Medinan)
-                                      Text(
-                                        revelationPlace,
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: isDark
-                                              ? AppColors.accentGold
-                                                    .withOpacity(0.8)
-                                              : AppColors.primaryTeal,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                      Text(
-                                        " • ",
-                                        style: TextStyle(
-                                          color: isDark
-                                              ? AppColors.textSecondaryDark
-                                              : AppColors.textSecondaryLight,
-                                        ),
-                                      ),
-                                      // Corrected dynamic verses count UI mapping
-                                      Text(
-                                        "$totalVerses Verses",
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: isDark
-                                              ? AppColors.textSecondaryDark
-                                              : AppColors.textSecondaryLight,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
+                                  Text(
+                                    isUrdu
+                                        ? "$revelationPlace • $totalVerses آیات"
+                                        : "$revelationPlace • $totalVerses Verses",
+                                    style: TextStyle(
+                                      fontFamily:
+                                          isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                                      fontSize: isUrdu ? 11 : 12,
+                                      color: isDark
+                                          ? AppColors.textSecondaryDark
+                                          : AppColors.textSecondaryLight,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
 
-                            // Pure Arabic Beautiful Script Name (Right aligned)
-                            Text(
-                              surah.nameArabic,
-                              style: TextStyle(
-                                fontFamily: 'Amiri',
-                                fontSize: 22,
-                                fontWeight: FontWeight.w500,
-                                color: isDark
-                                    ? AppColors.accentGold
-                                    : AppColors.primaryTeal,
+                            if (!isUrdu) ...[
+                              Text(
+                                surah.nameArabic,
+                                style: TextStyle(
+                                  fontFamily: 'Amiri',
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w500,
+                                  color: isDark
+                                      ? AppColors.accentGold
+                                      : AppColors.primaryTeal,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 12),
+                              const SizedBox(width: 12),
+                            ],
 
                             Icon(
-                              Icons.arrow_forward_ios_rounded,
+                              isUrdu
+                                  ? Icons.arrow_back_ios_rounded
+                                  : Icons.arrow_forward_ios_rounded,
                               size: 12,
                               color: isDark
                                   ? AppColors.textSecondaryDark

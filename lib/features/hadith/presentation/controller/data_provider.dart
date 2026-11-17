@@ -1,17 +1,39 @@
-// Books Provider
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/entities/book.dart';
 import '../../domain/entities/chapter.dart';
+import '../../domain/entities/hadith.dart';
 import 'hadith_notifier.dart';
 
 final booksProvider = FutureProvider<List<BookEntity>>((ref) async {
   final repo = ref.read(hadithRepositoryProvider);
-  return await repo.getBooks(); // API: /books
+  return await repo.getBooks();
 });
 
-// Chapters Provider (Auto-dispose use karein taake nayi book par reset ho)
 final chaptersProvider = FutureProvider.family<List<ChapterEntity>, String>((ref, bookSlug) async {
   final repo = ref.read(hadithRepositoryProvider);
-  return await repo.getChapters(bookSlug); // API: /$bookSlug/chapters
+  return await repo.getChapters(bookSlug);
+});
+
+class SearchParam {
+  final String query;
+  final bool isUrdu;
+  const SearchParam({required this.query, required this.isUrdu});
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SearchParam &&
+          runtimeType == other.runtimeType &&
+          query == other.query &&
+          isUrdu == other.isUrdu;
+
+  @override
+  int get hashCode => query.hashCode ^ isUrdu.hashCode;
+}
+
+final globalHadithSearchProvider = FutureProvider.family<List<HadithEntity>, SearchParam>((ref, param) async {
+  if (param.query.trim().isEmpty) return [];
+  final repo = ref.read(hadithRepositoryProvider);
+  return await repo.searchHadiths(param.query, param.isUrdu);
 });

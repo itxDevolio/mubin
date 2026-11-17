@@ -19,30 +19,60 @@ class JanazaGuideScreen extends ConsumerWidget {
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         centerTitle: true,
-        title: const Text(
-"Funeral Prayer (Janaza)",
-
+        title: Text(
+          isUrdu ? "نمازِ جنازہ" : "Funeral Prayer (Janaza)",
+          style: isUrdu
+              ? const TextStyle(
+                  fontFamily: 'NotoNastaliqUrdu',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                )
+              : const TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment:
+              isUrdu ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
-            const Text(
-             "Select Category",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Text(
+              isUrdu ? "زمرہ منتخب کریں" : "Select Category",
+              textAlign: isUrdu ? TextAlign.right : TextAlign.left,
+              style: isUrdu
+                  ? const TextStyle(
+                      fontFamily: 'NotoNastaliqUrdu',
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    )
+                  : const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            const Text(
-              "Supplications differ slightly for adults and children.",
-
+            Text(
+              isUrdu
+                  ? "بالغ افراد اور نابالغ بچوں کے لیے نمازِ جنازہ کی دعائیں مختلف ہوتی ہیں۔"
+                  : "Supplications differ slightly for adults and children.",
+              textAlign: isUrdu ? TextAlign.right : TextAlign.left,
+              style: isUrdu
+                  ? TextStyle(
+                      fontFamily: 'NotoNastaliqUrdu',
+                      fontSize: 13,
+                      color: Colors.grey.shade600,
+                      height: 1.8,
+                    )
+                  : TextStyle(color: Colors.grey.shade600),
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 30),
             _SelectionCard(
-              title:  "For Adults",
-              subtitle: "Janaza prayer for men and women",
-              icons: const [FlutterIslamicIcons.muslim, FlutterIslamicIcons.muslimah],
+              title: isUrdu ? "بالغ افراد کے لیے" : "For Adults",
+              subtitle: isUrdu
+                  ? "مرد اور عورت کی نمازِ جنازہ کا طریقہ"
+                  : "Janaza prayer for men and women",
+              isUrdu: isUrdu,
+              icons: const [
+                FlutterIslamicIcons.muslim,
+                FlutterIslamicIcons.muslimah
+              ],
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -52,9 +82,15 @@ class JanazaGuideScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             _SelectionCard(
-              title:  "For Children",
-              subtitle: "Janaza prayer for boys and girls",
-              icons: const [FlutterIslamicIcons.muslim2, FlutterIslamicIcons.muslimah2],
+              title: isUrdu ? "نابالغ بچوں کے لیے" : "For Children",
+              subtitle: isUrdu
+                  ? "لڑکے اور لڑکی کی نمازِ جنازہ کا طریقہ"
+                  : "Janaza prayer for boys and girls",
+              isUrdu: isUrdu,
+              icons: const [
+                FlutterIslamicIcons.muslim2,
+                FlutterIslamicIcons.muslimah2
+              ],
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -77,12 +113,14 @@ class _SelectionCard extends StatelessWidget {
   final String subtitle;
   final List<IconData> icons;
   final VoidCallback onTap;
+  final bool isUrdu;
 
   const _SelectionCard({
     required this.title,
     required this.subtitle,
     required this.icons,
     required this.onTap,
+    this.isUrdu = false,
   });
 
   @override
@@ -108,60 +146,139 @@ class _SelectionCard extends StatelessWidget {
               ),
           ],
         ),
-        child: Row(
-          textDirection:TextDirection.ltr,
-          children: [
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryTeal.withOpacity(0.1),
-                    shape: BoxShape.circle,
+        child: isUrdu
+            ? Row(
+                children: [
+                  Icon(
+                    Icons.chevron_left_rounded,
+                    color: AppColors.primaryTeal.withOpacity(0.4),
                   ),
-                  child: Icon(icons[0], color: AppColors.primaryTeal, size: 26),
-                ),
-                Positioned(
-                  right: -10,
-                  bottom: -5,
-                  child: Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: isDark ? Colors.grey.shade900 : Colors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4)
+                  const SizedBox(width: 8),
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryTeal.withOpacity(0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(icons[0], color: AppColors.primaryTeal, size: 26),
+                      ),
+                      Positioned(
+                        left: -10,
+                        bottom: -5,
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: isDark ? Colors.grey.shade900 : Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 4,
+                              )
+                            ],
+                          ),
+                          child: Icon(icons[1], color: AppColors.primaryTeal, size: 16),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          title,
+                          textAlign: TextAlign.right,
+                          style: const TextStyle(
+                            fontFamily: 'NotoNastaliqUrdu',
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          subtitle,
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                            fontFamily: 'NotoNastaliqUrdu',
+                            fontSize: 12,
+                            color: Colors.grey.shade600,
+                            height: 1.7,
+                          ),
+                        ),
                       ],
                     ),
-                    child: Icon(icons[1], color: AppColors.primaryTeal, size: 16),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(width: 30),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                ],
+              )
+            : Row(
                 children: [
-                  Text(
-                    title,
-                    style:  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryTeal.withOpacity(0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(icons[0], color: AppColors.primaryTeal, size: 26),
+                      ),
+                      Positioned(
+                        right: -10,
+                        bottom: -5,
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: isDark ? Colors.grey.shade900 : Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 4,
+                              )
+                            ],
+                          ),
+                          child: Icon(icons[1], color: AppColors.primaryTeal, size: 16),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style:TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                  const SizedBox(width: 24),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          subtitle,
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 13,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    color: AppColors.primaryTeal.withOpacity(0.4),
                   ),
                 ],
               ),
-            ),
-            Icon(
-          Icons.chevron_right_rounded,
-              color: AppColors.primaryTeal.withOpacity(0.4),
-            ),
-          ],
-        ),
       ),
     );
   }

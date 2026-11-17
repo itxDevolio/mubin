@@ -22,7 +22,6 @@ import '../widgets/user_profile_widget.dart';
 import '../widgets/prayer_card.dart';
 import '../../../core/widgets/ad_banner_widget.dart';
 
-// FIX: ConsumerWidget ko ConsumerStatefulWidget se replace kiya kyunki isme state (_currentDate) use ho rahi hai
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
@@ -49,7 +48,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      // Refresh current time and reschedule notifications when app is resumed
       setState(() {
         _currentDate = DateTime.now();
       });
@@ -60,7 +58,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final settings = ref.watch(settingsControllerProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isUrdu = settings.language == 'ur';
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -93,7 +91,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       color: AppColors.primaryTeal,
                       size: 24,
                     ),
-                    tooltip: "Settings",
+                    tooltip: isUrdu ? "ترتیبات" : "Settings",
                   ),
                 ],
               ),
@@ -129,14 +127,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           vertical: 8.0,
                         ),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: isUrdu
+                              ? CrossAxisAlignment.end
+                              : CrossAxisAlignment.start,
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              textDirection:
+                                  isUrdu ? TextDirection.rtl : TextDirection.ltr,
                               children: [
                                 FeatureCard(
-                                  title: "Quran",
+                                  title: isUrdu ? "قرآن" : "Quran",
                                   icon: FlutterIslamicIcons.quran,
+                                  isUrdu: isUrdu,
                                   onTap: () {
                                     hapticFeedBack();
                                     Navigator.push(
@@ -150,8 +153,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                 ),
                                 const SizedBox(width: 8),
                                 FeatureCard(
-                                  title: "Hadith",
+                                  title: isUrdu ? "حدیث" : "Hadith",
                                   icon: FlutterIslamicIcons.quran2,
+                                  isUrdu: isUrdu,
                                   onTap: () {
                                     Navigator.push(
                                       context,
@@ -163,8 +167,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                 ),
                                 const SizedBox(width: 8),
                                 FeatureCard(
-                                  title: "Adhkar",
+                                  title: isUrdu ? "اذکار" : "Adhkar",
                                   icon: FlutterIslamicIcons.tasbihHand,
+                                  isUrdu: isUrdu,
                                   onTap: () {
                                     Navigator.push(
                                       context,
@@ -180,10 +185,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                             const SizedBox(height: 12),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              textDirection:
+                                  isUrdu ? TextDirection.rtl : TextDirection.ltr,
                               children: [
                                 FeatureCard(
-                                  title: "Shifa",
+                                  title: isUrdu ? "شفاء" : "Shifa",
                                   icon: FlutterIslamicIcons.prayingPerson,
+                                  isUrdu: isUrdu,
                                   onTap: () {
                                     hapticFeedBack();
                                     Navigator.push(
@@ -197,10 +205,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                 ),
                                 const SizedBox(width: 8),
                                 FeatureCard(
-                                  title: "Qibla",
+                                  title: isUrdu ? "قبلہ" : "Qibla",
                                   icon: FlutterIslamicIcons.qibla2,
+                                  isUrdu: isUrdu,
                                   onTap: () {
-                                    // Example navigation
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -211,8 +219,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                 ),
                                 const SizedBox(width: 8),
                                 FeatureCard(
-                                  title: "Duas",
+                                  title: isUrdu ? "دعائیں" : "Duas",
                                   icon: FlutterIslamicIcons.prayer,
+                                  isUrdu: isUrdu,
                                   onTap: () {
                                     hapticFeedBack();
                                     Navigator.push(
@@ -227,70 +236,94 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                               ],
                             ),
                             const SizedBox(height: 24),
-                            Text(
-                              "Islamic Guides",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(
-                                  context,
-                                ).textTheme.titleLarge?.color,
+                            Align(
+                              alignment: isUrdu
+                                  ? Alignment.centerRight
+                                  : Alignment.centerLeft,
+                              child: Text(
+                                isUrdu ? "اسلامی رہنمائی" : "Islamic Guides",
+                                style: TextStyle(
+                                  fontFamily:
+                                      isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                                  fontSize: isUrdu ? 16 : 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(
+                                    context,
+                                  ).textTheme.titleLarge?.color,
+                                ),
                               ),
                             ),
                             const SizedBox(height: 12),
-                            SizedBox(
-                              height: 175,
-                              child: ListView(
-                                scrollDirection: Axis.horizontal,
-                                physics: const BouncingScrollPhysics(),
-                                padding: EdgeInsets.zero,
-                                children: [
-                                  InfoGuideCard(
-                                    title: "Funeral Prayer Guide",
-                                    subTitle:
-                                        "Step-by-step authentic method and supplications.",
-                                    imageUrl: "assets/app_logos/funeral.png",
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const JanazaGuideScreen(),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  InfoGuideCard(
-                                    title: "Istikhara Prayer Guide",
-                                    subTitle:
-                                        "Seek Allah's counsel for your important decisions.",
-                                    imageUrl: "assets/app_logos/istikhara.png",
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const IstikharaGuideScreen(),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  InfoGuideCard(
-                                    title: "Traveler's Prayer ",
-                                    subTitle:
-                                        "Guidelines and method for shortening prayers during travel.",
-                                    imageUrl: "assets/app_logos/qasar.png",
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const QasarGuideScreen(),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ],
+                            Directionality(
+                              textDirection: isUrdu
+                                  ? TextDirection.rtl
+                                  : TextDirection.ltr,
+                              child: SizedBox(
+                                height: 175,
+                                child: ListView(
+                                  scrollDirection: Axis.horizontal,
+                                  physics: const BouncingScrollPhysics(),
+                                  padding: EdgeInsets.zero,
+                                  children: [
+                                    InfoGuideCard(
+                                      title: isUrdu
+                                          ? "نمازِ جنازہ کا طریقہ"
+                                          : "Funeral Prayer Guide",
+                                      subTitle: isUrdu
+                                          ? "نمازِ جنازہ کا مسنون اور مستند طریقہ"
+                                          : "Step-by-step authentic method and supplications.",
+                                      imageUrl: "assets/app_logos/funeral.png",
+                                      isUrdu: isUrdu,
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const JanazaGuideScreen(),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    InfoGuideCard(
+                                      title: isUrdu
+                                          ? "استخارہ کا طریقہ"
+                                          : "Istikhara Prayer Guide",
+                                      subTitle: isUrdu
+                                          ? "اہم فیصلوں میں اللہ سے رہنمائی حاصل کریں"
+                                          : "Seek Allah's counsel for your important decisions.",
+                                      imageUrl: "assets/app_logos/istikhara.png",
+                                      isUrdu: isUrdu,
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const IstikharaGuideScreen(),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    InfoGuideCard(
+                                      title: isUrdu
+                                          ? "نمازِ قصر کا طریقہ"
+                                          : "Traveler's Prayer",
+                                      subTitle: isUrdu
+                                          ? "سفر کے دوران نماز قصر کرنے کا مکمل طریقہ"
+                                          : "Guidelines and method for shortening prayers during travel.",
+                                      imageUrl: "assets/app_logos/qasar.png",
+                                      isUrdu: isUrdu,
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const QasarGuideScreen(),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                             const SizedBox(height: 20),

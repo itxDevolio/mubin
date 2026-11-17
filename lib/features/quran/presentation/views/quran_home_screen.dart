@@ -2,6 +2,7 @@ import 'package:mubin/core/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
+import 'package:mubin/core/services/settings_controller.dart';
 import 'package:mubin/features/quran/presentation/controllers/quran_progress_controller.dart';
 import 'package:mubin/features/quran/presentation/widgets/khatam_progress_card.dart';
 import 'package:mubin/features/quran/presentation/views/mushaf_view_screen.dart';
@@ -17,6 +18,8 @@ class QuranHomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final progressState = ref.watch(quranProgressControllerProvider);
+    final settings = ref.watch(settingsControllerProvider);
+    final isUrdu = settings.language == 'ur';
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -25,10 +28,12 @@ class QuranHomeScreen extends ConsumerWidget {
           : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-          'Al-Quran',
+          isUrdu ? 'القرآن الکریم' : 'Al-Quran',
           style: TextStyle(
+            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
+            fontSize: isUrdu ? 18 : 20,
             color: isDark
                 ? AppColors.textPrimaryDark
                 : AppColors.textPrimaryLight,
@@ -62,7 +67,8 @@ class QuranHomeScreen extends ConsumerWidget {
           physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment:
+                isUrdu ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 10),
 
@@ -70,6 +76,7 @@ class QuranHomeScreen extends ConsumerWidget {
               progressState.when(
                 data: (progress) => KhatamProgressCard(
                   lastReadPage: progress.lastReadPage,
+                  isUrdu: isUrdu,
                   onTap: () {
                     Navigator.push(
                       context,
@@ -93,9 +100,11 @@ class QuranHomeScreen extends ConsumerWidget {
               const SizedBox(height: 30),
 
               Text(
-                'Explore Quran',
+                isUrdu ? 'قرآن کریم دریافت کریں' : 'Explore Quran',
+                textAlign: isUrdu ? TextAlign.right : TextAlign.left,
                 style: TextStyle(
-                  fontSize: 18,
+                  fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                  fontSize: isUrdu ? 17 : 18,
                   fontWeight: FontWeight.bold,
                   color: isDark
                       ? AppColors.textPrimaryDark
@@ -104,7 +113,7 @@ class QuranHomeScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
 
-              // Minimal Grid Menu (All colors synced perfectly with AppColors)
+              // Grid Menu
               LayoutBuilder(
                 builder: (context, constraints) {
                   final crossAxisCount = constraints.maxWidth > 600 ? 4 : 2;
@@ -118,9 +127,10 @@ class QuranHomeScreen extends ConsumerWidget {
                     children: [
                       _buildMinimalMenu(
                         context,
-                        title: 'Surah',
+                        title: isUrdu ? 'سورتیں' : 'Surah',
                         icon: FlutterIslamicIcons.solidQuran,
                         baseColor: AppColors.lightTeal,
+                        isUrdu: isUrdu,
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -130,9 +140,10 @@ class QuranHomeScreen extends ConsumerWidget {
                       ),
                       _buildMinimalMenu(
                         context,
-                        title: 'Juz',
+                        title: isUrdu ? 'پارے' : 'Juz',
                         icon: FlutterIslamicIcons.solidQuran2,
                         baseColor: AppColors.lightTeal,
+                        isUrdu: isUrdu,
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -142,9 +153,10 @@ class QuranHomeScreen extends ConsumerWidget {
                       ),
                       _buildMinimalMenu(
                         context,
-                        title: 'Bookmarks',
+                        title: isUrdu ? 'بک مارک' : 'Bookmarks',
                         icon: Icons.bookmark_rounded,
                         baseColor: AppColors.lightTeal,
+                        isUrdu: isUrdu,
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -154,9 +166,10 @@ class QuranHomeScreen extends ConsumerWidget {
                       ),
                       _buildMinimalMenu(
                         context,
-                        title: 'Audio',
+                        title: isUrdu ? 'تلاوت آڈیو' : 'Audio',
                         icon: Icons.audiotrack_rounded,
                         baseColor: AppColors.lightTeal,
+                        isUrdu: isUrdu,
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -185,6 +198,7 @@ class QuranHomeScreen extends ConsumerWidget {
     required IconData icon,
     required Color baseColor,
     required VoidCallback onTap,
+    bool isUrdu = false,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -193,7 +207,6 @@ class QuranHomeScreen extends ConsumerWidget {
       borderRadius: BorderRadius.circular(16),
       child: Container(
         decoration: BoxDecoration(
-          // Dark mode me opacity kam rakhi hai taaki screen chubhni na lage, light mode me soft backdrop bnaya hai
           color: isDark
               ? baseColor.withValues(alpha: 0.12)
               : baseColor.withValues(alpha: 0.08),
@@ -217,8 +230,9 @@ class QuranHomeScreen extends ConsumerWidget {
             Text(
               title,
               style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
+                fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                fontWeight: FontWeight.bold,
+                fontSize: isUrdu ? 14 : 16,
                 letterSpacing: 0.3,
                 color: isDark
                     ? AppColors.textPrimaryDark

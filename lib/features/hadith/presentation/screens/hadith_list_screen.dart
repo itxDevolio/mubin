@@ -4,6 +4,7 @@ import 'package:mubin/core/services/settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../controller/hadith_notifier.dart';
+import '../../data/models/book_model.dart';
 import 'hadith_detail_screen.dart';
 
 class HadithListScreen extends ConsumerStatefulWidget {
@@ -39,6 +40,10 @@ class _HadithListScreenState extends ConsumerState<HadithListScreen> {
     final settings = ref.watch(settingsControllerProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bool isUrdu = settings.language == 'ur';
+    final String bookName = BookModel.getBookNameFromSlug(
+      widget.bookSlug,
+      isUrdu,
+    );
 
     return Scaffold(
       backgroundColor: isDark
@@ -48,8 +53,9 @@ class _HadithListScreenState extends ConsumerState<HadithListScreen> {
         title: Text(
           widget.chapterName,
           style: TextStyle(
-            fontSize: 16,
-            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : null,
+            fontSize: isUrdu ? 15 : 16,
+            fontWeight: FontWeight.bold,
+            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
             color: isDark
                 ? AppColors.textPrimaryDark
                 : AppColors.textPrimaryLight,
@@ -82,9 +88,14 @@ class _HadithListScreenState extends ConsumerState<HadithListScreen> {
               separatorBuilder: (context, index) => const SizedBox(height: 12),
               itemBuilder: (context, index) {
                 final hadith = state.hadiths[index];
-                final String displayContent = isUrdu
-                    ? hadith.urduText
-                    : hadith.englishText;
+
+                final String heading = isUrdu
+                    ? (hadith.headingUrdu.isNotEmpty
+                        ? hadith.headingUrdu
+                        : hadith.headingEnglish)
+                    : (hadith.headingEnglish.isNotEmpty
+                        ? hadith.headingEnglish
+                        : hadith.headingUrdu);
 
                 return InkWell(
                   onTap: () {
@@ -109,9 +120,9 @@ class _HadithListScreenState extends ConsumerState<HadithListScreen> {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withAlpha(isDark ? 30 : 10),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
+                          color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.04),
+                          blurRadius: 8,
+                          offset: const Offset(0, 3),
                         ),
                       ],
                     ),
@@ -120,87 +131,118 @@ class _HadithListScreenState extends ConsumerState<HadithListScreen> {
                           ? CrossAxisAlignment.end
                           : CrossAxisAlignment.start,
                       children: [
+                        // Header Row: Book Name + Hadith Number + Status Badge
                         Row(
+                          textDirection:
+                              isUrdu ? TextDirection.rtl : TextDirection.ltr,
                           children: [
-                            if (!isUrdu) ...[
-                              _buildHadithBadge(hadith.hadithNumber),
-                              const Spacer(),
+                            if (bookName.isNotEmpty) ...[
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: AppColors.primaryTeal
+                                      .withValues(alpha: 0.12),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  bookName,
+                                  style: TextStyle(
+                                    fontFamily: isUrdu
+                                        ? 'NotoNastaliqUrdu'
+                                        : 'Poppins',
+                                    color: AppColors.primaryTeal,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 11,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
                             ],
-
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: isDark
+                                    ? Colors.white10
+                                    : Colors.black.withValues(alpha: 0.04),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                isUrdu
+                                    ? "حدیث ${hadith.hadithNumber}"
+                                    : "Hadith ${hadith.hadithNumber}",
+                                style: TextStyle(
+                                  fontFamily:
+                                      isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                                  color: isDark
+                                      ? Colors.white70
+                                      : Colors.black87,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 10.5,
+                                ),
+                              ),
+                            ),
+                            const Spacer(),
                             if (hadith.status.isNotEmpty)
                               Container(
                                 padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
+                                    horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
                                   color: isDark
                                       ? Colors.white10
-                                      : Colors.black.withAlpha(5),
+                                      : Colors.black.withValues(alpha: 0.05),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Text(
                                   hadith.status,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 10,
                                     fontWeight: FontWeight.w600,
-                                    color: isDark
-                                        ? Colors.white54
-                                        : Colors.black54,
+                                    color: AppColors.primaryTeal,
                                   ),
                                 ),
                               ),
-
-                            if (isUrdu) ...[
-                              const Spacer(),
-                              _buildHadithBadge(hadith.hadithNumber),
-                            ] else ...[
-                              const SizedBox(width: 8),
-                              Icon(
-                                Icons.arrow_forward_ios_rounded,
-                                size: 14,
-                                color: AppColors.primaryTeal,
-                              ),
-                            ],
                           ],
                         ),
-                        const SizedBox(height: 16),
-                        Text(
-                          hadith.arabicText,
-                          style: TextStyle(
-                            fontFamily: 'Amiri',
-                            fontSize: 20,
-                            height: 1.8,
-                            color: isDark
-                                ? Colors.white
-                                : AppColors.textPrimaryLight,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.right,
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          displayContent,
-                          style: isUrdu
-                              ? TextStyle(
-                                  fontFamily: 'NotoNastaliqUrdu',
-                                  fontSize: 12,
+
+                        // Compact Title Row with Arrow Indicator
+                        const SizedBox(height: 10),
+                        Row(
+                          textDirection:
+                              isUrdu ? TextDirection.rtl : TextDirection.ltr,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                heading.isNotEmpty
+                                    ? heading
+                                    : (isUrdu
+                                        ? "حدیث نمبر ${hadith.hadithNumber}"
+                                        : "Hadith Number ${hadith.hadithNumber}"),
+                                textAlign:
+                                    isUrdu ? TextAlign.right : TextAlign.left,
+                                style: TextStyle(
+                                  fontFamily:
+                                      isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                                  fontSize: isUrdu ? 14 : 14.5,
+                                  fontWeight: FontWeight.bold,
+                                  height: isUrdu ? 1.5 : 1.3,
                                   color: isDark
-                                      ? Colors.white70
-                                      : AppColors.textSecondaryLight,
-                                  height: 1.5,
-                                )
-                              : TextStyle(
-                                  fontSize: 14,
-                                  color: isDark
-                                      ? Colors.white70
-                                      : AppColors.textSecondaryLight,
-                                  height: 1.4,
+                                      ? Colors.white
+                                      : AppColors.textPrimaryLight,
                                 ),
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: isUrdu ? TextAlign.right : TextAlign.left,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Icon(
+                              isUrdu
+                                  ? Icons.arrow_back_ios_rounded
+                                  : Icons.arrow_forward_ios_rounded,
+                              size: 12,
+                              color: AppColors.primaryTeal
+                                  .withValues(alpha: 0.6),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -209,25 +251,6 @@ class _HadithListScreenState extends ConsumerState<HadithListScreen> {
               },
             )
           : const SizedBox(),
-    );
-  }
-
-  Widget _buildHadithBadge(String number) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: AppColors.primaryTeal.withAlpha(30),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.primaryTeal.withAlpha(50)),
-      ),
-      child: Text(
-        "$number",
-        style: const TextStyle(
-          color: AppColors.primaryTeal,
-          fontWeight: FontWeight.bold,
-          fontSize: 12,
-        ),
-      ),
     );
   }
 }

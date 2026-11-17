@@ -1,4 +1,5 @@
 import 'package:mubin/core/app_colors.dart';
+import 'package:mubin/core/services/settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'mushaf_view_screen.dart';
@@ -10,6 +11,8 @@ class BookmarkListScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bookmarksState = ref.watch(bookmarkControllerProvider);
+    final settings = ref.watch(settingsControllerProvider);
+    final isUrdu = settings.language == 'ur';
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -18,8 +21,9 @@ class BookmarkListScreen extends ConsumerWidget {
           : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-          'Saved Bookmarks',
+          isUrdu ? 'محفوظ شدہ نشانات (بک مارکس)' : 'Saved Bookmarks',
           style: TextStyle(
+            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
             color: isDark
@@ -66,13 +70,14 @@ class BookmarkListScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'No bookmarks saved yet',
+                    isUrdu ? 'کوئی نشان محفوظ نہیں ہے' : 'No bookmarks saved yet',
                     style: TextStyle(
+                      fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
                       color: isDark
                           ? AppColors.textSecondaryDark
                           : AppColors.textSecondaryLight,
                       fontWeight: FontWeight.w500,
-                      fontSize: 15,
+                      fontSize: isUrdu ? 14 : 15,
                     ),
                   ),
                 ],
@@ -113,8 +118,9 @@ class BookmarkListScreen extends ConsumerWidget {
                     horizontal: 4.0,
                   ),
                   child: Row(
+                    textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
                     children: [
-                      // Elegant Left Icon Badge
+                      // Left Icon Badge
                       Container(
                         width: 40,
                         height: 40,
@@ -171,9 +177,12 @@ class BookmarkListScreen extends ConsumerWidget {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              'Surah ${verse.surahNumber} • Verse ${verse.verseNumber} • Page ${verse.pageNumber}',
+                              isUrdu
+                                  ? 'سورة ${verse.surahNumber} • آیت ${verse.verseNumber} • صفحہ ${verse.pageNumber}'
+                                  : 'Surah ${verse.surahNumber} • Verse ${verse.verseNumber} • Page ${verse.pageNumber}',
                               style: TextStyle(
-                                fontSize: 12,
+                                fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                                fontSize: isUrdu ? 11 : 12,
                                 color: isDark
                                     ? AppColors.textSecondaryDark
                                     : AppColors.textSecondaryLight,
@@ -185,7 +194,7 @@ class BookmarkListScreen extends ConsumerWidget {
                       ),
                       const SizedBox(width: 12),
 
-                      // Elegant Delete Button
+                      // Delete Button
                       IconButton(
                         icon: const Icon(
                           Icons.delete_outline_rounded,

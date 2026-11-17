@@ -10,6 +10,7 @@ class PrayerTimeCard extends StatelessWidget {
   final Prayer activePrayer;
   final Prayer currentCardPrayer;
   final int flexValue;
+  final bool isUrdu;
 
   const PrayerTimeCard({
     super.key,
@@ -18,6 +19,7 @@ class PrayerTimeCard extends StatelessWidget {
     required this.activePrayer,
     required this.currentCardPrayer,
     this.flexValue = 10,
+    this.isUrdu = false,
   });
 
   @override
@@ -33,9 +35,7 @@ class PrayerTimeCard extends StatelessWidget {
           );
 
     final Color subTextColor = isCurrentActive
-        ? Colors.white.withOpacity(
-            0.9,
-          ) // Active ka subtext thoda aur clear kiya
+        ? Colors.white.withOpacity(0.9)
         : getThemeColor(context, light: Colors.black45, dark: Colors.white38);
 
     final Color inactiveBgColor = getThemeColor(
@@ -45,19 +45,14 @@ class PrayerTimeCard extends StatelessWidget {
     );
 
     return Expanded(
-      // 🔥 Active card ko row mein thodi mazeed breathing space dene ke liye flex adjust kiya
       flex: isCurrentActive ? (flexValue + 2) : flexValue,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
-        // Smooth transition effect
         curve: Curves.easeInOut,
         margin: EdgeInsets.symmetric(
           horizontal: isCurrentActive ? 2 : 4,
-          vertical: isCurrentActive
-              ? 0
-              : 2, // Active card thoda bahar nikla hua dikhega
+          vertical: isCurrentActive ? 0 : 2,
         ),
-        // Active card ko thodi vertical padding zyada di taake height barh jaye
         padding: EdgeInsets.symmetric(
           vertical: isCurrentActive ? 15 : 11,
           horizontal: 4,
@@ -72,9 +67,7 @@ class PrayerTimeCard extends StatelessWidget {
               : null,
           color: isCurrentActive ? null : inactiveBgColor,
           borderRadius: BorderRadius.circular(14),
-          // Corner radius thoda enhance kiya
           border: Border.all(
-            // 🔥 Active card par soft neon cyan border taake wo pop out kare
             color: isCurrentActive
                 ? AppColors.primaryTeal.withOpacity(0.5)
                 : getThemeColor(
@@ -84,7 +77,6 @@ class PrayerTimeCard extends StatelessWidget {
                   ),
             width: isCurrentActive ? 1.5 : 1,
           ),
-          // 🔥 Active card par behtareen glow shadow
           boxShadow: isCurrentActive
               ? [
                   BoxShadow(
@@ -105,9 +97,11 @@ class PrayerTimeCard extends StatelessWidget {
               prayerName,
               maxLines: 1,
               style: TextStyle(
+                fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
                 color: textColor,
-                fontSize: isCurrentActive ? 12 : 11,
-                // Active ka size thoda bada
+                fontSize: isCurrentActive
+                    ? (isUrdu ? 11 : 12)
+                    : (isUrdu ? 10 : 11),
                 fontWeight: isCurrentActive ? FontWeight.bold : FontWeight.w500,
                 letterSpacing: isCurrentActive ? 0.4 : 0.2,
               ),
@@ -123,7 +117,6 @@ class PrayerTimeCard extends StatelessWidget {
                 style: TextStyle(
                   color: subTextColor,
                   fontSize: isCurrentActive ? 9.5 : 9,
-                  // Active ka time bhi clear dikhe
                   fontWeight: isCurrentActive
                       ? FontWeight.w700
                       : FontWeight.w800,
@@ -140,7 +133,6 @@ class PrayerTimeCard extends StatelessWidget {
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
-                  // Dot ke gird bhi aik chota sa soft shadow effect
                   boxShadow: [
                     BoxShadow(
                       color: Colors.white60,

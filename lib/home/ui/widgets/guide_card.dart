@@ -6,6 +6,7 @@ class InfoGuideCard extends StatelessWidget {
   final String subTitle;
   final String imageUrl;
   final VoidCallback onTap;
+  final bool isUrdu;
 
   const InfoGuideCard({
     super.key,
@@ -13,6 +14,7 @@ class InfoGuideCard extends StatelessWidget {
     required this.subTitle,
     required this.imageUrl,
     required this.onTap,
+    this.isUrdu = false,
   });
 
   @override
@@ -26,7 +28,6 @@ class InfoGuideCard extends StatelessWidget {
       alignment: Alignment.topCenter,
       child: GestureDetector(
         onTap: () {
-
           onTap();
         },
         child: Container(
@@ -50,7 +51,7 @@ class InfoGuideCard extends StatelessWidget {
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: isUrdu ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
               // 1. IMAGE SECTION
               ClipRRect(
@@ -85,7 +86,7 @@ class InfoGuideCard extends StatelessWidget {
                     ),
               ),
 
-              // 2. TEXT CONTENT SECTION (Neeche se padding tight)
+              // 2. TEXT CONTENT SECTION
               Padding(
                 padding: const EdgeInsets.only(
                   left: 12.0,
@@ -95,16 +96,17 @@ class InfoGuideCard extends StatelessWidget {
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: isUrdu ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                   children: [
                     // TITLE
                     Text(
                       title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
+                      textAlign: isUrdu ? TextAlign.right : TextAlign.left,
                       style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 13.5,
+                        fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                        fontSize: isUrdu ? 13 : 13.5,
                         fontWeight: FontWeight.bold,
                         color: getThemeColor(context, light: Colors.black87, dark: Colors.white),
                       ),
@@ -117,12 +119,13 @@ class InfoGuideCard extends StatelessWidget {
                       subTitle,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
+                      textAlign: isUrdu ? TextAlign.right : TextAlign.left,
                       style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 10.5,
+                        fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                        fontSize: isUrdu ? 10.5 : 10.5,
                         fontWeight: FontWeight.w400,
                         color: getThemeColor(context, light: Colors.black54, dark: Colors.white60),
-                        height: 1.25,
+                        height: isUrdu ? 1.6 : 1.25,
                       ),
                     ),
                   ],

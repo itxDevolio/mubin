@@ -1,5 +1,6 @@
 import 'package:mubin/core/app_colors.dart';
 import 'package:mubin/core/services/haptic_feedback.dart';
+import 'package:mubin/core/services/settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quran/quran.dart' as quran;
@@ -27,6 +28,8 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
   Widget build(BuildContext context) {
     final quranState = ref.watch(surahJuzControllerProvider);
     final audioState = ref.watch(quranAudioPlayerControllerProvider);
+    final settings = ref.watch(settingsControllerProvider);
+    final isUrdu = settings.language == 'ur';
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -35,8 +38,9 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
           : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-          'Quran Audio',
+          isUrdu ? 'تلاوت آڈیو' : 'Quran Audio',
           style: TextStyle(
+            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
             color: isDark
@@ -70,15 +74,18 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
               onChanged: (val) => ref
                   .read(surahJuzControllerProvider.notifier)
                   .searchSurah(val),
+              textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
               style: TextStyle(
+                fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
                 color: isDark
                     ? AppColors.textPrimaryDark
                     : AppColors.textPrimaryLight,
                 fontSize: 14,
               ),
               decoration: InputDecoration(
-                hintText: 'Search Surah...',
+                hintText: isUrdu ? 'سورت تلاش کریں...' : 'Search Surah...',
                 hintStyle: TextStyle(
+                  fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
                   color: isDark
                       ? AppColors.textSecondaryDark
                       : AppColors.textSecondaryLight,
@@ -126,8 +133,9 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
                 if (list.isEmpty) {
                   return Center(
                     child: Text(
-                      'No Surah found',
+                      isUrdu ? 'کوئی سورت نہیں ملی' : 'No Surah found',
                       style: TextStyle(
+                        fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
                         color: isDark
                             ? AppColors.textSecondaryDark
                             : AppColors.textSecondaryLight,
@@ -173,6 +181,11 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
                       final downloadProgress = downloadInfo?.progress ?? 0.0;
                       final isDownloaded = audioState.downloadedSurahs.contains(surah.number);
 
+                      final rawRevelation = quran.getPlaceOfRevelation(surah.number);
+                      final revelationPlace = isUrdu
+                          ? (rawRevelation == 'Makkah' ? "مکی" : "مدنی")
+                          : rawRevelation;
+
                       return InkWell(
                         onTap: () {
                           if (isCurrent) {
@@ -205,6 +218,7 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
                             horizontal: 4.0,
                           ),
                           child: Row(
+                            textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
                             children: [
                               Container(
                                 width: 40,
@@ -250,16 +264,16 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
                               const SizedBox(width: 16),
                               Expanded(
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      surah.nameEnglish,
+                                      isUrdu ? surah.nameArabic : surah.nameEnglish,
                                       style: TextStyle(
+                                        fontFamily: isUrdu ? 'Amiri' : 'Poppins',
                                         fontWeight: isCurrent
                                             ? FontWeight.bold
                                             : FontWeight.w600,
-                                        fontSize: 15,
+                                        fontSize: isUrdu ? 18 : 15,
                                         color: isCurrent
                                             ? AppColors.primaryTeal
                                             : (isDark
@@ -270,9 +284,12 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      '$totalVerses Verses • ${quran.getPlaceOfRevelation(surah.number)}',
+                                      isUrdu
+                                          ? '$revelationPlace • $totalVerses آیات'
+                                          : '$totalVerses Verses • $rawRevelation',
                                       style: TextStyle(
-                                        fontSize: 12,
+                                        fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                                        fontSize: isUrdu ? 11 : 12,
                                         color: isDark
                                             ? AppColors.textSecondaryDark
                                             : AppColors.textSecondaryLight,
@@ -330,20 +347,22 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
                                       ? Colors.white54
                                       : Colors.black54,
                                 ),
-                              const SizedBox(width: 12),
-                              Text(
-                                surah.nameArabic,
-                                style: TextStyle(
-                                  fontFamily: 'Amiri',
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w500,
-                                  color: isCurrent
-                                      ? AppColors.accentGold
-                                      : (isDark
-                                            ? AppColors.textPrimaryDark
-                                            : AppColors.primaryTeal),
+                              if (!isUrdu) ...[
+                                const SizedBox(width: 12),
+                                Text(
+                                  surah.nameArabic,
+                                  style: TextStyle(
+                                    fontFamily: 'Amiri',
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w500,
+                                    color: isCurrent
+                                        ? AppColors.accentGold
+                                        : (isDark
+                                              ? AppColors.textPrimaryDark
+                                              : AppColors.primaryTeal),
+                                  ),
                                 ),
-                              ),
+                              ],
                             ],
                           ),
                         ),

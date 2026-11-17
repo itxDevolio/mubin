@@ -2,36 +2,34 @@ import 'package:mubin/core/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
 
-/// KhatamProgressCard - Quran completion progress dikhata hai
-/// Clean architecture ke hisaab se yeh sirf UI render karta hai
 class KhatamProgressCard extends StatelessWidget {
   final int lastReadPage;
   final VoidCallback onTap;
+  final bool isUrdu;
 
   const KhatamProgressCard({
     super.key,
     required this.lastReadPage,
     required this.onTap,
+    this.isUrdu = false,
   });
 
-  // Total pages in Quran (standard Madani Mushaf)
   static const int _totalPages = 604;
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    // Safety check for calculation
     final validPage = lastReadPage.clamp(0, _totalPages);
     final double percentage = validPage / _totalPages;
     final int percentInt = (percentage * 100).round();
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(20), // Standardized clean radius
+      borderRadius: BorderRadius.circular(20),
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         decoration: BoxDecoration(
           gradient: isDark
               ? const LinearGradient(
@@ -65,9 +63,11 @@ class KhatamProgressCard extends StatelessWidget {
               : [],
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment:
+              isUrdu ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
             Row(
+              textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
               children: [
                 // Clean Minimal Icon Container
                 Container(
@@ -81,41 +81,25 @@ class KhatamProgressCard extends StatelessWidget {
                   child: Icon(
                     FlutterIslamicIcons.solidQuran2,
                     color: isDark ? Colors.white : AppColors.primaryTeal,
-                    size: 18,
+                    size: 20,
                   ),
                 ),
                 const SizedBox(width: 12),
 
                 // Title Typography Clean Up
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "QURAN COMPLETION",
-                        style: TextStyle(
-                          color: isDark
-                              ? AppColors.textSecondaryDark
-                              : AppColors.textSecondaryLight,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 1.5,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        "Page $validPage of $_totalPages",
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          color: isDark
-                              ? AppColors.textPrimaryDark
-                              : AppColors.textPrimaryLight,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.2,
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    isUrdu ? "ختمِ قرآن" : "QURAN COMPLETION",
+                    textAlign: isUrdu ? TextAlign.right : TextAlign.left,
+                    style: TextStyle(
+                      fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                      color: isDark
+                          ? AppColors.textPrimaryDark
+                          : AppColors.textPrimaryLight,
+                      fontSize: isUrdu ? 15 : 15,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: isUrdu ? 0 : 1.2,
+                    ),
                   ),
                 ),
 
@@ -157,7 +141,7 @@ class KhatamProgressCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
 
             // Clean Progress Bar
             LinearProgressIndicator(
@@ -168,28 +152,35 @@ class KhatamProgressCard extends StatelessWidget {
               valueColor: const AlwaysStoppedAnimation<Color>(AppColors.lightTeal),
               minHeight: 6,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
 
             // Action Row
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment:
+                  isUrdu ? MainAxisAlignment.start : MainAxisAlignment.end,
+              textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
               children: [
                 Text(
-                  validPage >= _totalPages ? "MashaAllah! Complete" : "Continue Reading",
+                  validPage >= _totalPages
+                      ? (isUrdu ? "ماشاء اللہ! ختمِ قرآن مکمل" : "MashaAllah! Complete")
+                      : (isUrdu ? "تلاوتِ قرآن جاری رکھیں" : "Continue Reading"),
                   style: TextStyle(
+                    fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
                     color: isDark
                         ? AppColors.textPrimaryDark
                         : AppColors.primaryTeal,
                     fontWeight: FontWeight.w700,
-                    fontSize: 12,
-                    letterSpacing: 0.3,
+                    fontSize: isUrdu ? 12 : 12,
+                    letterSpacing: isUrdu ? 0 : 0.3,
                   ),
                 ),
-                const SizedBox(width: 4),
+                const SizedBox(width: 6),
                 Icon(
                   validPage >= _totalPages
                       ? Icons.celebration_rounded
-                      : Icons.arrow_forward_ios_rounded,
+                      : (isUrdu
+                          ? Icons.arrow_back_ios_rounded
+                          : Icons.arrow_forward_ios_rounded),
                   size: 12,
                   color: isDark
                       ? AppColors.textPrimaryDark

@@ -7,12 +7,14 @@ class FeatureCard extends StatelessWidget {
   final String title;
   final IconData icon;
   final VoidCallback? onTap;
+  final bool isUrdu;
 
   const FeatureCard({
     super.key,
     required this.title,
     required this.icon,
     this.onTap,
+    this.isUrdu = false,
   });
 
   @override
@@ -54,8 +56,10 @@ class FeatureCard extends StatelessWidget {
                 title,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 15,
+                  fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                  fontSize: isUrdu ? 13.5 : 15,
                   fontWeight: FontWeight.w500,
+                  height: isUrdu ? 1.5 : 1.2,
                   color: getThemeColor(
                     context,
                     light: Colors.black87,

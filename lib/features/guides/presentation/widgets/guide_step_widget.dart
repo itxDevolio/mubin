@@ -116,31 +116,46 @@ class GuideStepWidget extends ConsumerWidget {
                   ),
                 ],
 
-                const SizedBox(height: 24),
-
-                // AUTHENTIC REFERENCE
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: isDark ? Colors.white.withOpacity(0.04) : Colors.black.withOpacity(0.025),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.bookmark_added_rounded, size: 14, color: Colors.grey.shade500),
-                      const SizedBox(width: 8),
-                      Flexible(
-                        child: Text(
-                           "Reference: ${step.reference}",
-                          style: isUrdu 
-                            ? TextStyle(fontFamily: 'NotoNastaliqUrdu', fontSize: 12, color: Colors.grey.shade600)
-                            : TextStyle(fontFamily: 'Poppins', fontSize: 11, fontWeight: FontWeight.w600, color: Colors.grey.shade600, letterSpacing: 0.5),
+                if (step.reference.trim().isNotEmpty) ...[
+                  const SizedBox(height: 24),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? Colors.white.withOpacity(0.04)
+                          : Colors.black.withOpacity(0.025),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
+                      children: [
+                        Icon(Icons.bookmark_added_rounded,
+                            size: 14, color: Colors.grey.shade500),
+                        const SizedBox(width: 8),
+                        Flexible(
+                          child: Text(
+                            isUrdu
+                                ? "حوالہ: ${step.reference}"
+                                : "Reference: ${step.reference}",
+                            style: isUrdu
+                                ? TextStyle(
+                                    fontFamily: 'NotoNastaliqUrdu',
+                                    fontSize: 12,
+                                    color: Colors.grey.shade600)
+                                : TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey.shade600,
+                                    letterSpacing: 0.5),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
+                ],
               ],
             ),
           ),

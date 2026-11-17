@@ -4,7 +4,9 @@ import 'package:mubin/core/services/settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../controller/data_provider.dart';
+import '../../data/models/book_model.dart';
 import 'chapters_screen.dart';
+import 'hadith_detail_screen.dart';
 import '../../../../core/widgets/ad_banner_widget.dart';
 
 class BooksScreen extends ConsumerStatefulWidget {
@@ -15,7 +17,14 @@ class BooksScreen extends ConsumerStatefulWidget {
 }
 
 class _BooksScreenState extends ConsumerState<BooksScreen> {
+  final TextEditingController _searchController = TextEditingController();
   String _searchQuery = "";
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,19 +33,20 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bool isUrdu = settings.language == 'ur';
 
+    final isSearching = _searchQuery.trim().length >= 2;
+
     return Scaffold(
       backgroundColor: isDark
           ? AppColors.backgroundDark
           : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-          'Hadith Books',
+          isUrdu ? 'صحاح ستہ' : 'Sihah Sittah',
           style: TextStyle(
             letterSpacing: 0.5,
             fontWeight: FontWeight.bold,
-            fontFamily:
-                'Poppins'
-                '',
+            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontSize: isUrdu ? 18 : 20,
             color: isDark
                 ? AppColors.textPrimaryDark
                 : AppColors.textPrimaryLight,
@@ -56,259 +66,560 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: Column(
-        children: [
-          // Search Bar
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 12.0,
-            ),
-            child: TextField(
-              onChanged: (val) {
-                setState(() {
-                  _searchQuery = val.toLowerCase();
-                });
-              },
-              style: TextStyle(
-                color: isDark
-                    ? AppColors.textPrimaryDark
-                    : AppColors.textPrimaryLight,
-                fontSize: 14,
-              ),
-              decoration: InputDecoration(
-                hint: const Text('Search Books...'),
-                hintStyle: TextStyle(
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+        child: Column(
+          crossAxisAlignment:
+              isUrdu ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          children: [
+            // 1. Prominent & Beautiful Search Input Field
+            Container(
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.surfaceDark : Colors.white,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(
                   color: isDark
-                      ? AppColors.textSecondaryDark
-                      : AppColors.textSecondaryLight,
-                  fontSize: 14,
+                      ? AppColors.borderDark
+                      : AppColors.borderLight,
+                  width: 1,
                 ),
-                prefixIcon: const Icon(
-                  Icons.search_rounded,
-                  color: AppColors.primaryTeal,
-                  size: 22,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.04),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: TextField(
+                controller: _searchController,
+                onChanged: (val) {
+                  setState(() {
+                    _searchQuery = val;
+                  });
+                },
+                textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
+                style: TextStyle(
+                  fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                  color: isDark
+                      ? AppColors.textPrimaryDark
+                      : AppColors.textPrimaryLight,
+                  fontSize: 15,
                 ),
-                filled: true,
-                fillColor: isDark
-                    ? AppColors.surfaceDark
-                    : AppColors.surfaceLight,
-                contentPadding: const EdgeInsets.symmetric(vertical: 14),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide.none,
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide(
+                decoration: InputDecoration(
+                  hintText: isUrdu
+                      ? "تمام کتبِ احادیث میں تلاش (مثلاً: طلاق، نماز)..."
+                      : "Search all Hadiths (e.g. Prayer, Divorce)...",
+                  hintStyle: TextStyle(
+                    fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
                     color: isDark
-                        ? AppColors.borderDark
-                        : AppColors.borderLight,
-                    width: 1,
+                        ? AppColors.textSecondaryDark
+                        : AppColors.textSecondaryLight,
+                    fontSize: isUrdu ? 13 : 13.5,
                   ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: const BorderSide(
-                    color: AppColors.primaryTeal,
-                    width: 1.2,
+                  prefixIcon: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    child: Icon(
+                      Icons.search_rounded,
+                      color: AppColors.primaryTeal,
+                      size: 24,
+                    ),
                   ),
+                  suffixIcon: _searchQuery.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(
+                            Icons.clear_rounded,
+                            size: 20,
+                          ),
+                          onPressed: () {
+                            _searchController.clear();
+                            setState(() {
+                              _searchQuery = "";
+                            });
+                          },
+                        )
+                      : null,
+                  border: InputBorder.none,
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                 ),
               ),
             ),
-          ),
 
-          Expanded(
-            child: booksAsync.when(
-              data: (books) {
-                final filteredBooks = books.where((book) {
-                  return book.bookName.toLowerCase().contains(_searchQuery) ||
-                      book.bookNameUrdu.contains(_searchQuery);
-                }).toList();
+            const SizedBox(height: 24),
 
-                if (filteredBooks.isEmpty) {
-                  return Center(
+            // 2. Global Search Results Mode OR 6 Books Grid Mode
+            if (isSearching) ...[
+              // Global Search Mode
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
+                children: [
+                  Text(
+                    isUrdu
+                        ? "تلاش کے نتائج ('$_searchQuery'):"
+                        : "Search Results for '$_searchQuery':",
+                    style: TextStyle(
+                      fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                      fontSize: isUrdu ? 15 : 16,
+                      fontWeight: FontWeight.bold,
+                      color: isDark
+                          ? AppColors.textPrimaryDark
+                          : AppColors.textPrimaryLight,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _searchController.clear();
+                      setState(() {
+                        _searchQuery = "";
+                      });
+                    },
                     child: Text(
-                      'No Book found',
-                      style: TextStyle(
-                        color: isDark
-                            ? AppColors.textSecondaryDark
-                            : AppColors.textSecondaryLight,
-                        fontWeight: FontWeight.w500,
+                      isUrdu ? "صاف کریں" : "Clear Search",
+                      style: const TextStyle(
+                        color: AppColors.primaryTeal,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  );
-                }
-
-                return ListView.separated(
-                  itemCount: filteredBooks.length + 1,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
                   ),
-                  physics: const BouncingScrollPhysics(),
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 12),
-                  itemBuilder: (context, index) {
-                    if (index == filteredBooks.length) {
-                      return const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 16.0),
-                        child: AdBannerWidget(),
-                      );
-                    }
-                    final book = filteredBooks[index];
-                    final String displayTitle = isUrdu
-                        ? book.bookNameUrdu
-                        : book.bookName;
+                ],
+              ),
+              const SizedBox(height: 12),
 
-                    return InkWell(
-                      onTap: () {
-                        hapticFeedBack();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => ChaptersScreen(bookSlug: book.slug),
+              ref
+                  .watch(globalHadithSearchProvider(
+                      SearchParam(query: _searchQuery, isUrdu: isUrdu)))
+                  .when(
+                    data: (hadiths) {
+                      if (hadiths.isEmpty) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 40.0),
+                          child: Center(
+                            child: Column(
+                              children: [
+                                Icon(
+                                  Icons.search_off_rounded,
+                                  size: 48,
+                                  color: Colors.grey.shade400,
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  isUrdu
+                                      ? "'$_searchQuery' سے متعلق کوئی حدیث نہیں ملی"
+                                      : "No Hadiths found for '$_searchQuery'",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontFamily:
+                                        isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                                    color: Colors.grey.shade600,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
-                      },
-                      borderRadius: BorderRadius.circular(16),
-                      child: Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: isDark ? AppColors.surfaceDark : Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: isDark
-                                ? AppColors.borderDark
-                                : AppColors.borderLight,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withAlpha(isDark ? 30 : 10),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            if (!isUrdu) ...[
-                              _buildBookIcon(),
-                              const SizedBox(width: 16),
-                            ],
+                      }
 
-                            Expanded(
+                      return ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: hadiths.length,
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 12),
+                        itemBuilder: (context, index) {
+                          final hadith = hadiths[index];
+                          final String bookName = BookModel.getBookNameFromSlug(
+                            hadith.bookSlug,
+                            isUrdu,
+                          );
+                          final String heading = isUrdu
+                              ? (hadith.headingUrdu.isNotEmpty
+                                  ? hadith.headingUrdu
+                                  : hadith.headingEnglish)
+                              : (hadith.headingEnglish.isNotEmpty
+                                  ? hadith.headingEnglish
+                                  : hadith.headingUrdu);
+
+                          return InkWell(
+                            onTap: () {
+                              hapticFeedBack();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      HadithDetailScreen(hadith: hadith),
+                                ),
+                              );
+                            },
+                            borderRadius: BorderRadius.circular(16),
+                            child: Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: isDark
+                                    ? AppColors.surfaceDark
+                                    : Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: isDark
+                                      ? AppColors.borderDark
+                                      : AppColors.borderLight,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black
+                                        .withValues(alpha: isDark ? 0.3 : 0.04),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
+                              ),
                               child: Column(
                                 crossAxisAlignment: isUrdu
                                     ? CrossAxisAlignment.end
                                     : CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    displayTitle,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: 18,
-                                      color: isDark
-                                          ? Colors.white
-                                          : AppColors.textPrimaryLight,
-                                      fontFamily: isUrdu
-                                          ? 'NotoNastaliqUrdu'
-                                          : null,
-                                    ),
-                                    textAlign: isUrdu
-                                        ? TextAlign.right
-                                        : TextAlign.left,
+                                  // Top Row: Book Name, Hadith Number & Status Badge
+                                  Row(
+                                    textDirection: isUrdu
+                                        ? TextDirection.rtl
+                                        : TextDirection.ltr,
+                                    children: [
+                                      if (bookName.isNotEmpty) ...[
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 4),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.primaryTeal
+                                                .withValues(alpha: 0.12),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          child: Text(
+                                            bookName,
+                                            style: TextStyle(
+                                              fontFamily: isUrdu
+                                                  ? 'NotoNastaliqUrdu'
+                                                  : 'Poppins',
+                                              color: AppColors.primaryTeal,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 11,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                      ],
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          color: isDark
+                                              ? Colors.white10
+                                              : Colors.black.withValues(alpha: 0.04),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: Text(
+                                          isUrdu
+                                              ? "حدیث ${hadith.hadithNumber}"
+                                              : "Hadith ${hadith.hadithNumber}",
+                                          style: TextStyle(
+                                            fontFamily: isUrdu
+                                                ? 'NotoNastaliqUrdu'
+                                                : 'Poppins',
+                                            color: isDark
+                                                ? Colors.white70
+                                                : Colors.black87,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 10.5,
+                                          ),
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      if (hadith.status.isNotEmpty)
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8, vertical: 4),
+                                          decoration: BoxDecoration(
+                                            color: isDark
+                                                ? Colors.white10
+                                                : Colors.black.withValues(alpha: 0.05),
+                                            borderRadius:
+                                                BorderRadius.circular(6),
+                                          ),
+                                          child: Text(
+                                            hadith.status,
+                                            style: const TextStyle(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w600,
+                                              color: AppColors.primaryTeal,
+                                            ),
+                                          ),
+                                        ),
+                                    ],
                                   ),
+
+                                  // Compact Title Row with Arrow Indicator
                                   const SizedBox(height: 10),
-                                  Text(
-                                    "${book.totalHadith}",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: isDark
-                                          ? AppColors.textSecondaryDark
-                                          : AppColors.textSecondaryLight,
-                                      fontWeight: FontWeight.w300,
-                                    ),
-                                    textAlign: isUrdu
-                                        ? TextAlign.right
-                                        : TextAlign.left,
+                                  Row(
+                                    textDirection: isUrdu
+                                        ? TextDirection.rtl
+                                        : TextDirection.ltr,
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          heading.isNotEmpty
+                                              ? heading
+                                              : (isUrdu
+                                                  ? "حدیث نمبر ${hadith.hadithNumber}"
+                                                  : "Hadith Number ${hadith.hadithNumber}"),
+                                          textAlign: isUrdu
+                                              ? TextAlign.right
+                                              : TextAlign.left,
+                                          style: TextStyle(
+                                            fontFamily: isUrdu
+                                                ? 'NotoNastaliqUrdu'
+                                                : 'Poppins',
+                                            fontSize: isUrdu ? 14 : 14.5,
+                                            fontWeight: FontWeight.bold,
+                                            height: isUrdu ? 1.5 : 1.3,
+                                            color: isDark
+                                                ? Colors.white
+                                                : AppColors.textPrimaryLight,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Icon(
+                                        isUrdu
+                                            ? Icons.arrow_back_ios_rounded
+                                            : Icons.arrow_forward_ios_rounded,
+                                        size: 12,
+                                        color: AppColors.primaryTeal
+                                            .withValues(alpha: 0.6),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
                             ),
-
-                            if (isUrdu) ...[
-                              const SizedBox(width: 16),
-                              _buildBookIcon(),
-                            ] else ...[
-                              const Icon(
-                                Icons.arrow_forward_ios_rounded,
-                                size: 14,
-                                color: AppColors.primaryTeal,
+                          );
+                        },
+                      );
+                    },
+                    loading: () => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 40.0),
+                      child: Center(
+                        child: Column(
+                          children: [
+                            const CircularProgressIndicator(
+                              color: AppColors.primaryTeal,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              isUrdu
+                                  ? "آن لائن احادیث تلاش کی جا رہی ہیں..."
+                                  : "Searching online Hadiths...",
+                              style: TextStyle(
+                                fontFamily:
+                                    isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                                fontSize: 13,
                               ),
-                            ],
+                            ),
                           ],
                         ),
                       ),
-                    );
-                  },
-                );
-              },
-              loading: () => const Center(
-                child: CircularProgressIndicator(color: AppColors.primaryTeal),
-              ),
-              error: (err, stack) => Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.error_outline,
-                      color: AppColors.error,
-                      size: 40,
                     ),
-                    const SizedBox(height: 12),
-                    const Text("Error loading books"),
-                    TextButton(
-                      onPressed: () => ref.invalidate(booksProvider),
-                      child: const Text(
-                        "Retry",
-                        style: TextStyle(color: AppColors.primaryTeal),
+                    error: (err, _) => Center(
+                      child: Text(
+                        "Error searching hadiths: $err",
+                        style: const TextStyle(color: AppColors.error),
                       ),
                     ),
-                  ],
+                  ),
+            ] else ...[
+              // 6 Books Grid Mode
+              booksAsync.when(
+                data: (books) {
+                  return Directionality(
+                    textDirection:
+                        isUrdu ? TextDirection.rtl : TextDirection.ltr,
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: books.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 14,
+                        crossAxisSpacing: 14,
+                        childAspectRatio: 0.96,
+                      ),
+                      itemBuilder: (context, index) {
+                        final book = books[index];
+                        final String displayTitle =
+                            isUrdu ? book.bookNameUrdu : book.bookName;
+                        final String writerName = isUrdu
+                            ? BookModel.getUrduWriterName(
+                                book.slug, book.writerName)
+                            : book.writerName;
+
+                        return InkWell(
+                          onTap: () {
+                            hapticFeedBack();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    ChaptersScreen(bookSlug: book.slug),
+                              ),
+                            );
+                          },
+                          borderRadius: BorderRadius.circular(16),
+                          child: Container(
+                            padding: const EdgeInsets.all(14),
+                            decoration: BoxDecoration(
+                              color: isDark
+                                  ? AppColors.surfaceDark
+                                  : Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: isDark
+                                    ? AppColors.borderDark
+                                    : AppColors.borderLight,
+                                width: 1,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black
+                                      .withValues(alpha: isDark ? 0.3 : 0.04),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Top Icon Badge
+                                Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primaryTeal
+                                        .withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: const Icon(
+                                    Icons.auto_stories_rounded,
+                                    color: AppColors.primaryTeal,
+                                    size: 20,
+                                  ),
+                                ),
+                                const Spacer(),
+
+                                // Book Title
+                                Text(
+                                  displayTitle,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontFamily:
+                                        isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: isUrdu ? 14.5 : 15,
+                                    height: isUrdu ? 1.5 : 1.2,
+                                    color: isDark
+                                        ? Colors.white
+                                        : AppColors.textPrimaryLight,
+                                  ),
+                                ),
+                                const SizedBox(height: 3),
+
+                                // Writer Name
+                                Text(
+                                  writerName,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontFamily:
+                                        isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                                    fontSize: isUrdu ? 10 : 11,
+                                    color: isDark
+                                        ? AppColors.textSecondaryDark
+                                        : AppColors.textSecondaryLight,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+
+                                // Hadith Count Badge
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 3),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primaryTeal
+                                        .withValues(alpha: 0.08),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Text(
+                                    isUrdu
+                                        ? "${book.totalHadith} احادیث"
+                                        : "${book.totalHadith} Hadiths",
+                                    style: const TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.primaryTeal,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+                loading: () => const Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 40.0),
+                    child: CircularProgressIndicator(
+                      color: AppColors.primaryTeal,
+                    ),
+                  ),
+                ),
+                error: (err, stack) => Center(
+                  child: Column(
+                    children: [
+                      const Icon(
+                        Icons.error_outline,
+                        color: AppColors.error,
+                        size: 32,
+                      ),
+                      const SizedBox(height: 8),
+                      const Text("Error loading books"),
+                      TextButton(
+                        onPressed: () => ref.invalidate(booksProvider),
+                        child: const Text(
+                          "Retry",
+                          style: TextStyle(color: AppColors.primaryTeal),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+            ],
 
-  Widget _buildBookIcon() {
-    return Container(
-      width: 48,
-      height: 48,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppColors.primaryTeal, AppColors.lightTeal],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+            const SizedBox(height: 24),
+            const AdBannerWidget(),
+            const SizedBox(height: 16),
+          ],
         ),
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primaryTeal.withAlpha(50),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      alignment: Alignment.center,
-      child: const Icon(
-        Icons.auto_stories_rounded,
-        color: Colors.white,
-        size: 24,
       ),
     );
   }

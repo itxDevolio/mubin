@@ -1,8 +1,8 @@
 import 'package:mubin/core/app_colors.dart';
 import 'package:mubin/core/services/settings_controller.dart';
 import 'package:mubin/features/hadith/domain/entities/hadith.dart';
+import 'package:mubin/features/hadith/data/models/book_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HadithDetailScreen extends ConsumerWidget {
@@ -16,15 +16,31 @@ class HadithDetailScreen extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bool isUrdu = settings.language == 'ur';
 
+    final String bookName = BookModel.getBookNameFromSlug(
+      hadith.bookSlug,
+      isUrdu,
+    );
+
+    final String heading = isUrdu
+        ? (hadith.headingUrdu.isNotEmpty
+            ? hadith.headingUrdu
+            : hadith.headingEnglish)
+        : (hadith.headingEnglish.isNotEmpty
+            ? hadith.headingEnglish
+            : hadith.headingUrdu);
+
     return Scaffold(
       backgroundColor: isDark
           ? AppColors.backgroundDark
           : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-          'Hadith ${hadith.hadithNumber}',
+          isUrdu ? "حدیث ${hadith.hadithNumber}" : "Hadith ${hadith.hadithNumber}",
           style: TextStyle(
+            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
             letterSpacing: 0.5,
+            fontSize: isUrdu ? 16 : 18,
+            fontWeight: FontWeight.bold,
             color: isDark
                 ? AppColors.textPrimaryDark
                 : AppColors.textPrimaryLight,
@@ -59,7 +75,7 @@ class HadithDetailScreen extends ConsumerWidget {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withAlpha(isDark ? 30 : 10),
+                    color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
                     blurRadius: 20,
                     offset: const Offset(0, 10),
                   ),
@@ -68,34 +84,45 @@ class HadithDetailScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Header Info
+                  // Top Header Info Bar
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 20,
                       vertical: 16,
                     ),
-                    color: AppColors.primaryTeal.withAlpha(20),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryTeal.withValues(alpha: 0.08),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(24),
+                        topRight: Radius.circular(24),
+                      ),
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      textDirection:
+                          isUrdu ? TextDirection.rtl : TextDirection.ltr,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.primaryTeal,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            "${hadith.hadithNumber}",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
+                        if (bookName.isNotEmpty)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryTeal,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              bookName,
+                              style: TextStyle(
+                                fontFamily:
+                                    isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                        ),
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 10,
@@ -103,12 +130,12 @@ class HadithDetailScreen extends ConsumerWidget {
                           ),
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: AppColors.primaryTeal.withAlpha(100),
+                              color: AppColors.primaryTeal.withValues(alpha: 0.4),
                             ),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
-                            hadith.status,
+                            hadith.status.isNotEmpty ? hadith.status : "Hadith",
                             style: const TextStyle(
                               color: AppColors.primaryTeal,
                               fontSize: 10,
@@ -123,33 +150,57 @@ class HadithDetailScreen extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.all(24.0),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      crossAxisAlignment: isUrdu
+                          ? CrossAxisAlignment.end
+                          : CrossAxisAlignment.start,
                       children: [
-                        // Arabic Text (Always present and centered)
-                        Text(
-                          hadith.arabicText,
-                          style: TextStyle(
-                            fontFamily: 'Amiri',
-                            fontSize: 20,
-                            height: 1.8,
-                            color: isDark
-                                ? Colors.white
-                                : AppColors.textPrimaryLight,
+                        // Hadith Title / Heading
+                        if (heading.isNotEmpty) ...[
+                          Text(
+                            heading,
+                            style: TextStyle(
+                              fontFamily:
+                                  isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                              fontSize: isUrdu ? 16 : 16,
+                              fontWeight: FontWeight.bold,
+                              height: isUrdu ? 1.6 : 1.4,
+                              color: isDark
+                                  ? Colors.white
+                                  : AppColors.textPrimaryLight,
+                            ),
+                            textAlign:
+                                isUrdu ? TextAlign.right : TextAlign.left,
                           ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 40),
+                          const SizedBox(height: 24),
+                        ],
 
-                        // Main Translation based on Settings (Strictly only one)
-                        if (isUrdu)
+                        // Arabic Text
+                        if (hadith.arabicText.isNotEmpty) ...[
+                          Text(
+                            hadith.arabicText,
+                            style: TextStyle(
+                              fontFamily: 'Amiri',
+                              fontSize: 20,
+                              height: 1.8,
+                              color: isDark
+                                  ? Colors.white
+                                  : AppColors.textPrimaryLight,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 30),
+                        ],
+
+                        // Translation Section
+                        if (isUrdu && hadith.urduText.isNotEmpty)
                           _buildTranslationSection(
-                            title: "Translation",
+                            title: "ترجمہ",
                             content: hadith.urduText,
                             isUrdu: true,
                             isDark: isDark,
                             isMain: true,
                           )
-                        else
+                        else if (hadith.englishText.isNotEmpty)
                           _buildTranslationSection(
                             title: "English Translation",
                             content: hadith.englishText,
@@ -178,28 +229,25 @@ class HadithDetailScreen extends ConsumerWidget {
     required bool isMain,
   }) {
     return Column(
-      crossAxisAlignment: isUrdu
-          ? CrossAxisAlignment.end
-          : CrossAxisAlignment.start,
+      crossAxisAlignment:
+          isUrdu ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: isUrdu
-              ? MainAxisAlignment.end
-              : MainAxisAlignment.start,
+          mainAxisAlignment:
+              isUrdu ? MainAxisAlignment.end : MainAxisAlignment.start,
           children: [
             if (!isUrdu)
               Container(
                 width: 24,
                 height: 2,
-                color: AppColors.primaryTeal.withAlpha(100),
+                color: AppColors.primaryTeal.withValues(alpha: 0.4),
               ),
             if (!isUrdu) const SizedBox(width: 8),
             Text(
               title,
               style: TextStyle(
-                color: isMain
-                    ? AppColors.primaryTeal
-                    : AppColors.primaryTeal.withAlpha(150),
+                fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                color: AppColors.primaryTeal,
                 fontSize: isMain ? 15 : 13,
                 fontWeight: FontWeight.bold,
               ),
@@ -209,7 +257,7 @@ class HadithDetailScreen extends ConsumerWidget {
               Container(
                 width: 24,
                 height: 2,
-                color: AppColors.primaryTeal.withAlpha(100),
+                color: AppColors.primaryTeal.withValues(alpha: 0.4),
               ),
           ],
         ),
@@ -226,7 +274,8 @@ class HadithDetailScreen extends ConsumerWidget {
                       : AppColors.textPrimaryLight,
                 )
               : TextStyle(
-                  fontSize: isMain ? 16 : 14,
+                  fontFamily: 'Poppins',
+                  fontSize: isMain ? 15 : 14,
                   height: 1.5,
                   color: isDark
                       ? (isMain ? Colors.white : Colors.white70)

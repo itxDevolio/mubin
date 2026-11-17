@@ -37,17 +37,32 @@ class JanazaDetailScreen extends ConsumerWidget {
             indicatorWeight: 3,
             labelColor: AppColors.primaryTeal,
             unselectedLabelColor: Colors.grey.withOpacity(0.6),
+            labelStyle: TextStyle(
+              fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+              fontWeight: FontWeight.bold,
+              fontSize: isUrdu ? 14 : 14,
+            ),
             tabs: [
               Tab(
+                text: isUrdu
+                    ? (isAdult ? "مرد (بالغ)" : "لڑکا (نابالغ)")
+                    : (isAdult ? "Man" : "Boy"),
                 icon: Icon(
-                  isAdult ? FlutterIslamicIcons.muslim : FlutterIslamicIcons.muslim2,
-                  size: 28,
+                  isAdult
+                      ? FlutterIslamicIcons.muslim
+                      : FlutterIslamicIcons.muslim2,
+                  size: 24,
                 ),
               ),
               Tab(
+                text: isUrdu
+                    ? (isAdult ? "عورت (بالغہ)" : "لڑکی (نابالغہ)")
+                    : (isAdult ? "Woman" : "Girl"),
                 icon: Icon(
-                  isAdult ? FlutterIslamicIcons.muslimah : FlutterIslamicIcons.muslimah2,
-                  size: 28,
+                  isAdult
+                      ? FlutterIslamicIcons.muslimah
+                      : FlutterIslamicIcons.muslimah2,
+                  size: 24,
                 ),
               ),
             ],

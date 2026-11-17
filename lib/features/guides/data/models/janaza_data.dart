@@ -2,8 +2,6 @@ import '../../domain/entities/guide_step.dart';
 
 class JanazaData {
   static List<GuideStep> getAdultSteps(bool isMan, String madhab) {
-    bool isHanafi = madhab == 'hanafi';
-
     return [
       GuideStep(
         stepNumber: "1",
@@ -13,54 +11,54 @@ class JanazaData {
             "Simply make the intention in your heart to pray the funeral prayer for the deceased for the sake of Allah. Verbal declaration is not required.",
         contentUr:
             "دل میں صرف یہ ارادہ (نیت) کر لیں کہ میں اللہ کی رضا کے لیے اس میت کی نمازِ جنازہ پڑھ رہا ہوں۔ زبان سے الفاظ کہنا ضروری نہیں ہے۔",
-        reference: "Sahih al-Bukhari: 1",
+        reference: "",
       ),
 
       GuideStep(
         stepNumber: "2",
-        titleEn: "First Takbeer & Surah Al-Fatiha",
-        titleUr: "پہلی تکبیر اور سورۃ الفاتحہ",
+        titleEn: "First Takbeer, Sana & Surah Al-Fatiha",
+        titleUr: "پہلی تکبیر، ثناء، تعوذ، تسمیہ اور سورۃ الفاتحہ",
         contentEn:
-            "Raise your hands, say 'Allahu Akbar' and fold them. Then recite Surah Al-Fatihah",
+            "Raise your hands, say 'Allahu Akbar' and fold them. Recite Sana (Praise of Allah), Ta'awwuz (Seeking Refuge), Bismillah, and Surah Al-Fatihah:",
         contentUr:
-            "ہاتھ اٹھا کر 'اللہ اکبر' کہیں اور ہاتھ باندھ لیں۔ پھر سورۃ الفاتحہ پڑھیں",
+            "ہاتھ اٹھا کر 'اللہ اکبر' کہیں اور ہاتھ باندھ لیں۔ پھر ثناء، تعوذ، تسمیہ اور سورۃ الفاتحہ پڑھیں:",
         arabic:
-            "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ ۝ الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ ۝ الرَّحْمَنِ الرَّحِيمِ ۝ مَالِكِ يَوْمِ الدِّينِ ۝ إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ ۝ اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ ۝ صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ",
+            "سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ، وَتَبَارَكَ اسْمُكَ، وَتَعَالَى جَدُّكَ، وَجَلَّ ثَنَاؤُكَ، وَلَا إِلَهَ غَيْرُكَ ۝\n\nأَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ ۝\n\nبِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ ۝\n\nالْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ ۝ الرَّحْمَنِ الرَّحِيمِ ۝ مَالِكِ يَوْمِ الدِّينِ ۝ إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ ۝ اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ ۝ صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ",
         translationEn:
-            "In the name of Allah, the Most Gracious, the Most Merciful. All praise is due to Allah, Lord of the worlds. The Most Gracious, the Most Merciful. Master of the Day of Judgment. You alone we worship and You alone we ask for help. Guide us to the straight path. The path of those upon whom You have bestowed favor, not of those who have evoked [Your] anger or of those who are astray.",
+            "Glory be to You, O Allah, and praise be to You, blessed is Your name, exalted is Your majesty, glorified is Your praise, and there is no deity worthy of worship except You.\n\nI seek refuge in Allah from Satan, the rejected.\n\nIn the name of Allah, the Most Gracious, the Most Merciful.\n\nAll praise is due to Allah, Lord of the worlds. The Most Gracious, the Most Merciful. Master of the Day of Judgment. You alone we worship and You alone we ask for help. Guide us to the straight path. The path of those upon whom You have bestowed favor, not of those who have evoked [Your] anger or of those who are astray.",
         translationUr:
-            "اللہ کے نام سے شروع جو بڑا مہربان نہایت رحم والا ہے۔ سب تعریفیں اللہ ہی کے لیے ہیں جو تمام جہانوں کا رب ہے۔ بڑا مہربان نہایت رحم والا ہے۔ سزا و جزا کے دن کا مالک ہے۔ ہم صرف تیری ہی عبادت کرتے ہیں اور تجھ ہی سے مدد مانگتے ہیں۔ ہمیں سیدھے راستے کی ہدایت فرما۔ ان لوگوں کا راستہ جن پر تو نے انعام کیا، نہ کہ ان کا جن پر غضب ہوا اور نہ گمراہوں کا۔",
-        reference: "",
+            "پاک ہے تو اے اللہ! اپنی تعریف کے ساتھ، اور بابرکت ہے تیرا نام، اور بلند ہے تیری شان، اور جلالی ہے تیری ثناء، اور تیرے سوا کوئی معبود نہیں ۝\n\nمیں پناہ مانگتا ہوں اللہ کی شیطان مردود سے ۝\n\nاللہ کے نام سے شروع جو بڑا مہربان نہایت رحم والا ہے ۝\n\nسب تعریفیں اللہ ہی کے لیے ہیں جو تمام جہانوں کا رب ہے ۝ بڑا مہربان نہایت رحم والا ہے ۝ سزا و جزا کے دن کا مالک ہے ۝ ہم صرف تیری ہی عبادت کرتے ہیں اور تجھ ہی سے مدد مانگتے ہیں ۝ ہمیں سیدھے راستے کی ہدایت فرما ۝ ان لوگوں کا راستہ جن پر تو نے انعام کیا، نہ کہ ان کا جن پر غضب ہوا اور نہ گمراہوں کا۔",
+        reference: "Sahih al-Bukhari: 1335, Sunan an-Nasa'i: 1989",
       ),
       GuideStep(
         stepNumber: "3",
-        titleEn: "Second Takbeer & Durood",
-        titleUr: "دوسری تکبیر اور درود شریف",
+        titleEn: "Second Takbeer & Durood Ibrahim",
+        titleUr: "دوسری تکبیر اور درودِ ابراہیم",
         contentEn: "Say 'Allahu Akbar' and recite 'Durood-e-Ibrahim'.",
-        contentUr: "دوسری بار 'اللہ اکبر' کہیں  اور درودِ ابراہیم پڑھیں۔ ",
+        contentUr: "دوسری بار 'اللہ اکبر' کہیں اور درودِ ابراہیم پڑھیں:",
         arabic:
-            "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ كَمَا صَلَّيْتَ عَلَى إِبْرَاهِيمَ وَعَلَى آلِ إِبْرَاهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ، اللَّهُمَّ بَارِكْ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ كَمَا بَارَكْتَ عَلَى إِبْرَاهِيمَ وَعَلَى آلِ إِبْرَاهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ",
+            "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَعَى آلِ مُحَمَّدٍ كَمَا صَلَّيْتَ عَلَى إِبْرَاهِيمَ وَعَلَى آلِ إِبْرَاهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ، اللَّهُمَّ بَارِكْ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ كَمَا بَارَكْتَ عَلَى إِبْرَاهِيمَ وَعَلَى آلِ إِبْرَاهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ",
         translationEn:
-            "O Allah, let Your Peace come upon Muhammad and the family of Muhammad, as you have brought peace to Ibrahim and his family. Truly, You are Praiseworthy and Glorious. O Allah, bless Muhammad and the family of Muhammad, as you have blessed Ibrahim and his family. Truly, You are Praiseworthy and Glorious.",
+            "O Allah, let Your Peace come upon Muhammad and the family of Muhammad, as You have brought peace to Ibrahim and his family. Truly, You are Praiseworthy and Glorious. O Allah, bless Muhammad and the family of Muhammad, as You have blessed Ibrahim and his family. Truly, You are Praiseworthy and Glorious.",
         translationUr:
             "اے اللہ! محمد ﷺ اور ان کی آل پر رحمتیں نازل فرما، جس طرح تو نے ابراہیم ؑ اور ان کی آل پر رحمتیں نازل فرمائیں، بے شک تو تعریف کے لائق اور بڑی شان والا ہے۔ اے اللہ! محمد ﷺ اور ان کی آل پر برکتیں نازل فرما، جس طرح تو نے ابراہیم ؑ اور ان کی آل پر برکتیں نازل فرمائیں، بے شک تو تعریف کے لائق اور بڑی شان والا ہے۔",
-        reference: "Sahih al-Bukhari: 3370 ",
+        reference: "Sahih al-Bukhari: 3370",
       ),
       GuideStep(
         stepNumber: "4",
         titleEn: "Third Takbeer & Dua for Deceased",
-        titleUr: "تیسری تکبیر اور میت کے لیے دعا",
+        titleUr: "تیسری تکبیر اور میت کی دعا",
         contentEn:
             "Say 'Allahu Akbar' and recite the specific supplication for the deceased.",
         contentUr:
-            "تیسری بار 'اللہ اکبر' کہیں اور میت کے لیے یہ مخصوص دعا پڑھیں۔",
+            "تیسری بار 'اللہ اکبر' کہیں اور میت کے لیے یہ مخصوص دعا پڑھیں:",
         arabic:
             "اللَّهُمَّ اغْفِرْ لِحَيِّنَا وَمَيِّتِنَا وَشَاهِدِنَا وَغَائِبِنَا وَصَغِيرِنَا وَكَبِيرِنَا وَذَكَرِنَا وَأُنْثَانَا، اللَّهُمَّ مَنْ أَحْيَيْتَهُ مِنَّا فَأَهْيِهِ عَلَى الْإِسْلَامِ، وَمَنْ تَوَفَّيْتَهُ مِنَّا فَتَوفَّهُ عَلَى الْإِيمَانِ",
         translationEn:
             "O Allah, forgive our living and our dead, those present and those absent, our young and our old, our males and our females. O Allah, whomsoever among us You keep to live, then let him live on Islam, and whomsoever among us You cause to die, then let him die on Iman.",
         translationUr:
             "اے اللہ! ہمارے ہر زندہ اور مردہ، حاضر اور غائب، چھوٹے اور بڑے، اور مرد اور عورت کی مغفرت فرما۔ اے اللہ! ہم میں سے تو جس کو زندہ رکھے اسے اسلام پر زندہ رکھ اور جسے موت دے اسے ایمان پر موت دے۔",
-        reference: "Sunan Abu Dawud: 3201, Jami' at-Tirmidhi: 1024 ",
+        reference: "Sunan Abu Dawud: 3201, Jami' at-Tirmidhi: 1024",
       ),
 
       GuideStep(
@@ -68,17 +66,15 @@ class JanazaData {
         titleEn: "Fourth Takbeer & Salam",
         titleUr: "چوتھی تکبیر اور سلام",
         contentEn:
-            "Say 'Allahu Akbar'. pause briefly and then perform Salam, turning the head to the right.",
+            "Say 'Allahu Akbar', pause briefly, and then perform Salam to the right and left.",
         contentUr:
-            "چوتھی بار 'اللہ اکبر' کہیں۔  تھوڑا سا توقف کریں اور پھر دائیں  طرف سلام پھیر دیں۔",
+            "چوتھی بار 'اللہ اکبر' کہیں۔ تھوڑا سا توقف کریں اور پھر دائیں اور بائیں طرف سلام پھیر دیں۔",
         reference: "",
       ),
     ];
   }
 
   static List<GuideStep> getChildSteps(bool isBoy, String madhab) {
-    bool isHanafi = madhab == 'hanafi';
-
     return [
       GuideStep(
         stepNumber: "1",
@@ -92,30 +88,38 @@ class JanazaData {
       ),
       GuideStep(
         stepNumber: "2",
-        titleEn: "First Takbeer & Fatiha",
-        titleUr: "پہلی تکبیر اور سورۃ الفاتحہ",
+        titleEn: "First Takbeer, Sana & Surah Al-Fatiha",
+        titleUr: "پہلی تکبیر، ثناء، تعوذ، تسمیہ اور سورۃ الفاتحہ",
         contentEn:
-            "Say 'Allahu Akbar' and fold your hands. Recite Surah Al-Fatihah:",
+            "Say 'Allahu Akbar' and fold your hands. Recite Sana (Praise of Allah), Ta'awwuz (Seeking Refuge), Bismillah, and Surah Al-Fatihah:",
         contentUr:
-            "ہاتھ اٹھا کر 'اللہ اکبر' کہیں اور ہاتھ باندھ کر سورۃ الفاتحہ پڑھیں",
+            "ہاتھ اٹھا کر 'اللہ اکبر' کہیں اور ہاتھ باندھ کر ثناء، تعوذ، تسمیہ اور سورۃ الفاتحہ پڑھیں:",
         arabic:
-            "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ ۝ الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ ۝ الرَّحْمَنِ الرَّحِيمِ ۝ مَالِكِ يَوْمِ الدِّينِ ۝ إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ ۝ اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ ۝ صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ",
-        reference: "Sahih al-Bukhari: 1335",
+            "سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ، وَتَبَارَكَ اسْمُكَ، وَتَعَالَى جَدُّكَ، وَجَلَّ ثَنَاؤُكَ، وَلَا إِلَهَ غَيْرُكَ ۝\n\nأَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ ۝\n\nبِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ ۝\n\nالْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ ۝ الرَّحْمَنِ الرَّحِيمِ ۝ مَالِكِ يَوْمِ الدِّينِ ۝ إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ ۝ اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ ۝ صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ",
+        translationEn:
+            "Glory be to You, O Allah, and praise be to You, blessed is Your name, exalted is Your majesty, glorified is Your praise, and there is no deity worthy of worship except You.\n\nI seek refuge in Allah from Satan, the rejected.\n\nIn the name of Allah, the Most Gracious, the Most Merciful.\n\nAll praise is due to Allah, Lord of the worlds. The Most Gracious, the Most Merciful. Master of the Day of Judgment. You alone we worship and You alone we ask for help. Guide us to the straight path. The path of those upon whom You have bestowed favor, not of those who have evoked [Your] anger or of those who are astray.",
+        translationUr:
+            "پاک ہے تو اے اللہ! اپنی تعریف کے ساتھ، اور بابرکت ہے تیرا نام، اور بلند ہے تیری شان، اور جلالی ہے تیری ثناء، اور تیرے سوا کوئی معبود نہیں ۝\n\nمیں پناہ مانگتا ہوں اللہ کی شیطان مردود سے ۝\n\nاللہ کے نام سے شروع جو بڑا مہربان نہایت رحم والا ہے ۝\n\nسب تعریفیں اللہ ہی کے لیے ہیں جو تمام جہانوں کا رب ہے ۝ بڑا مہربان نہایت رحم والا ہے ۝ سزا و جزا کے دن کا مالک ہے ۝ ہم صرف تیری ہی عبادت کرتے ہیں اور تجھ ہی سے مدد مانگتے ہیں ۝ ہمیں سیدھے راستے کی ہدایت فرما ۝ ان لوگوں کا راستہ جن پر تو نے انعام کیا، نہ کہ ان کا جن پر غضب ہوا اور نہ گمراہوں کا۔",
+        reference: "Sahih al-Bukhari: 1335, Sunan an-Nasa'i: 1989",
       ),
       GuideStep(
         stepNumber: "3",
-        titleEn: "Second Takbeer",
-        titleUr: "دوسری تکبیر",
+        titleEn: "Second Takbeer & Durood Ibrahim",
+        titleUr: "دوسری تکبیر اور درودِ ابراہیم",
         contentEn: "Say 'Allahu Akbar' and recite 'Durood-e-Ibrahim'.",
-        contentUr: "دوسری بار 'اللہ اکبر' کہیں اور درودِ ابراہیم پڑھیں۔",
+        contentUr: "دوسری بار 'اللہ اکبر' کہیں اور درودِ ابراہیم پڑھیں:",
         arabic:
             "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ كَمَا صَلَّيْتَ عَلَى إِبْرَاهِيمَ وَعَلَى آلِ إِبْرَاهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ، اللَّهُمَّ بَارِكْ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ كَمَا بَارَكْتَ عَلَى إِبْرَاهِيمَ وَعَلَى آلِ إِبْرَاهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ",
+        translationEn:
+            "O Allah, let Your Peace come upon Muhammad and the family of Muhammad, as You have brought peace to Ibrahim and his family. Truly, You are Praiseworthy and Glorious. O Allah, bless Muhammad and the family of Muhammad, as You have blessed Ibrahim and his family. Truly, You are Praiseworthy and Glorious.",
+        translationUr:
+            "اے اللہ! محمد ﷺ اور ان کی آل پر رحمتیں نازل فرما، جس طرح تو نے ابراہیم ؑ اور ان کی آل پر رحمتیں نازل فرمائیں، بے شک تو تعریف کے لائق اور بڑی شان والا ہے۔ اے اللہ! محمد ﷺ اور ان کی آل پر برکتیں نازل فرما، جس طرح تو نے ابراہیم ؑ اور ان کی آل پر برکتیں نازل فرمائیں، بے شک تو تعریف کے لائق اور بڑی شان والا ہے۔",
         reference: "Sahih al-Bukhari: 3370",
       ),
       GuideStep(
         stepNumber: "4",
         titleEn: "Third Takbeer & Child Dua",
-        titleUr: "تیسری تکبیر اور مخصوص دعا",
+        titleUr: "تیسری تکبیر اور نابالغ کی دعا",
         contentEn:
             "Say 'Allahu Akbar' and recite the specific dua for a child:",
         contentUr: "تیسری بار 'اللہ اکبر' کہیں اور نابالغ کے لیے یہ دعا پڑھیں:",
@@ -128,16 +132,16 @@ class JanazaData {
         translationUr: isBoy
             ? "اے اللہ! اس بچے کو ہمارے لیے آگے پہنچ کر سامانِ راحت بننے والا بنا، اور اس کو ہمارے لیے اجر اور ذخیرہ بنا، اور اس کو ہمارے لیے شفاعت کرنے والا بنا جس کی شفاعت قبول کی جائے۔"
             : "اے اللہ! اس بچی کو ہمارے لیے آگے پہنچ کر سامانِ راحت بننے والی بنا، اور اس کو ہمارے لیے اجر اور ذخیرہ بنا، اور اس کو ہمارے لیے شفاعت کرنے والی بنا جس کی شفاعت قبول کی جائے۔",
-        reference: "Sunan Abu Dawood 3180",
+        reference: "Sunan Abu Dawud: 3180",
       ),
       GuideStep(
         stepNumber: "5",
         titleEn: "Fourth Takbeer & Salam",
         titleUr: "چوتھی تکبیر اور سلام",
         contentEn:
-            "Say 'Allahu Akbar'. No additional dua is recited in the Hanafi school; pause briefly and perform Salam to the right and then to the left.",
+            "Say 'Allahu Akbar', pause briefly, and perform Salam to the right and to the left.",
         contentUr:
-            "چوتھی بار 'اللہ اکبر' کہیں۔ حنفی مسلک میں کوئی اضافی دعا نہیں پڑھی جاتی؛ تھوڑا توقف کریں اور دائیں بائیں سلام پھیر دیں۔",
+            "چوتھی بار 'اللہ اکبر' کہیں۔ تھوڑا توقف کریں اور دائیں و بائیں سلام پھیر دیں۔",
         reference: "",
       ),
     ];
