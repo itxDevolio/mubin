@@ -99,19 +99,7 @@ class QuranHomeScreen extends ConsumerWidget {
 
               const SizedBox(height: 30),
 
-              Text(
-                isUrdu ? 'قرآن کریم دریافت کریں' : 'Explore Quran',
-                textAlign: isUrdu ? TextAlign.right : TextAlign.left,
-                style: TextStyle(
-                  fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
-                  fontSize: isUrdu ? 17 : 18,
-                  fontWeight: FontWeight.bold,
-                  color: isDark
-                      ? AppColors.textPrimaryDark
-                      : AppColors.textPrimaryLight,
-                ),
-              ),
-              const SizedBox(height: 16),
+
 
               // Grid Menu
               LayoutBuilder(

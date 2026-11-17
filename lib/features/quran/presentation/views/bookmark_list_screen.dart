@@ -146,7 +146,9 @@ class BookmarkListScreen extends ConsumerWidget {
                       // Text Content (Title & Subtitle Info)
                       Expanded(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: isUrdu
+                              ? CrossAxisAlignment.end
+                              : CrossAxisAlignment.start,
                           children: [
                             Text(
                               hasCustomName

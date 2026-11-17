@@ -70,6 +70,8 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
                   .read(surahJuzControllerProvider.notifier)
                   .searchSurah(val),
               textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
+              textAlign: isUrdu ? TextAlign.right : TextAlign.left,
+              cursorColor: AppColors.primaryTeal,
               style: TextStyle(
                 fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
                 color: isDark
@@ -78,7 +80,7 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
                 fontSize: 14,
               ),
               decoration: InputDecoration(
-                hintText: isUrdu ? 'سورت کا نام تلاش کریں...' : 'Search Surah...',
+                hintText: isUrdu ? 'سورت تلاش کریں' : 'Search Surah',
                 hintStyle: TextStyle(
                   fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
                   color: isDark
@@ -223,7 +225,9 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
                             // Surah Details
                             Expanded(
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: isUrdu
+                                    ? CrossAxisAlignment.end
+                                    : CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     isUrdu ? surah.nameArabic : surah.nameEnglish,

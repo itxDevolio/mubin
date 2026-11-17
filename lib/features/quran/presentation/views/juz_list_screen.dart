@@ -71,6 +71,8 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
             child: TextField(
               onChanged: (val) => setState(() => _searchQuery = val),
               textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
+              textAlign: isUrdu ? TextAlign.right : TextAlign.left,
+              cursorColor: AppColors.primaryTeal,
               style: TextStyle(
                 fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
                 color: isDark
@@ -79,7 +81,7 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
                 fontSize: 14,
               ),
               decoration: InputDecoration(
-                hintText: isUrdu ? 'پارہ تلاش کریں...' : 'Search Juz / Para...',
+                hintText: isUrdu ? 'پارہ تلاش کریں' : 'Search Juz',
                 hintStyle: TextStyle(
                   fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
                   color: isDark
@@ -255,47 +257,37 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
 
                                   // Text Content Area
                                   Expanded(
-                                    child: isUrdu
-                                        ? Text(
-                                            juzArabicName,
-                                            style: TextStyle(
-                                              fontFamily: 'Amiri',
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                              color: isDark
-                                                  ? AppColors.textPrimaryDark
-                                                  : AppColors.textPrimaryLight,
-                                            ),
-                                          )
-                                        : Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                juzEnglishName,
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 16,
-                                                  color: isDark
-                                                      ? AppColors.textPrimaryDark
-                                                      : AppColors.textPrimaryLight,
-                                                  letterSpacing: 0.2,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 4),
-                                              Text(
-                                                "Juz $juzNumber",
-                                                style: TextStyle(
-                                                  fontFamily: 'Poppins',
-                                                  fontSize: 12,
-                                                  color: isDark
-                                                      ? AppColors.textSecondaryDark
-                                                      : AppColors.textSecondaryLight,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ],
+                                    child: Column(
+                                      crossAxisAlignment: isUrdu
+                                          ? CrossAxisAlignment.end
+                                          : CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          isUrdu ? juzArabicName : juzEnglishName,
+                                          style: TextStyle(
+                                            fontFamily: isUrdu ? 'Amiri' : 'Poppins',
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: isUrdu ? 20 : 16,
+                                            color: isDark
+                                                ? AppColors.textPrimaryDark
+                                                : AppColors.textPrimaryLight,
+                                            letterSpacing: isUrdu ? 0 : 0.2,
                                           ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          isUrdu ? "پارہ $juzNumber" : "Juz $juzNumber",
+                                          style: TextStyle(
+                                            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                                            fontSize: isUrdu ? 11 : 12,
+                                            color: isDark
+                                                ? AppColors.textSecondaryDark
+                                                : AppColors.textSecondaryLight,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
 
                                   if (!isUrdu) ...[

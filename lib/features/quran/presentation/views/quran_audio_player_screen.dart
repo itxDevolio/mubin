@@ -75,6 +75,8 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
                   .read(surahJuzControllerProvider.notifier)
                   .searchSurah(val),
               textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
+              textAlign: isUrdu ? TextAlign.right : TextAlign.left,
+              cursorColor: AppColors.primaryTeal,
               style: TextStyle(
                 fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
                 color: isDark
@@ -83,7 +85,7 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
                 fontSize: 14,
               ),
               decoration: InputDecoration(
-                hintText: isUrdu ? 'سورت تلاش کریں...' : 'Search Surah...',
+                hintText: isUrdu ? 'سورت تلاش کریں' : 'Search Surah',
                 hintStyle: TextStyle(
                   fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
                   color: isDark
@@ -214,79 +216,66 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
                         borderRadius: BorderRadius.circular(12),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
-                            vertical: 14.0,
+                            vertical: 12.0,
                             horizontal: 4.0,
                           ),
                           child: Row(
                             textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
                             children: [
+                              // Number Badge
                               Container(
                                 width: 40,
                                 height: 40,
                                 decoration: BoxDecoration(
                                   color: isCurrent
-                                      ? AppColors.primaryTeal.withAlpha(30)
+                                      ? AppColors.primaryTeal.withValues(alpha: 0.12)
                                       : (isDark
-                                            ? AppColors.surfaceDark
-                                            : AppColors.primaryTeal.withAlpha(10)),
-                                  shape: BoxShape.circle,
+                                            ? AppColors.primaryTeal.withValues(alpha: 0.12)
+                                            : AppColors.primaryTeal.withValues(alpha: 0.08)),
+                                  borderRadius: BorderRadius.circular(12),
                                   border: Border.all(
                                     color: isCurrent
                                         ? AppColors.primaryTeal
-                                        : Colors.transparent,
-                                    width: 1,
+                                        : AppColors.primaryTeal.withValues(alpha: 0.2),
+                                    width: isCurrent ? 1.5 : 1,
                                   ),
                                 ),
                                 alignment: Alignment.center,
-                                child: isCurrent && audioState.isLoading
-                                    ? const SizedBox(
-                                        width: 20,
-                                        height: 20,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          color: AppColors.primaryTeal,
-                                        ),
-                                      )
-                                    : Icon(
-                                        isCurrent && audioState.isPlaying
-                                            ? Icons.pause_rounded
-                                            : Icons.play_arrow_rounded,
-                                        color: isCurrent
-                                            ? AppColors.primaryTeal
-                                            : (isDark
-                                                  ? AppColors
-                                                        .textSecondaryDark
-                                                  : AppColors
-                                                        .textSecondaryLight),
-                                        size: 24,
-                                      ),
+                                child: Text(
+                                  '${surah.number}',
+                                  style: const TextStyle(
+                                    color: AppColors.primaryTeal,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
+                                ),
                               ),
                               const SizedBox(width: 16),
                               Expanded(
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: isUrdu
+                                      ? CrossAxisAlignment.end
+                                      : CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       isUrdu ? surah.nameArabic : surah.nameEnglish,
                                       style: TextStyle(
                                         fontFamily: isUrdu ? 'Amiri' : 'Poppins',
-                                        fontWeight: isCurrent
-                                            ? FontWeight.bold
-                                            : FontWeight.w600,
-                                        fontSize: isUrdu ? 18 : 15,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: isUrdu ? 20 : 16,
                                         color: isCurrent
                                             ? AppColors.primaryTeal
                                             : (isDark
                                                   ? AppColors.textPrimaryDark
-                                                  : AppColors
-                                                        .textPrimaryLight),
+                                                  : AppColors.textPrimaryLight),
+                                        letterSpacing: isUrdu ? 0 : 0.2,
                                       ),
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
                                       isUrdu
-                                          ? '$revelationPlace • $totalVerses آیات'
-                                          : '$totalVerses Verses • $rawRevelation',
+                                          ? "$revelationPlace • $totalVerses آیات"
+                                          : "$revelationPlace • $totalVerses Verses",
                                       style: TextStyle(
                                         fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
                                         fontSize: isUrdu ? 11 : 12,
@@ -299,7 +288,15 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
                                   ],
                                 ),
                               ),
-                              // Download Status
+                              if (isCurrent)
+                                const Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: Icon(
+                                    Icons.volume_up_rounded,
+                                    color: AppColors.primaryTeal,
+                                    size: 22,
+                                  ),
+                                ),
                               if (isDownloading)
                                 SizedBox(
                                   width: 24,
@@ -313,15 +310,6 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
                                         color: AppColors.primaryTeal,
                                         backgroundColor: AppColors.primaryTeal.withAlpha(30),
                                       ),
-                                      if (downloadProgress > 0)
-                                        Text(
-                                          '${(downloadProgress * 100).toStringAsFixed(0)}%',
-                                          style: const TextStyle(
-                                            fontSize: 8,
-                                            color: AppColors.primaryTeal,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
                                     ],
                                   ),
                                 )
@@ -347,22 +335,6 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
                                       ? Colors.white54
                                       : Colors.black54,
                                 ),
-                              if (!isUrdu) ...[
-                                const SizedBox(width: 12),
-                                Text(
-                                  surah.nameArabic,
-                                  style: TextStyle(
-                                    fontFamily: 'Amiri',
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w500,
-                                    color: isCurrent
-                                        ? AppColors.accentGold
-                                        : (isDark
-                                              ? AppColors.textPrimaryDark
-                                              : AppColors.primaryTeal),
-                                  ),
-                                ),
-                              ],
                             ],
                           ),
                         ),
