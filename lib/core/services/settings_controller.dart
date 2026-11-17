@@ -12,6 +12,7 @@ class SettingsState {
   final String language;
   final Reciter currentReciter;
   final bool keepPlayingInBackground;
+  final bool enableTafseer;
   final String madhab; // 'hanafi' or 'shafi'
   final ThemeMode themeMode;
   final String calculationMethod; 
@@ -35,6 +36,7 @@ class SettingsState {
     this.language = 'en',
     Reciter? currentReciter,
     this.keepPlayingInBackground = false,
+    this.enableTafseer = false,
     this.madhab = 'hanafi',
     this.themeMode = ThemeMode.system,
     this.calculationMethod = 'karachi',
@@ -55,6 +57,7 @@ class SettingsState {
     String? language,
     Reciter? currentReciter,
     bool? keepPlayingInBackground,
+    bool? enableTafseer,
     String? madhab,
     ThemeMode? themeMode,
     String? calculationMethod,
@@ -74,6 +77,7 @@ class SettingsState {
       language: language ?? this.language,
       currentReciter: currentReciter ?? this.currentReciter,
       keepPlayingInBackground: keepPlayingInBackground ?? this.keepPlayingInBackground,
+      enableTafseer: enableTafseer ?? this.enableTafseer,
       madhab: madhab ?? this.madhab,
       themeMode: themeMode ?? this.themeMode,
       calculationMethod: calculationMethod ?? this.calculationMethod,
@@ -99,6 +103,7 @@ class SettingsController extends Notifier<SettingsState> {
 
     final String lang = box.get('language', defaultValue: 'en');
     final bool keepBg = box.get('keepPlayingInBackground', defaultValue: false);
+    final bool tafseerEnabled = box.get('enableTafseer', defaultValue: false);
     final String madhab = box.get('madhab', defaultValue: 'hanafi');
     final String calcMethod = box.get('calculationMethod', defaultValue: 'karachi');
     final String? reciterName = box.get('reciterName');
@@ -132,6 +137,7 @@ class SettingsController extends Notifier<SettingsState> {
       language: lang,
       currentReciter: reciter,
       keepPlayingInBackground: keepBg,
+      enableTafseer: tafseerEnabled,
       madhab: madhab,
       themeMode: themeMode,
       calculationMethod: calcMethod,
@@ -239,6 +245,12 @@ class SettingsController extends Notifier<SettingsState> {
     final box = Hive.box(DbConstants.appBox);
     await box.put('keepPlayingInBackground', value);
     state = state.copyWith(keepPlayingInBackground: value);
+  }
+
+  Future<void> setEnableTafseer(bool value) async {
+    final box = Hive.box(DbConstants.appBox);
+    await box.put('enableTafseer', value);
+    state = state.copyWith(enableTafseer: value);
   }
 }
 

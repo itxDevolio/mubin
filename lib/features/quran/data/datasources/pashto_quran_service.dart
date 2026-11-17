@@ -1,0 +1,1 @@
+// Removed Pashto Quran Service

@@ -1,5 +1,6 @@
 import 'package:mubin/core/app_colors.dart';
 import 'package:mubin/core/services/settings_controller.dart';
+import 'package:mubin/core/services/tafseer_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quran/quran.dart' as quran;
@@ -30,8 +31,18 @@ class VerseBottomSheet extends ConsumerWidget {
     final isLoadingThis =
         audioState.isLoading && audioState.playingVerseId == verse.id;
 
+    final tafseerAsync = settings.enableTafseer
+        ? ref.watch(
+            verseTafseerProvider((
+              surahNumber: verse.surahNumber,
+              verseNumber: verse.verseNumber,
+              language: settings.language,
+            )),
+          )
+        : null;
+
     return DraggableScrollableSheet(
-      initialChildSize: 0.45,
+      initialChildSize: settings.enableTafseer ? 0.6 : 0.45,
       minChildSize: 0.3,
       maxChildSize: 0.9,
       expand: false,
@@ -66,18 +77,24 @@ class VerseBottomSheet extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Surah ${quran.getSurahName(verse.surahNumber)}',
+                          isUrdu
+                              ? 'سورہ ${quran.getSurahNameArabic(verse.surahNumber)}'
+                              : 'Surah ${quran.getSurahName(verse.surahNumber)}',
                           style: TextStyle(
+                            fontFamily: isUrdu ? 'Amiri' : 'Poppins',
                             fontWeight: FontWeight.bold,
-                            fontSize: 18,
+                            fontSize: isUrdu ? 20 : 18,
                             color: Theme.of(
                               context,
                             ).textTheme.titleLarge?.color,
                           ),
                         ),
                         Text(
-                          'Verse ${verse.verseNumber}',
+                          isUrdu
+                              ? 'آیت ${verse.verseNumber}'
+                              : 'Verse ${verse.verseNumber}',
                           style: TextStyle(
+                            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
                             fontSize: 14,
                             color: isDark ? Colors.white60 : Colors.black54,
                           ),
@@ -173,8 +190,9 @@ class VerseBottomSheet extends ConsumerWidget {
               const Divider(),
               const SizedBox(height: 12),
               Text(
-                'Translation:',
+                isUrdu ? 'ترجمہ:' : 'Translation:',
                 style: TextStyle(
+                  fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
                   fontSize: 12,
                   color: isDark
                       ? AppColors.textSecondaryDark
@@ -184,7 +202,9 @@ class VerseBottomSheet extends ConsumerWidget {
               const SizedBox(height: 8),
               Text(
                 verse.translation,
-                textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
+                textDirection: isUrdu
+                    ? TextDirection.rtl
+                    : TextDirection.ltr,
                 style: isUrdu
                     ? TextStyle(
                         fontFamily: 'NotoNastaliqUrdu',
@@ -200,6 +220,73 @@ class VerseBottomSheet extends ConsumerWidget {
                       ),
               ),
               const SizedBox(height: 24),
+              if (settings.enableTafseer && tafseerAsync != null) ...[
+                const Divider(),
+                const SizedBox(height: 12),
+                Text(
+                  isUrdu ? 'تفسیر (تذکیر القرآن):' : 'Tafseer (Tazkirul Quran):',
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryTeal,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                tafseerAsync.when(
+                  data: (tafseerText) {
+                    if (tafseerText == null || tafseerText.isEmpty) {
+                      return Text(
+                        isUrdu
+                            ? 'اس آیت کے لیے تفسیر دستیاب نہیں ہے۔'
+                            : 'No Tafseer available for this verse.',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: isDark ? Colors.white54 : Colors.black54,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      );
+                    }
+                    return Text(
+                      tafseerText,
+                      textDirection: isUrdu
+                          ? TextDirection.rtl
+                          : TextDirection.ltr,
+                      style: isUrdu
+                          ? TextStyle(
+                              fontFamily: 'NotoNastaliqUrdu',
+                              fontSize: 13,
+                              height: 2.2,
+                              color: Theme.of(context).textTheme.bodyLarge?.color,
+                            )
+                          : TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 13,
+                              height: 1.6,
+                              color: Theme.of(context).textTheme.bodyLarge?.color,
+                            ),
+                    );
+                  },
+                  loading: () => const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppColors.primaryTeal,
+                      ),
+                    ),
+                  ),
+                  error: (err, stack) => Text(
+                    isUrdu
+                        ? 'تفسیر لوڈ کرنے میں مسئلہ پیش آیا۔'
+                        : 'Error loading Tafseer.',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.redAccent,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+              ],
             ],
           ),
         );
@@ -212,16 +299,31 @@ class VerseBottomSheet extends ConsumerWidget {
     WidgetRef ref,
     Verse verse,
   ) {
+    final settings = ref.read(settingsControllerProvider);
+    final isUrdu = settings.language == 'ur';
     final controller = TextEditingController();
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Save Bookmark'),
+        title: Text(
+          isUrdu ? 'بک مارک محفوظ کریں' : 'Save Bookmark',
+          style: TextStyle(
+            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         content: TextField(
           controller: controller,
+          textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
+          style: TextStyle(
+            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+          ),
           decoration: InputDecoration(
-            hintText: 'Enter title',
+            hintText: isUrdu ? 'عنوان درج کریں' : 'Enter title',
+            hintStyle: TextStyle(
+              fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+            ),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -233,12 +335,20 @@ class VerseBottomSheet extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
+            child: Text(
+              isUrdu ? 'منسوخ کریں' : 'Cancel',
+              style: TextStyle(
+                fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                color: Colors.grey,
+              ),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
               final namedVerse = verse.copyWith(
-                bookmarkName: controller.text.trim(),
+                bookmarkName: controller.text.trim().isEmpty
+                    ? null
+                    : controller.text.trim(),
               );
               ref
                   .read(bookmarkControllerProvider.notifier)
@@ -252,7 +362,12 @@ class VerseBottomSheet extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
-            child: const Text('Save'),
+            child: Text(
+              isUrdu ? 'محفوظ کریں' : 'Save',
+              style: TextStyle(
+                fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+              ),
+            ),
           ),
         ],
       ),

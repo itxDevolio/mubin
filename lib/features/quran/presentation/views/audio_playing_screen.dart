@@ -1,5 +1,6 @@
 import 'package:mubin/core/app_colors.dart';
 import 'package:mubin/core/services/haptic_feedback.dart';
+import 'package:mubin/core/services/settings_controller.dart';
 import 'package:mubin/features/quran/domain/entities/reciter.dart';
 import 'package:mubin/features/quran/presentation/controllers/quran_audio_player_controller.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,8 @@ class AudioPlayingScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final audioState = ref.watch(quranAudioPlayerControllerProvider);
+    final settings = ref.watch(settingsControllerProvider);
+    final isUrdu = settings.language == 'ur';
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     if (audioState.currentSurahNumber == null &&
@@ -44,8 +47,9 @@ class AudioPlayingScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                "No audio playing",
+                isUrdu ? 'کوئی آڈیو نہیں چل رہی' : "No audio playing",
                 style: TextStyle(
+                  fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
                   color: isDark ? Colors.white60 : Colors.black54,
                   fontSize: 16,
                 ),
@@ -54,7 +58,10 @@ class AudioPlayingScreen extends ConsumerWidget {
               ElevatedButton.icon(
                 onPressed: () => Navigator.pop(context),
                 icon: const Icon(Icons.arrow_back),
-                label: const Text("Browse Surahs"),
+                label: Text(
+                  isUrdu ? 'سورتیں دیکھیں' : "Browse Surahs",
+                  style: TextStyle(fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins'),
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryTeal,
                   foregroundColor: Colors.white,
@@ -67,8 +74,10 @@ class AudioPlayingScreen extends ConsumerWidget {
     }
 
     final String surahName = audioState.currentSurahNumber != null
-        ? quran.getSurahNameEnglish(audioState.currentSurahNumber!)
-        : "Verse Audio";
+        ? (isUrdu
+            ? quran.getSurahNameArabic(audioState.currentSurahNumber!)
+            : quran.getSurahNameEnglish(audioState.currentSurahNumber!))
+        : (isUrdu ? 'آیت کی آڈیو' : "Verse Audio");
 
     final String surahArabic = audioState.currentSurahNumber != null
         ? quran.getSurahNameArabic(audioState.currentSurahNumber!)
@@ -101,7 +110,8 @@ class AudioPlayingScreen extends ConsumerWidget {
         title: Text(
           surahName,
           style: TextStyle(
-            fontSize: 16,
+            fontFamily: isUrdu ? 'Amiri' : 'Poppins',
+            fontSize: isUrdu ? 18 : 16,
             fontWeight: FontWeight.w600,
             color: isDark ? Colors.white : Colors.black87,
           ),
@@ -114,8 +124,8 @@ class AudioPlayingScreen extends ConsumerWidget {
           if (audioState.currentAudioUrl != null)
             Tooltip(
               message: audioState.isPlayingFromLocal 
-                  ? "Playing from device storage" 
-                  : "Streaming from internet",
+                  ? (isUrdu ? 'ڈیوائس اسٹوریج سے چل رہا ہے' : "Playing from device storage")
+                  : (isUrdu ? 'انٹرنیٹ سے اسٹریمنگ ہو رہی ہے' : "Streaming from internet"),
               child: Padding(
                 padding: const EdgeInsets.only(right: 8.0),
                 child: Icon(
@@ -139,8 +149,8 @@ class AudioPlayingScreen extends ConsumerWidget {
                   : (isDark ? Colors.white60 : Colors.black54),
             ),
             tooltip: audioState.keepPlayingInBackground 
-                ? "Background play enabled" 
-                : "Background play disabled",
+                ? (isUrdu ? 'بیک گراؤنڈ پلے فعال ہے' : "Background play enabled")
+                : (isUrdu ? 'بیک گراؤنڈ پلے غیر فعال ہے' : "Background play disabled"),
             onPressed: () {
               hapticFeedBack();
               ref
@@ -822,6 +832,8 @@ class AudioPlayingScreen extends ConsumerWidget {
 
   void _showDownloadsInfo(BuildContext context, WidgetRef ref) {
     final audioState = ref.watch(quranAudioPlayerControllerProvider);
+    final settings = ref.watch(settingsControllerProvider);
+    final isUrdu = settings.language == 'ur';
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final surahNumber = audioState.currentSurahNumber;
 
@@ -834,6 +846,7 @@ class AudioPlayingScreen extends ConsumerWidget {
           ),
           backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
           title: Row(
+            textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
             children: [
               Icon(
                 surahNumber != null && audioState.isSurahDownloaded(surahNumber)
@@ -845,9 +858,10 @@ class AudioPlayingScreen extends ConsumerWidget {
               Expanded(
                 child: Text(
                   surahNumber != null && audioState.isSurahDownloaded(surahNumber)
-                      ? "Downloaded"
-                      : "Not Downloaded",
+                      ? (isUrdu ? 'ڈاؤن لوڈ شدہ' : "Downloaded")
+                      : (isUrdu ? 'ڈاؤن لوڈ نہیں ہے' : "Not Downloaded"),
                   style: TextStyle(
+                    fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
                     color: isDark ? Colors.white : Colors.black87,
                     fontWeight: FontWeight.bold,
                   ),
@@ -861,23 +875,30 @@ class AudioPlayingScreen extends ConsumerWidget {
             children: [
               _buildInfoRow(
                 context,
-                "Surah",
-                surahNumber != null ? "Surah $surahNumber" : "N/A",
+                isUrdu ? 'سورہ' : "Surah",
+                surahNumber != null 
+                    ? (isUrdu ? 'سورہ $surahNumber' : "Surah $surahNumber") 
+                    : "N/A",
                 isDark,
+                isUrdu,
               ),
               const SizedBox(height: 8),
               _buildInfoRow(
                 context,
-                "Reciter",
+                isUrdu ? 'قاری' : "Reciter",
                 audioState.currentReciter.name,
                 isDark,
+                isUrdu,
               ),
               const SizedBox(height: 8),
               _buildInfoRow(
                 context,
-                "Status",
-                audioState.isPlayingFromLocal ? "Playing from device" : "Streaming online",
+                isUrdu ? 'حالت' : "Status",
+                audioState.isPlayingFromLocal 
+                    ? (isUrdu ? 'ڈیوائس سے چل رہا ہے' : "Playing from device") 
+                    : (isUrdu ? 'آن لائن اسٹریمنگ' : "Streaming online"),
                 isDark,
+                isUrdu,
               ),
               if (surahNumber != null && audioState.isSurahDownloaded(surahNumber)) ...[
                 const SizedBox(height: 16),
@@ -888,11 +909,14 @@ class AudioPlayingScreen extends ConsumerWidget {
                         .deleteDownloadedSurah(surahNumber);
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Downloaded surah deleted")),
+                      SnackBar(content: Text(isUrdu ? 'ڈاؤن لوڈ کردہ سورت حذف کر دی گئی' : "Downloaded surah deleted")),
                     );
                   },
                   icon: const Icon(Icons.delete_outline),
-                  label: const Text("Delete Download"),
+                  label: Text(
+                    isUrdu ? 'ڈاؤن لوڈ حذف کریں' : "Delete Download",
+                    style: TextStyle(fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins'),
+                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
                     foregroundColor: Colors.white,
@@ -905,8 +929,11 @@ class AudioPlayingScreen extends ConsumerWidget {
             TextButton(
               onPressed: () => Navigator.pop(context),
               child: Text(
-                "Close",
-                style: TextStyle(color: isDark ? Colors.white60 : Colors.black54),
+                isUrdu ? 'بند کریں' : "Close",
+                style: TextStyle(
+                  fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                  color: isDark ? Colors.white60 : Colors.black54,
+                ),
               ),
             ),
           ],
@@ -915,13 +942,15 @@ class AudioPlayingScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildInfoRow(BuildContext context, String label, String value, bool isDark) {
+  Widget _buildInfoRow(BuildContext context, String label, String value, bool isDark, bool isUrdu) {
     return Row(
+      textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           label,
           style: TextStyle(
+            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
             color: isDark ? Colors.white60 : Colors.black54,
             fontWeight: FontWeight.w500,
           ),
@@ -929,6 +958,7 @@ class AudioPlayingScreen extends ConsumerWidget {
         Text(
           value,
           style: TextStyle(
+            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
             color: isDark ? Colors.white : Colors.black87,
             fontWeight: FontWeight.w600,
           ),

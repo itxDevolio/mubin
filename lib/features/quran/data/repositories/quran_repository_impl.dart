@@ -102,17 +102,19 @@ class QuranRepositoryImpl implements QuranRepository {
         final int end = data['end'] as int;
 
         for (int v = start; v <= end; v++) {
+          final String translationText = quran.getVerseTranslation(
+            surah,
+            v,
+            translation: translationType,
+          );
+
           verses.add(
             Verse(
               id: surah * 1000 + v,
               surahNumber: surah,
               verseNumber: v,
               textArabic: quran.getVerse(surah, v, verseEndSymbol: true),
-              translation: quran.getVerseTranslation(
-                surah,
-                v,
-                translation: translationType,
-              ),
+              translation: translationText,
               audioUrl: quran.getAudioURLByVerse(surah, v),
               juzNumber: quran.getJuzNumber(surah, v),
               pageNumber: quran.getPageNumber(surah, v),

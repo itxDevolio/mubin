@@ -59,6 +59,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/app_logos/
+    - assets/tafseer/
 
   fonts:
     - family: Poppins

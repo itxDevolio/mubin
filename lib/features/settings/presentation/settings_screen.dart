@@ -76,7 +76,9 @@ class SettingsScreen extends ConsumerWidget {
               _buildSettingsTile(
                 icon: Icons.translate_rounded,
                 title: 'App Language',
-                subtitle: settings.language == 'en' ? 'English' : 'Urdu (اردو)',
+                subtitle: settings.language == 'en'
+                    ? 'English'
+                    : 'Urdu (اردو)',
                 isDark: isDark,
                 onTap: () =>
                     _showLanguageDialog(context, ref, settings.language),
@@ -146,6 +148,23 @@ class SettingsScreen extends ConsumerWidget {
                     ref
                         .read(settingsControllerProvider.notifier)
                         .setKeepPlayingInBackground(val);
+                  },
+                ),
+              ),
+              _buildDivider(isDark),
+              _buildSettingsTile(
+                icon: Icons.menu_book_rounded,
+                title: 'Enable Tafseer',
+                subtitle: 'Show detailed Tafseer in verse view',
+                isDark: isDark,
+                trailing: CupertinoSwitch(
+                  value: settings.enableTafseer,
+                  activeTrackColor: AppColors.primaryTeal,
+                  onChanged: (val) {
+                    hapticFeedBack();
+                    ref
+                        .read(settingsControllerProvider.notifier)
+                        .setEnableTafseer(val);
                   },
                 ),
               ),

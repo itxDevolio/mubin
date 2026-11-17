@@ -6,6 +6,11 @@ import 'quran_di_providers.dart';
 class MushafController extends Notifier<Map<int, AsyncValue<List<Verse>>>> {
   @override
   Map<int, AsyncValue<List<Verse>>> build() {
+    ref.listen(settingsControllerProvider, (previous, next) {
+      if (previous?.language != next.language) {
+        state = const {};
+      }
+    });
     return const {};
   }
 

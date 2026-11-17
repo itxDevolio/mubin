@@ -118,10 +118,10 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
                   Expanded(
                     child: Text(
                       isUrdu 
-                        ? "پارہ ${_getJuz(_currentPage)}"
-                        : QuranUtils.juzNamesEnglish[_getJuz(_currentPage) - 1],
+                          ? "پارہ ${_getJuz(_currentPage)}"
+                          : QuranUtils.juzNamesEnglish[_getJuz(_currentPage) - 1],
                       style: TextStyle(
-                        fontSize: isUrdu ? 11 : 11,
+                        fontSize: 11,
                         fontWeight: FontWeight.w600,
                         color: isDark ? Colors.white60 : Colors.black54,
                         fontFamily: isUrdu ? 'NotoNastaliqUrdu' : null,
