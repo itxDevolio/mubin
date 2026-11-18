@@ -17,7 +17,7 @@ class ShifaRepositoryImpl implements ShifaRepository {
   List<ShifaEntity> getDuasByCategory(String categoryId) {
     return ShifaConstants.categories
         .firstWhere((cat) => cat.id == categoryId,
-            orElse: () => ShifaCategory(id: '', titleEn: '', titleUr: '', duas: []))
+            orElse: () => ShifaCategory(id: '', titleEn: '', titleUr: '', titlePs: '', duas: []))
         .duas;
   }
 
@@ -28,8 +28,10 @@ class ShifaRepositoryImpl implements ShifaRepository {
     return ShifaConstants.allDuas.where((dua) {
       return dua.titleEn.toLowerCase().contains(lowerQuery) ||
           dua.titleUr.contains(query) ||
+          dua.titlePs.contains(query) ||
           dua.translationEn.toLowerCase().contains(lowerQuery) ||
-          dua.translationUr.contains(query);
+          dua.translationUr.contains(query) ||
+          dua.translationPs.contains(query);
     }).toList();
   }
 }

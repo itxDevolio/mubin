@@ -26,7 +26,9 @@ class AdhkarHomeScreen extends ConsumerWidget {
           : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-          isUrdu ? "اذکار و تسبیح" : (isPashto ? "اذکار او تسبیح" : "Adhkar & Tasbeeh"),
+          isUrdu
+              ? "اذکار و تسبیح"
+              : (isPashto ? "اذکار او تسبیح" : "Adhkar & Tasbeeh"),
           style: TextStyle(
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
@@ -59,20 +61,9 @@ class AdhkarHomeScreen extends ConsumerWidget {
               const SizedBox(height: 10),
 
               // Featured Card - Minimal & Clean
-              _buildFeaturedCard(context, isRtl, isDark),
+              _buildFeaturedCard(context, isUrdu, isPashto, isRtl, isDark),
 
               const SizedBox(height: 28),
-
-              Text(
-                isUrdu ? "اذکار کی اقسام" : (isPashto ? "د اذکارو کتنه" : "Explore Adhkar"),
-                style: TextStyle(
-                  fontSize: isRtl ? 16 : 18,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
-                  color: isDark ? Colors.white : AppColors.textPrimaryLight,
-                ),
-              ),
-              const SizedBox(height: 16),
 
               // Grid Menu
               GridView.builder(
@@ -87,7 +78,13 @@ class AdhkarHomeScreen extends ConsumerWidget {
                 itemCount: AdhkarConstants.categories.length,
                 itemBuilder: (context, index) {
                   final category = AdhkarConstants.categories[index];
-                  return _buildCategoryCard(context, category, isUrdu, isPashto, isDark);
+                  return _buildCategoryCard(
+                    context,
+                    category,
+                    isUrdu,
+                    isPashto,
+                    isDark,
+                  );
                 },
               ),
               const SizedBox(height: 20),
@@ -100,7 +97,13 @@ class AdhkarHomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildFeaturedCard(BuildContext context, bool isRtl, bool isDark) {
+  Widget _buildFeaturedCard(
+    BuildContext context,
+    bool isUrdu,
+    bool isPashto,
+    bool isRtl,
+    bool isDark,
+  ) {
     return InkWell(
       onTap: () {
         hapticFeedBack();
@@ -154,7 +157,9 @@ class AdhkarHomeScreen extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    isRtl ? "تسبیح کاؤنٹر" : "Tasbeeh Counter",
+                    isUrdu
+                        ? "تسبیح کاؤنٹر"
+                        : (isPashto ? "د تسبیح کاونټر " : "Tasbeeh Counter"),
                     style: TextStyle(
                       color: isDark ? Colors.white : AppColors.textPrimaryLight,
                       fontSize: isRtl ? 15 : 16,
@@ -162,7 +167,6 @@ class AdhkarHomeScreen extends ConsumerWidget {
                       fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
                     ),
                   ),
-
                 ],
               ),
             ),

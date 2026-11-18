@@ -23,7 +23,9 @@ class TasbeehScreen extends ConsumerWidget {
     final notifier = ref.read(tasbeehProvider(dhikrId).notifier);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final settings = ref.watch(settingsControllerProvider);
-    final bool isUrdu = settings.language == 'ur';
+    final isUrdu = settings.language == 'ur';
+    final isPashto = settings.language == 'ps';
+    final isRtl = isUrdu || isPashto;
 
     return Scaffold(
       backgroundColor: isDark
@@ -31,11 +33,13 @@ class TasbeehScreen extends ConsumerWidget {
           : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-          isUrdu ? "تسبیح کاؤنٹر" : "Tasbeeh Counter",
+          isUrdu
+              ? "تسبیح کاؤنٹر"
+              : (isPashto ? "د تسبیح شمیرونکی" : "Tasbeeh Counter"),
           style: TextStyle(
-            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
             fontWeight: FontWeight.bold,
-            fontSize: isUrdu ? 16 : 18,
+            fontSize: isRtl ? 16 : 18,
             color: isDark ? Colors.white : Colors.black87,
           ),
         ),
@@ -57,7 +61,9 @@ class TasbeehScreen extends ConsumerWidget {
               hapticFeedBack();
               notifier.reset();
             },
-            tooltip: isUrdu ? 'ری سیٹ کریں' : 'Reset Count',
+            tooltip: isUrdu
+                ? 'ری سیٹ کریں'
+                : (isPashto ? 'صفر کول' : 'Reset Count'),
           ),
         ],
       ),
@@ -141,7 +147,7 @@ class TasbeehScreen extends ConsumerWidget {
                   const Spacer(flex: 2),
 
                   // Animated Instruction
-                  _buildInstruction(isDark, isUrdu),
+                  _buildInstruction(isDark, isUrdu, isPashto, isRtl),
 
                   const SizedBox(height: 40),
                 ],
@@ -153,7 +159,12 @@ class TasbeehScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildInstruction(bool isDark, bool isUrdu) {
+  Widget _buildInstruction(
+    bool isDark,
+    bool isUrdu,
+    bool isPashto,
+    bool isRtl,
+  ) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -164,13 +175,17 @@ class TasbeehScreen extends ConsumerWidget {
         ),
         const SizedBox(width: 8),
         Text(
-          isUrdu ? "شمار کرنے کے لیے کہیں بھی ٹیپ کریں" : "TAP ANYWHERE TO COUNT",
+          isUrdu
+              ? "شمار کرنے کے لیے کہیں بھی ٹیپ کریں"
+              : (isPashto
+                  ? "د شمیرلو لپاره هرچیرې ټپ کړئ"
+                  : "TAP ANYWHERE TO COUNT"),
           style: TextStyle(
             color: isDark ? Colors.white24 : Colors.black26,
-            letterSpacing: isUrdu ? 0 : 1.5,
+            letterSpacing: isRtl ? 0 : 1.5,
             fontWeight: FontWeight.bold,
-            fontSize: isUrdu ? 12 : 11,
-            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontSize: isRtl ? 12 : 11,
+            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
           ),
         ),
       ],

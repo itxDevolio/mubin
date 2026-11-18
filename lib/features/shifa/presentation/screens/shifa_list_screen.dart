@@ -14,27 +14,43 @@ class ShifaListScreen extends ConsumerWidget {
     final state = ref.watch(shifaProvider);
     final settings = ref.watch(settingsControllerProvider);
     final isUrdu = settings.language == 'ur';
+    final isPashto = settings.language == 'ps';
+    final isRtl = isUrdu || isPashto;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Shifa & Healing'),
+        title: Text(
+          isUrdu
+              ? 'شفا اور علاج'
+              : (isPashto ? 'شفا او درملنه' : 'Shifa & Healing'),
+          style: TextStyle(
+            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontWeight: FontWeight.bold,
+            fontSize: isRtl ? 16 : 18,
+          ),
+        ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(70),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
             child: TextField(
+              textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+              textAlign: isRtl ? TextAlign.right : TextAlign.left,
               decoration: InputDecoration(
-                hintText: 'Search Shifa...',
+                hintText: isUrdu
+                    ? 'شفا تلاش کریں...'
+                    : (isPashto ? 'شفا لټول...' : 'Search Shifa...'),
                 hintStyle: TextStyle(
+                  fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
                   fontWeight: FontWeight.normal,
                   fontSize: 12,
                 ),
                 prefixIcon: Icon(
                   Icons.search,
-                  color: AppColors.primaryTeal.withOpacity(0.7),
+                  color: AppColors.primaryTeal.withValues(alpha: 0.7),
                 ),
                 filled: true,
                 fillColor: isDark ? Colors.black26 : Colors.white,
@@ -43,7 +59,7 @@ class ShifaListScreen extends ConsumerWidget {
                   borderSide: BorderSide(
                     color: isDark
                         ? Colors.white10
-                        : Colors.black.withOpacity(0.05),
+                        : Colors.black.withValues(alpha: 0.05),
                   ),
                 ),
                 enabledBorder: OutlineInputBorder(
@@ -51,7 +67,7 @@ class ShifaListScreen extends ConsumerWidget {
                   borderSide: BorderSide(
                     color: isDark
                         ? Colors.white10
-                        : Colors.black.withOpacity(0.05),
+                        : Colors.black.withValues(alpha: 0.05),
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
@@ -74,7 +90,7 @@ class ShifaListScreen extends ConsumerWidget {
         ),
       ),
       body: Directionality(
-        textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
+        textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
         child: switch (state) {
           ShifaInitial() || ShifaLoading() => const Center(
             child: CircularProgressIndicator(color: AppColors.primaryTeal),
@@ -83,7 +99,9 @@ class ShifaListScreen extends ConsumerWidget {
             duas: loaded.searchQuery.isEmpty
                 ? loaded.allDuas
                 : loaded.searchedDuas,
+            isRtl: isRtl,
             isUrdu: isUrdu,
+            isPashto: isPashto,
           ),
         },
       ),
@@ -93,9 +111,16 @@ class ShifaListScreen extends ConsumerWidget {
 
 class _ShifaListView extends StatelessWidget {
   final List<ShifaEntity> duas;
+  final bool isRtl;
   final bool isUrdu;
+  final bool isPashto;
 
-  const _ShifaListView({required this.duas, required this.isUrdu});
+  const _ShifaListView({
+    required this.duas,
+    required this.isRtl,
+    required this.isUrdu,
+    required this.isPashto,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -107,10 +132,19 @@ class _ShifaListView extends StatelessWidget {
             Icon(
               Icons.search_off,
               size: 64,
-              color: Colors.grey.withOpacity(0.5),
+              color: Colors.grey.withValues(alpha: 0.5),
             ),
             const SizedBox(height: 16),
-            const Text('No results found.'),
+            Text(
+              isUrdu
+                  ? 'کوئی نتیجہ نہیں ملا۔'
+                  : (isPashto
+                      ? 'هیڅ پایله ونه موندل شوه.'
+                      : 'No results found.'),
+              style: TextStyle(
+                fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+              ),
+            ),
           ],
         ),
       );
@@ -122,7 +156,12 @@ class _ShifaListView extends StatelessWidget {
       itemCount: duas.length,
       itemBuilder: (context, index) {
         final dua = duas[index];
-        return ShifaTile(dua: dua, isUrdu: isUrdu);
+        return ShifaTile(
+          dua: dua,
+          isRtl: isRtl,
+          isUrdu: isUrdu,
+          isPashto: isPashto,
+        );
       },
     );
   }
@@ -130,13 +169,26 @@ class _ShifaListView extends StatelessWidget {
 
 class ShifaTile extends StatelessWidget {
   final ShifaEntity dua;
+  final bool isRtl;
   final bool isUrdu;
+  final bool isPashto;
 
-  const ShifaTile({super.key, required this.dua, required this.isUrdu});
+  const ShifaTile({
+    super.key,
+    required this.dua,
+    required this.isRtl,
+    required this.isUrdu,
+    required this.isPashto,
+  });
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final title = isUrdu
+        ? dua.titleUr
+        : (isPashto
+            ? (dua.titlePs.isNotEmpty ? dua.titlePs : dua.titleUr)
+            : dua.titleEn);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -145,13 +197,13 @@ class ShifaTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isDark
-              ? Colors.white.withOpacity(0.08)
-              : Colors.black.withOpacity(0.05),
+              ? Colors.white.withValues(alpha: 0.08)
+              : Colors.black.withValues(alpha: 0.05),
         ),
         boxShadow: [
           if (!isDark)
             BoxShadow(
-              color: Colors.black.withOpacity(0.02),
+              color: Colors.black.withValues(alpha: 0.02),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -163,8 +215,8 @@ class ShifaTile extends StatelessWidget {
           vertical: 10,
         ),
         title: Text(
-          isUrdu ? dua.titleUr : dua.titleEn,
-          style: isUrdu
+          title,
+          style: isRtl
               ? const TextStyle(
                   fontFamily: 'NotoNastaliqUrdu',
                   fontWeight: FontWeight.w600,
@@ -174,9 +226,9 @@ class ShifaTile extends StatelessWidget {
               : const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
         ),
         trailing: Icon(
-          Icons.chevron_right,
+          isRtl ? Icons.chevron_left : Icons.chevron_right,
           size: 18,
-          color: AppColors.primaryTeal.withOpacity(0.5),
+          color: AppColors.primaryTeal.withValues(alpha: 0.5),
         ),
         onTap: () {
           Navigator.push(
