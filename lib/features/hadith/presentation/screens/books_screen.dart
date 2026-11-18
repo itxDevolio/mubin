@@ -30,7 +30,7 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
     'اخلاق',
     'دعا',
     'صدقہ',
-    'نکاح'
+    'نکاح',
   ];
 
   final List<String> _englishTopics = [
@@ -42,7 +42,7 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
     'Parents',
     'Morals',
     'Dua',
-    'Forgiveness'
+    'Forgiveness',
   ];
 
   @override
@@ -67,7 +67,7 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
           : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-          isUrdu ? 'صحاح ستہ و موضوعاتی تلاش' : 'Sihah Sittah & Global Search',
+          isUrdu ? 'صحاح ستہ و موضوعاتی تلاش' : 'Sihah Sittah & Hadith Search',
           style: TextStyle(
             letterSpacing: 0.5,
             fontWeight: FontWeight.bold,
@@ -96,82 +96,11 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
         child: Column(
-          crossAxisAlignment:
-              isUrdu ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          crossAxisAlignment: isUrdu
+              ? CrossAxisAlignment.end
+              : CrossAxisAlignment.start,
           children: [
             // Subject & Topic Search Banner / Header Card
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: isDark
-                      ? [AppColors.primaryTeal.withValues(alpha: 0.2), AppColors.surfaceDark]
-                      : [AppColors.primaryTeal.withValues(alpha: 0.12), Colors.white],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-                borderRadius: BorderRadius.circular(18),
-                border: Border.all(
-                  color: AppColors.primaryTeal.withValues(alpha: 0.3),
-                  width: 1.2,
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment:
-                    isUrdu ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: AppColors.primaryTeal.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Icon(
-                          Icons.travel_explore_rounded,
-                          color: AppColors.primaryTeal,
-                          size: 22,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          isUrdu
-                              ? "موضوعاتی اور عالمی تلاش (Global Topic Search)"
-                              : "Global Subject & Topic Search",
-                          textAlign: isUrdu ? TextAlign.right : TextAlign.left,
-                          style: TextStyle(
-                            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
-                            fontWeight: FontWeight.bold,
-                            fontSize: isUrdu ? 14 : 15,
-                            color: isDark
-                                ? AppColors.textPrimaryDark
-                                : AppColors.textPrimaryLight,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    isUrdu
-                        ? "کسی بھی مسئلے، حکم یا موضوع (جیسے نماز، روزہ، طلاق، توبہ) کے بارے میں تمام کتبِ احادیث سے احادیث باآسانی تلاش کریں۔"
-                        : "Search Hadiths across all 6 major books for any issue, topic, or subject (e.g. Prayer, Fasting, Divorce, Patience).",
-                    textAlign: isUrdu ? TextAlign.right : TextAlign.left,
-                    style: TextStyle(
-                      fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
-                      fontSize: isUrdu ? 12 : 12.5,
-                      height: 1.5,
-                      color: isDark
-                          ? AppColors.textSecondaryDark
-                          : AppColors.textSecondaryLight,
-                    ),
-                  ),
-                ],
-              ),
-            ),
 
             const SizedBox(height: 16),
 
@@ -181,9 +110,7 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                 color: isDark ? AppColors.surfaceDark : Colors.white,
                 borderRadius: BorderRadius.circular(18),
                 border: Border.all(
-                  color: isDark
-                      ? AppColors.borderDark
-                      : AppColors.borderLight,
+                  color: isDark ? AppColors.borderDark : AppColors.borderLight,
                   width: 1,
                 ),
                 boxShadow: [
@@ -202,6 +129,7 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                   });
                 },
                 textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
+                textAlign: isUrdu ? TextAlign.right : TextAlign.left,
                 style: TextStyle(
                   fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
                   color: isDark
@@ -211,8 +139,8 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                 ),
                 decoration: InputDecoration(
                   hintText: isUrdu
-                      ? "موضوع یا مسئلہ درج کریں (مثلاً: نماز، طلاق، صبر)..."
-                      : "Search topic or issue (e.g. Prayer, Divorce, Patience)...",
+                      ? "موضوع یا مسئلہ درج کریں "
+                      : "Search topic or issue ",
                   hintStyle: TextStyle(
                     fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
                     color: isDark
@@ -230,10 +158,7 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                   ),
                   suffixIcon: _searchQuery.isNotEmpty
                       ? IconButton(
-                          icon: const Icon(
-                            Icons.clear_rounded,
-                            size: 20,
-                          ),
+                          icon: const Icon(Icons.clear_rounded, size: 20),
                           onPressed: () {
                             _searchController.clear();
                             setState(() {
@@ -243,8 +168,10 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                         )
                       : null,
                   border: InputBorder.none,
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 16,
+                    horizontal: 16,
+                  ),
                 ),
               ),
             ),
@@ -272,8 +199,8 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                         color: isSelected
                             ? Colors.white
                             : (isDark
-                                ? AppColors.textPrimaryDark
-                                : AppColors.textPrimaryLight),
+                                  ? AppColors.textPrimaryDark
+                                  : AppColors.textPrimaryLight),
                       ),
                     ),
                     backgroundColor: isSelected
@@ -289,7 +216,8 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                       setState(() {
                         _searchQuery = topic;
                         _searchController.text = topic;
-                        _searchController.selection = TextSelection.fromPosition(
+                        _searchController
+                            .selection = TextSelection.fromPosition(
                           TextPosition(offset: _searchController.text.length),
                         );
                       });
@@ -342,8 +270,11 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
               const SizedBox(height: 12),
 
               ref
-                  .watch(globalHadithSearchProvider(
-                      SearchParam(query: _searchQuery, isUrdu: isUrdu)))
+                  .watch(
+                    globalHadithSearchProvider(
+                      SearchParam(query: _searchQuery, isUrdu: isUrdu),
+                    ),
+                  )
                   .when(
                     data: (hadiths) {
                       if (hadiths.isEmpty) {
@@ -364,8 +295,9 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                                       : "No Hadiths found for '$_searchQuery'",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontFamily:
-                                        isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                                    fontFamily: isUrdu
+                                        ? 'NotoNastaliqUrdu'
+                                        : 'Poppins',
                                     color: Colors.grey.shade600,
                                     fontSize: 14,
                                   ),
@@ -390,11 +322,11 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                           );
                           final String heading = isUrdu
                               ? (hadith.headingUrdu.isNotEmpty
-                                  ? hadith.headingUrdu
-                                  : hadith.headingEnglish)
+                                    ? hadith.headingUrdu
+                                    : hadith.headingEnglish)
                               : (hadith.headingEnglish.isNotEmpty
-                                  ? hadith.headingEnglish
-                                  : hadith.headingUrdu);
+                                    ? hadith.headingEnglish
+                                    : hadith.headingUrdu);
                           final String previewText = isUrdu
                               ? hadith.urduText
                               : hadith.englishText;
@@ -425,8 +357,9 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black
-                                        .withValues(alpha: isDark ? 0.3 : 0.04),
+                                    color: Colors.black.withValues(
+                                      alpha: isDark ? 0.3 : 0.04,
+                                    ),
                                     blurRadius: 8,
                                     offset: const Offset(0, 3),
                                   ),
@@ -446,12 +379,15 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                                       if (bookName.isNotEmpty) ...[
                                         Container(
                                           padding: const EdgeInsets.symmetric(
-                                              horizontal: 10, vertical: 4),
+                                            horizontal: 10,
+                                            vertical: 4,
+                                          ),
                                           decoration: BoxDecoration(
                                             color: AppColors.primaryTeal
                                                 .withValues(alpha: 0.12),
-                                            borderRadius:
-                                                BorderRadius.circular(8),
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
                                           ),
                                           child: Text(
                                             bookName,
@@ -469,13 +405,18 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                                       ],
                                       Container(
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: 8, vertical: 4),
+                                          horizontal: 8,
+                                          vertical: 4,
+                                        ),
                                         decoration: BoxDecoration(
                                           color: isDark
                                               ? Colors.white10
-                                              : Colors.black.withValues(alpha: 0.04),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
+                                              : Colors.black.withValues(
+                                                  alpha: 0.04,
+                                                ),
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
                                         ),
                                         child: Text(
                                           isUrdu
@@ -497,13 +438,18 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                                       if (hadith.status.isNotEmpty)
                                         Container(
                                           padding: const EdgeInsets.symmetric(
-                                              horizontal: 8, vertical: 4),
+                                            horizontal: 8,
+                                            vertical: 4,
+                                          ),
                                           decoration: BoxDecoration(
                                             color: isDark
                                                 ? Colors.white10
-                                                : Colors.black.withValues(alpha: 0.05),
-                                            borderRadius:
-                                                BorderRadius.circular(6),
+                                                : Colors.black.withValues(
+                                                    alpha: 0.05,
+                                                  ),
+                                            borderRadius: BorderRadius.circular(
+                                              6,
+                                            ),
                                           ),
                                           child: Text(
                                             hadith.status,
@@ -529,8 +475,8 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                                           heading.isNotEmpty
                                               ? heading
                                               : (isUrdu
-                                                  ? "حدیث نمبر ${hadith.hadithNumber}"
-                                                  : "Hadith Number ${hadith.hadithNumber}"),
+                                                    ? "حدیث نمبر ${hadith.hadithNumber}"
+                                                    : "Hadith Number ${hadith.hadithNumber}"),
                                           textAlign: isUrdu
                                               ? TextAlign.right
                                               : TextAlign.left,
@@ -553,8 +499,9 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                                             ? Icons.arrow_back_ios_rounded
                                             : Icons.arrow_forward_ios_rounded,
                                         size: 12,
-                                        color: AppColors.primaryTeal
-                                            .withValues(alpha: 0.6),
+                                        color: AppColors.primaryTeal.withValues(
+                                          alpha: 0.6,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -599,10 +546,11 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                             Text(
                               isUrdu
                                   ? "تمام کتب میں موضوعاتی احادیث تلاش کی جا رہی ہیں..."
-                                  : "Searching global Hadiths across books...",
+                                  : "Searching hadiths across books...",
                               style: TextStyle(
-                                fontFamily:
-                                    isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                                fontFamily: isUrdu
+                                    ? 'NotoNastaliqUrdu'
+                                    : 'Poppins',
                                 fontSize: 13,
                               ),
                             ),
@@ -619,47 +567,36 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                   ),
             ] else ...[
               // 6 Books Grid Mode Header & Grid
-              Row(
-                textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
-                children: [
-                  Text(
-                    isUrdu ? "صحاح ستہ کی بنیادی کتب" : "Major Hadith Books",
-                    style: TextStyle(
-                      fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
-                      fontSize: isUrdu ? 15 : 16,
-                      fontWeight: FontWeight.bold,
-                      color: isDark
-                          ? AppColors.textPrimaryDark
-                          : AppColors.textPrimaryLight,
-                    ),
-                  ),
-                ],
-              ),
+
               const SizedBox(height: 12),
 
               booksAsync.when(
                 data: (books) {
                   return Directionality(
-                    textDirection:
-                        isUrdu ? TextDirection.rtl : TextDirection.ltr,
+                    textDirection: isUrdu
+                        ? TextDirection.rtl
+                        : TextDirection.ltr,
                     child: GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: books.length,
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 14,
-                        crossAxisSpacing: 14,
-                        childAspectRatio: 0.96,
-                      ),
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 14,
+                            crossAxisSpacing: 14,
+                            childAspectRatio: 0.96,
+                          ),
                       itemBuilder: (context, index) {
                         final book = books[index];
-                        final String displayTitle =
-                            isUrdu ? book.bookNameUrdu : book.bookName;
+                        final String displayTitle = isUrdu
+                            ? book.bookNameUrdu
+                            : book.bookName;
                         final String writerName = isUrdu
                             ? BookModel.getUrduWriterName(
-                                book.slug, book.writerName)
+                                book.slug,
+                                book.writerName,
+                              )
                             : book.writerName;
 
                         return InkWell(
@@ -689,8 +626,9 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black
-                                      .withValues(alpha: isDark ? 0.3 : 0.04),
+                                  color: Colors.black.withValues(
+                                    alpha: isDark ? 0.3 : 0.04,
+                                  ),
                                   blurRadius: 8,
                                   offset: const Offset(0, 3),
                                 ),
@@ -704,8 +642,9 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                                   width: 40,
                                   height: 40,
                                   decoration: BoxDecoration(
-                                    color: AppColors.primaryTeal
-                                        .withValues(alpha: 0.1),
+                                    color: AppColors.primaryTeal.withValues(
+                                      alpha: 0.1,
+                                    ),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   alignment: Alignment.center,
@@ -723,8 +662,9 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    fontFamily:
-                                        isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                                    fontFamily: isUrdu
+                                        ? 'NotoNastaliqUrdu'
+                                        : 'Poppins',
                                     fontWeight: FontWeight.bold,
                                     fontSize: isUrdu ? 14.5 : 15,
                                     height: isUrdu ? 1.5 : 1.2,
@@ -741,8 +681,9 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    fontFamily:
-                                        isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                                    fontFamily: isUrdu
+                                        ? 'NotoNastaliqUrdu'
+                                        : 'Poppins',
                                     fontSize: isUrdu ? 10 : 11,
                                     color: isDark
                                         ? AppColors.textSecondaryDark
@@ -754,10 +695,13 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                                 // Hadith Count Badge
                                 Container(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 8, vertical: 3),
+                                    horizontal: 8,
+                                    vertical: 3,
+                                  ),
                                   decoration: BoxDecoration(
-                                    color: AppColors.primaryTeal
-                                        .withValues(alpha: 0.08),
+                                    color: AppColors.primaryTeal.withValues(
+                                      alpha: 0.08,
+                                    ),
                                     borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: Text(
