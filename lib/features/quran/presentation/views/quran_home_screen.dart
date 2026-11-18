@@ -67,8 +67,9 @@ class QuranHomeScreen extends ConsumerWidget {
           physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
-            crossAxisAlignment:
-                isUrdu ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            crossAxisAlignment: isUrdu
+                ? CrossAxisAlignment.end
+                : CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 10),
 
@@ -98,8 +99,6 @@ class QuranHomeScreen extends ConsumerWidget {
               ),
 
               const SizedBox(height: 30),
-
-
 
               // Grid Menu
               LayoutBuilder(

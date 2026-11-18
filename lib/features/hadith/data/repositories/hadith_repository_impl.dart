@@ -138,7 +138,7 @@ class HadithRepositoryImpl implements HadithRepository {
       return cachedData.map((e) => HadithModel.fromJson(Map<String, dynamic>.from(e))).toList();
     }
 
-    // 2. Online Dynamic Search across all books via API
+    // 2. Online Dynamic Search across all books via API with higher pagination & relevance
     try {
       Response response;
       if (isUrdu) {
@@ -147,7 +147,7 @@ class HadithRepositoryImpl implements HadithRepository {
           queryParameters: {
             'apiKey': apiKey,
             'hadithUrdu': trimmedQuery,
-            'paginate': 40,
+            'paginate': 100,
           },
         );
       } else {
@@ -156,44 +156,54 @@ class HadithRepositoryImpl implements HadithRepository {
           queryParameters: {
             'apiKey': apiKey,
             'hadithEnglish': trimmedQuery,
-            'paginate': 40,
+            'paginate': 100,
           },
         );
       }
 
-      dynamic data;
+      List rawList = [];
       if (response.statusCode == 200 && response.data != null) {
         final rawHadiths = response.data['hadiths'];
         if (rawHadiths is Map && rawHadiths['data'] is List) {
-          data = rawHadiths['data'];
+          rawList = rawHadiths['data'];
         } else if (rawHadiths is List) {
-          data = rawHadiths;
+          rawList = rawHadiths;
         }
       }
 
-      // Fallback: If no results, try opposite parameter in case query was English/Urdu mixed
-      if ((data == null || (data is List && data.isEmpty))) {
+      // Fallback: If no results, try opposite parameter
+      if (rawList.isEmpty) {
         final fallbackResponse = await dio.get(
           'https://hadithapi.com/api/hadiths',
           queryParameters: {
             'apiKey': apiKey,
-            'hadithEnglish': trimmedQuery,
-            'paginate': 40,
+            isUrdu ? 'hadithEnglish' : 'hadithUrdu': trimmedQuery,
+            'paginate': 100,
           },
         );
         if (fallbackResponse.statusCode == 200 && fallbackResponse.data != null) {
           final rawHadiths = fallbackResponse.data['hadiths'];
           if (rawHadiths is Map && rawHadiths['data'] is List) {
-            data = rawHadiths['data'];
+            rawList = rawHadiths['data'];
           } else if (rawHadiths is List) {
-            data = rawHadiths;
+            rawList = rawHadiths;
           }
         }
       }
 
-      if (data != null && data is List && data.isNotEmpty) {
-        await localDataSource.cacheHadiths(cacheKey, data);
-        return data.map((e) => HadithModel.fromJson(Map<String, dynamic>.from(e))).toList();
+      if (rawList.isNotEmpty) {
+        await localDataSource.cacheHadiths(cacheKey, rawList);
+        List<HadithModel> hadiths = rawList.map((e) => HadithModel.fromJson(e)).toList();
+
+        // Relevance Scoring & Sorting for high accuracy on topics / masail
+        final queryTokens = trimmedQuery.toLowerCase().split(RegExp(r'\s+'));
+        hadiths.sort((a, b) {
+          int scoreA = _calculateRelevance(a, queryTokens, isUrdu);
+          int scoreB = _calculateRelevance(b, queryTokens, isUrdu);
+          return scoreB.compareTo(scoreA); // Highest relevance score first
+        });
+
+        return hadiths;
       }
       return [];
     } catch (e) {
@@ -203,5 +213,22 @@ class HadithRepositoryImpl implements HadithRepository {
       }
       return [];
     }
+  }
+
+  int _calculateRelevance(HadithEntity hadith, List<String> queryTokens, bool isUrdu) {
+    int score = 0;
+    final heading = (isUrdu ? hadith.headingUrdu : hadith.headingEnglish).toLowerCase();
+    final text = (isUrdu ? hadith.urduText : hadith.englishText).toLowerCase();
+    final altHeading = (isUrdu ? hadith.headingEnglish : hadith.headingUrdu).toLowerCase();
+    final altText = (isUrdu ? hadith.englishText : hadith.urduText).toLowerCase();
+
+    for (var token in queryTokens) {
+      if (token.isEmpty) continue;
+      if (heading.contains(token)) score += 15; // Heading/Topic match is paramount
+      if (text.contains(token)) score += 4;
+      if (altHeading.contains(token)) score += 8;
+      if (altText.contains(token)) score += 2;
+    }
+    return score;
   }
 }

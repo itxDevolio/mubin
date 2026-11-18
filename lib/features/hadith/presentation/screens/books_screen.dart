@@ -20,6 +20,31 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = "";
 
+  final List<String> _urduTopics = [
+    'نماز',
+    'روزہ',
+    'زکوٰۃ',
+    'توبہ',
+    'صبر',
+    'والدين',
+    'اخلاق',
+    'دعا',
+    'صدقہ',
+    'نکاح'
+  ];
+
+  final List<String> _englishTopics = [
+    'Prayer',
+    'Fasting',
+    'Charity',
+    'Repentance',
+    'Patience',
+    'Parents',
+    'Morals',
+    'Dua',
+    'Forgiveness'
+  ];
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -34,6 +59,7 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
     final bool isUrdu = settings.language == 'ur';
 
     final isSearching = _searchQuery.trim().length >= 2;
+    final topics = isUrdu ? _urduTopics : _englishTopics;
 
     return Scaffold(
       backgroundColor: isDark
@@ -41,12 +67,12 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
           : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-          isUrdu ? 'صحاح ستہ' : 'Sihah Sittah',
+          isUrdu ? 'صحاح ستہ و موضوعاتی تلاش' : 'Sihah Sittah & Global Search',
           style: TextStyle(
             letterSpacing: 0.5,
             fontWeight: FontWeight.bold,
             fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
-            fontSize: isUrdu ? 18 : 20,
+            fontSize: isUrdu ? 16 : 18,
             color: isDark
                 ? AppColors.textPrimaryDark
                 : AppColors.textPrimaryLight,
@@ -73,7 +99,83 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
           crossAxisAlignment:
               isUrdu ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
-            // 1. Prominent & Beautiful Search Input Field
+            // Subject & Topic Search Banner / Header Card
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: isDark
+                      ? [AppColors.primaryTeal.withValues(alpha: 0.2), AppColors.surfaceDark]
+                      : [AppColors.primaryTeal.withValues(alpha: 0.12), Colors.white],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(
+                  color: AppColors.primaryTeal.withValues(alpha: 0.3),
+                  width: 1.2,
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment:
+                    isUrdu ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryTeal.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Icon(
+                          Icons.travel_explore_rounded,
+                          color: AppColors.primaryTeal,
+                          size: 22,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          isUrdu
+                              ? "موضوعاتی اور عالمی تلاش (Global Topic Search)"
+                              : "Global Subject & Topic Search",
+                          textAlign: isUrdu ? TextAlign.right : TextAlign.left,
+                          style: TextStyle(
+                            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                            fontWeight: FontWeight.bold,
+                            fontSize: isUrdu ? 14 : 15,
+                            color: isDark
+                                ? AppColors.textPrimaryDark
+                                : AppColors.textPrimaryLight,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    isUrdu
+                        ? "کسی بھی مسئلے، حکم یا موضوع (جیسے نماز، روزہ، طلاق، توبہ) کے بارے میں تمام کتبِ احادیث سے احادیث باآسانی تلاش کریں۔"
+                        : "Search Hadiths across all 6 major books for any issue, topic, or subject (e.g. Prayer, Fasting, Divorce, Patience).",
+                    textAlign: isUrdu ? TextAlign.right : TextAlign.left,
+                    style: TextStyle(
+                      fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                      fontSize: isUrdu ? 12 : 12.5,
+                      height: 1.5,
+                      color: isDark
+                          ? AppColors.textSecondaryDark
+                          : AppColors.textSecondaryLight,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Search Input Field with RTL/LTR Support
             Container(
               decoration: BoxDecoration(
                 color: isDark ? AppColors.surfaceDark : Colors.white,
@@ -109,8 +211,8 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                 ),
                 decoration: InputDecoration(
                   hintText: isUrdu
-                      ? "تمام کتبِ احادیث میں تلاش (مثلاً: طلاق، نماز)..."
-                      : "Search all Hadiths (e.g. Prayer, Divorce)...",
+                      ? "موضوع یا مسئلہ درج کریں (مثلاً: نماز، طلاق، صبر)..."
+                      : "Search topic or issue (e.g. Prayer, Divorce, Patience)...",
                   hintStyle: TextStyle(
                     fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
                     color: isDark
@@ -147,19 +249,69 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
               ),
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 14),
+
+            // Popular Topic Suggestion Chips
+            SizedBox(
+              height: 38,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                reverse: isUrdu,
+                itemCount: topics.length,
+                separatorBuilder: (context, index) => const SizedBox(width: 8),
+                itemBuilder: (context, index) {
+                  final topic = topics[index];
+                  final isSelected = _searchQuery.trim() == topic;
+                  return ActionChip(
+                    label: Text(
+                      topic,
+                      style: TextStyle(
+                        fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: isSelected
+                            ? Colors.white
+                            : (isDark
+                                ? AppColors.textPrimaryDark
+                                : AppColors.textPrimaryLight),
+                      ),
+                    ),
+                    backgroundColor: isSelected
+                        ? AppColors.primaryTeal
+                        : (isDark ? AppColors.surfaceDark : Colors.white),
+                    side: BorderSide(
+                      color: isSelected
+                          ? AppColors.primaryTeal
+                          : AppColors.primaryTeal.withValues(alpha: 0.3),
+                    ),
+                    onPressed: () {
+                      hapticFeedBack();
+                      setState(() {
+                        _searchQuery = topic;
+                        _searchController.text = topic;
+                        _searchController.selection = TextSelection.fromPosition(
+                          TextPosition(offset: _searchController.text.length),
+                        );
+                      });
+                    },
+                  );
+                },
+              ),
+            ),
+
+            const SizedBox(height: 20),
 
             // 2. Global Search Results Mode OR 6 Books Grid Mode
             if (isSearching) ...[
-              // Global Search Mode
+              // Global Search Results Header
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
                 children: [
                   Text(
                     isUrdu
-                        ? "تلاش کے نتائج ('$_searchQuery'):"
-                        : "Search Results for '$_searchQuery':",
+                        ? "موضوعاتی تلاش کے نتائج ('$_searchQuery'):"
+                        : "Topic Search Results for '$_searchQuery':",
                     style: TextStyle(
                       fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
                       fontSize: isUrdu ? 15 : 16,
@@ -243,6 +395,9 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                               : (hadith.headingEnglish.isNotEmpty
                                   ? hadith.headingEnglish
                                   : hadith.headingUrdu);
+                          final String previewText = isUrdu
+                              ? hadith.urduText
+                              : hadith.englishText;
 
                           return InkWell(
                             onTap: () {
@@ -362,7 +517,7 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                                     ],
                                   ),
 
-                                  // Compact Title Row with Arrow Indicator
+                                  // Heading / Topic Title
                                   const SizedBox(height: 10),
                                   Row(
                                     textDirection: isUrdu
@@ -403,6 +558,28 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                                       ),
                                     ],
                                   ),
+
+                                  if (previewText.isNotEmpty) ...[
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      previewText,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: isUrdu
+                                          ? TextAlign.right
+                                          : TextAlign.left,
+                                      style: TextStyle(
+                                        fontFamily: isUrdu
+                                            ? 'NotoNastaliqUrdu'
+                                            : 'Poppins',
+                                        fontSize: isUrdu ? 12 : 12.5,
+                                        height: 1.4,
+                                        color: isDark
+                                            ? AppColors.textSecondaryDark
+                                            : AppColors.textSecondaryLight,
+                                      ),
+                                    ),
+                                  ],
                                 ],
                               ),
                             ),
@@ -421,8 +598,8 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                             const SizedBox(height: 16),
                             Text(
                               isUrdu
-                                  ? "آن لائن احادیث تلاش کی جا رہی ہیں..."
-                                  : "Searching online Hadiths...",
+                                  ? "تمام کتب میں موضوعاتی احادیث تلاش کی جا رہی ہیں..."
+                                  : "Searching global Hadiths across books...",
                               style: TextStyle(
                                 fontFamily:
                                     isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
@@ -441,7 +618,25 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                     ),
                   ),
             ] else ...[
-              // 6 Books Grid Mode
+              // 6 Books Grid Mode Header & Grid
+              Row(
+                textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
+                children: [
+                  Text(
+                    isUrdu ? "صحاح ستہ کی بنیادی کتب" : "Major Hadith Books",
+                    style: TextStyle(
+                      fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                      fontSize: isUrdu ? 15 : 16,
+                      fontWeight: FontWeight.bold,
+                      color: isDark
+                          ? AppColors.textPrimaryDark
+                          : AppColors.textPrimaryLight,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+
               booksAsync.when(
                 data: (books) {
                   return Directionality(
