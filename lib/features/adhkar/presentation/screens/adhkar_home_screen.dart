@@ -17,6 +17,8 @@ class AdhkarHomeScreen extends ConsumerWidget {
     final settings = ref.watch(settingsControllerProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bool isUrdu = settings.language == 'ur';
+    final bool isPashto = settings.language == 'ps';
+    final bool isRtl = isUrdu || isPashto;
 
     return Scaffold(
       backgroundColor: isDark
@@ -24,10 +26,12 @@ class AdhkarHomeScreen extends ConsumerWidget {
           : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-          "Adhkar & Tasbeeh",
+          isUrdu ? "اذکار و تسبیح" : (isPashto ? "اذکار او تسبیح" : "Adhkar & Tasbeeh"),
           style: TextStyle(
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
+            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontSize: isRtl ? 16 : 18,
             color: isDark ? Colors.white : Colors.black87,
           ),
         ),
@@ -48,20 +52,23 @@ class AdhkarHomeScreen extends ConsumerWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: isRtl
+                ? CrossAxisAlignment.end
+                : CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 10),
 
               // Featured Card - Minimal & Clean
-              _buildFeaturedCard(context, isUrdu, isDark),
+              _buildFeaturedCard(context, isRtl, isDark),
 
               const SizedBox(height: 28),
 
               Text(
-                "Explore Adhkar",
+                isUrdu ? "اذکار کی اقسام" : (isPashto ? "د اذکارو کتنه" : "Explore Adhkar"),
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: isRtl ? 16 : 18,
                   fontWeight: FontWeight.bold,
+                  fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
                   color: isDark ? Colors.white : AppColors.textPrimaryLight,
                 ),
               ),
@@ -80,7 +87,7 @@ class AdhkarHomeScreen extends ConsumerWidget {
                 itemCount: AdhkarConstants.categories.length,
                 itemBuilder: (context, index) {
                   final category = AdhkarConstants.categories[index];
-                  return _buildCategoryCard(context, category, isUrdu, isDark);
+                  return _buildCategoryCard(context, category, isUrdu, isPashto, isDark);
                 },
               ),
               const SizedBox(height: 20),
@@ -93,7 +100,7 @@ class AdhkarHomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildFeaturedCard(BuildContext context, bool isUrdu, bool isDark) {
+  Widget _buildFeaturedCard(BuildContext context, bool isRtl, bool isDark) {
     return InkWell(
       onTap: () {
         hapticFeedBack();
@@ -107,7 +114,6 @@ class AdhkarHomeScreen extends ConsumerWidget {
         width: double.infinity,
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          // Clean surface color matching the design system instead of heavy gradients
           color: isDark ? AppColors.surfaceDark : Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
@@ -123,8 +129,8 @@ class AdhkarHomeScreen extends ConsumerWidget {
           ],
         ),
         child: Row(
+          textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
           children: [
-            // Minimalist Icon Container with subtle primary tint
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -142,34 +148,30 @@ class AdhkarHomeScreen extends ConsumerWidget {
             // Texts
             Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: isRtl
+                    ? CrossAxisAlignment.end
+                    : CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "Tasbeeh Counter",
+                    isRtl ? "تسبیح کاؤنٹر" : "Tasbeeh Counter",
                     style: TextStyle(
                       color: isDark ? Colors.white : AppColors.textPrimaryLight,
-                      fontSize: isUrdu ? 17 : 16,
+                      fontSize: isRtl ? 15 : 16,
                       fontWeight: FontWeight.w600,
+                      fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
                     ),
                   ),
-                  const SizedBox(height: 3),
-                  Text(
-                    "Count your daily dhikr",
-                    style: TextStyle(
-                      color: isDark ? Colors.white60 : Colors.black54,
-                      fontSize: 12.5,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
+
                 ],
               ),
             ),
             const SizedBox(width: 12),
 
-            // Subtle forward arrow
             Icon(
-              Icons.arrow_forward_ios_rounded,
+              isRtl
+                  ? Icons.arrow_back_ios_rounded
+                  : Icons.arrow_forward_ios_rounded,
               color: isDark ? Colors.white54 : Colors.black45,
               size: 16,
             ),
@@ -183,6 +185,7 @@ class AdhkarHomeScreen extends ConsumerWidget {
     BuildContext context,
     AdhkarCategory category,
     bool isUrdu,
+    bool isPashto,
     bool isDark,
   ) {
     IconData icon;
@@ -201,6 +204,10 @@ class AdhkarHomeScreen extends ConsumerWidget {
         icon = Icons.bedtime_rounded;
         color = const Color(0xFF7E57C2);
         break;
+      case 'post_prayer':
+        icon = Icons.mosque_rounded;
+        color = const Color(0xFF26A69A);
+        break;
       case 'waking':
         icon = Icons.wb_twilight_rounded;
         color = const Color(0xFF26A69A);
@@ -210,6 +217,11 @@ class AdhkarHomeScreen extends ConsumerWidget {
         color = AppColors.primaryTeal;
     }
 
+    final bool isRtl = isUrdu || isPashto;
+    final String displayTitle = isUrdu
+        ? category.titleUr
+        : (isPashto ? category.titlePs : category.titleEn);
+
     return InkWell(
       onTap: () {
         hapticFeedBack();
@@ -218,7 +230,7 @@ class AdhkarHomeScreen extends ConsumerWidget {
           MaterialPageRoute(
             builder: (_) => AdhkarListScreen(
               dhikrList: category.dhikrs,
-              title: category.titleEn,
+              title: displayTitle,
             ),
           ),
         );
@@ -238,13 +250,17 @@ class AdhkarHomeScreen extends ConsumerWidget {
           children: [
             Icon(icon, size: 30, color: color),
             const SizedBox(height: 10),
-            Text(
-              category.titleEn,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 13.5,
-                color: isDark ? Colors.white : AppColors.textPrimaryLight,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text(
+                displayTitle,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: isRtl ? 13 : 13.5,
+                  fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                  color: isDark ? Colors.white : AppColors.textPrimaryLight,
+                ),
               ),
             ),
           ],

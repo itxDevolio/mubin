@@ -12,7 +12,9 @@ class TafseerService {
 
     final String assetPath = language == 'ur'
         ? 'assets/tafseer/tazkiru-quran-ur.json'
-        : 'assets/tafseer/tazkirul-quran-en.json';
+        : (language == 'ps'
+            ? 'assets/tafseer/pashto_tafseer.json'
+            : 'assets/tafseer/tazkirul-quran-en.json');
 
     try {
       final jsonString = await rootBundle.loadString(assetPath);

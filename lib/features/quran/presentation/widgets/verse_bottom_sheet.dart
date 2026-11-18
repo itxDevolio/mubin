@@ -20,6 +20,8 @@ class VerseBottomSheet extends ConsumerWidget {
     final settings = ref.watch(settingsControllerProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isUrdu = settings.language == 'ur';
+    final isPashto = settings.language == 'ps';
+    final isRtl = isUrdu || isPashto;
 
     final isBookmarked = bookmarksState.maybeWhen(
       data: (list) => list.any((b) => b.id == verse.id),
@@ -189,23 +191,24 @@ class VerseBottomSheet extends ConsumerWidget {
               const SizedBox(height: 20),
               const Divider(),
               const SizedBox(height: 12),
-              Text(
-                isUrdu ? 'ترجمہ:' : 'Translation:',
-                style: TextStyle(
-                  fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
-                  fontSize: 12,
-                  color: isDark
-                      ? AppColors.textSecondaryDark
-                      : AppColors.textSecondaryLight,
+              // Translation Header & Text
+              Align(
+                alignment: isRtl ? Alignment.centerRight : Alignment.centerLeft,
+                child: Text(
+                  isUrdu ? 'ترجمہ:' : (isPashto ? 'ژباړه:' : 'Translation:'),
+                  style: TextStyle(
+                    fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                    color: AppColors.primaryTeal,
+                  ),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               Text(
                 verse.translation,
-                textDirection: isUrdu
-                    ? TextDirection.rtl
-                    : TextDirection.ltr,
-                style: isUrdu
+                textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+                style: isRtl
                     ? TextStyle(
                         fontFamily: 'NotoNastaliqUrdu',
                         fontSize: 14,
@@ -223,22 +226,32 @@ class VerseBottomSheet extends ConsumerWidget {
               if (settings.enableTafseer && tafseerAsync != null) ...[
                 const Divider(),
                 const SizedBox(height: 12),
-                Text(
-                  isUrdu ? 'تفسیر (تذکیر القرآن):' : 'Tafseer (Tazkirul Quran):',
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.primaryTeal,
+                Align(
+                  alignment: isRtl ? Alignment.centerRight : Alignment.centerLeft,
+                  child: Text(
+                    isUrdu
+                        ? 'تفسیر (تذکیر القرآن):'
+                        : (isPashto
+                            ? 'تفسیر (تذکیر القرآن):'
+                            : 'Tafseer (Tazkirul Quran):'),
+                    style: TextStyle(
+                      fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                      color: AppColors.primaryTeal,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 6),
                 tafseerAsync.when(
                   data: (tafseerText) {
                     if (tafseerText == null || tafseerText.isEmpty) {
                       return Text(
                         isUrdu
                             ? 'اس آیت کے لیے تفسیر دستیاب نہیں ہے۔'
-                            : 'No Tafseer available for this verse.',
+                            : (isPashto
+                                ? 'د دې آیت لپاره تفسیر نشته.'
+                                : 'No Tafseer available for this verse.'),
                         style: TextStyle(
                           fontSize: 13,
                           color: isDark ? Colors.white54 : Colors.black54,
@@ -248,21 +261,25 @@ class VerseBottomSheet extends ConsumerWidget {
                     }
                     return Text(
                       tafseerText,
-                      textDirection: isUrdu
+                      textDirection: isRtl
                           ? TextDirection.rtl
                           : TextDirection.ltr,
-                      style: isUrdu
+                      style: isRtl
                           ? TextStyle(
                               fontFamily: 'NotoNastaliqUrdu',
                               fontSize: 13,
                               height: 2.2,
-                              color: Theme.of(context).textTheme.bodyLarge?.color,
+                              color: Theme.of(
+                                context,
+                              ).textTheme.bodyLarge?.color,
                             )
                           : TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 13,
                               height: 1.6,
-                              color: Theme.of(context).textTheme.bodyLarge?.color,
+                              color: Theme.of(
+                                context,
+                              ).textTheme.bodyLarge?.color,
                             ),
                     );
                   },
@@ -278,7 +295,9 @@ class VerseBottomSheet extends ConsumerWidget {
                   error: (err, stack) => Text(
                     isUrdu
                         ? 'تفسیر لوڈ کرنے میں مسئلہ پیش آیا۔'
-                        : 'Error loading Tafseer.',
+                        : (isPashto
+                            ? 'تفسیر په پورته کولو کې ستونزه رامنځته شوه.'
+                            : 'Error loading Tafseer.'),
                     style: const TextStyle(
                       fontSize: 12,
                       color: Colors.redAccent,
@@ -301,6 +320,8 @@ class VerseBottomSheet extends ConsumerWidget {
   ) {
     final settings = ref.read(settingsControllerProvider);
     final isUrdu = settings.language == 'ur';
+    final isPashto = settings.language == 'ps';
+    final isRtl = isUrdu || isPashto;
     final controller = TextEditingController();
     showDialog(
       context: context,
@@ -316,9 +337,7 @@ class VerseBottomSheet extends ConsumerWidget {
         content: TextField(
           controller: controller,
           textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
-          style: TextStyle(
-            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
-          ),
+          style: TextStyle(fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins'),
           decoration: InputDecoration(
             hintText: isUrdu ? 'عنوان درج کریں' : 'Enter title',
             hintStyle: TextStyle(

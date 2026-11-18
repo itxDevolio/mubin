@@ -6,12 +6,14 @@ class KhatamProgressCard extends StatelessWidget {
   final int lastReadPage;
   final VoidCallback onTap;
   final bool isUrdu;
+  final bool isPashto;
 
   const KhatamProgressCard({
     super.key,
     required this.lastReadPage,
     required this.onTap,
     this.isUrdu = false,
+    this.isPashto = false,
   });
 
   static const int _totalPages = 604;
@@ -19,6 +21,7 @@ class KhatamProgressCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bool isRtl = isUrdu || isPashto;
 
     final validPage = lastReadPage.clamp(0, _totalPages);
     final double percentage = validPage / _totalPages;
@@ -39,8 +42,8 @@ class KhatamProgressCard extends StatelessWidget {
                 )
               : LinearGradient(
                   colors: [
-                    AppColors.primaryTeal.withOpacity(0.05),
-                    AppColors.primaryTeal.withOpacity(0.01),
+                    AppColors.primaryTeal.withValues(alpha: 0.05),
+                    AppColors.primaryTeal.withValues(alpha: 0.01),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -48,14 +51,14 @@ class KhatamProgressCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isDark
-                ? AppColors.primaryTeal.withOpacity(0.25)
-                : AppColors.primaryTeal.withOpacity(0.12),
+                ? AppColors.primaryTeal.withValues(alpha: 0.25)
+                : AppColors.primaryTeal.withValues(alpha: 0.12),
             width: 1,
           ),
           boxShadow: isDark
               ? [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
+                    color: Colors.black.withValues(alpha: 0.3),
                     blurRadius: 16,
                     offset: const Offset(0, 8),
                   ),
@@ -64,18 +67,18 @@ class KhatamProgressCard extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment:
-              isUrdu ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              isRtl ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
             Row(
-              textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
+              textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
               children: [
                 // Clean Minimal Icon Container
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: isDark
-                        ? Colors.white.withOpacity(0.08)
-                        : AppColors.primaryTeal.withOpacity(0.08),
+                        ? Colors.white.withValues(alpha: 0.08)
+                        : AppColors.primaryTeal.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
@@ -89,16 +92,18 @@ class KhatamProgressCard extends StatelessWidget {
                 // Title Typography Clean Up
                 Expanded(
                   child: Text(
-                    isUrdu ? "ختمِ قرآن" : "QURAN COMPLETION",
-                    textAlign: isUrdu ? TextAlign.right : TextAlign.left,
+                    isUrdu
+                        ? "ختمِ قرآن"
+                        : (isPashto ? "د قرآن ختم" : "QURAN COMPLETION"),
+                    textAlign: isRtl ? TextAlign.right : TextAlign.left,
                     style: TextStyle(
-                      fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                      fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
                       color: isDark
                           ? AppColors.textPrimaryDark
                           : AppColors.textPrimaryLight,
-                      fontSize: isUrdu ? 15 : 15,
+                      fontSize: isRtl ? 15 : 15,
                       fontWeight: FontWeight.bold,
-                      letterSpacing: isUrdu ? 0 : 1.2,
+                      letterSpacing: isRtl ? 0 : 1.2,
                     ),
                   ),
                 ),
@@ -113,19 +118,19 @@ class KhatamProgressCard extends StatelessWidget {
                     gradient: LinearGradient(
                       colors: isDark
                           ? [
-                              AppColors.lightTeal.withOpacity(0.3),
-                              AppColors.lightTeal.withOpacity(0.1),
+                              AppColors.lightTeal.withValues(alpha: 0.3),
+                              AppColors.lightTeal.withValues(alpha: 0.1),
                             ]
                           : [
-                              AppColors.lightTeal.withOpacity(0.2),
-                              AppColors.lightTeal.withOpacity(0.05),
+                              AppColors.lightTeal.withValues(alpha: 0.2),
+                              AppColors.lightTeal.withValues(alpha: 0.05),
                             ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: AppColors.lightTeal.withOpacity(0.3),
+                      color: AppColors.lightTeal.withValues(alpha: 0.3),
                       width: 1,
                     ),
                   ),
@@ -147,9 +152,11 @@ class KhatamProgressCard extends StatelessWidget {
             LinearProgressIndicator(
               value: percentage,
               backgroundColor: isDark
-                  ? Colors.white.withOpacity(0.08)
-                  : AppColors.primaryTeal.withOpacity(0.06),
-              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.lightTeal),
+                  ? Colors.white.withValues(alpha: 0.08)
+                  : AppColors.primaryTeal.withValues(alpha: 0.06),
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                AppColors.lightTeal,
+              ),
               minHeight: 6,
             ),
             const SizedBox(height: 14),
@@ -157,28 +164,36 @@ class KhatamProgressCard extends StatelessWidget {
             // Action Row
             Row(
               mainAxisAlignment:
-                  isUrdu ? MainAxisAlignment.start : MainAxisAlignment.end,
-              textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
+                  isRtl ? MainAxisAlignment.start : MainAxisAlignment.end,
+              textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
               children: [
                 Text(
                   validPage >= _totalPages
-                      ? (isUrdu ? "ماشاء اللہ! ختمِ قرآن مکمل" : "MashaAllah! Complete")
-                      : (isUrdu ? "تلاوتِ قرآن جاری رکھیں" : "Continue Reading"),
+                      ? (isUrdu
+                          ? "ماشاء اللہ! ختمِ قرآن مکمل"
+                          : (isPashto
+                              ? "ماشاالله! د قرآن ختم بشپړ شو"
+                              : "MashaAllah! Complete"))
+                      : (isUrdu
+                          ? "تلاوتِ قرآن جاری رکھیں"
+                          : (isPashto
+                              ? "د قرآن تلاوت ته دوام ورکړئ"
+                              : "Continue Reading")),
                   style: TextStyle(
-                    fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                    fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
                     color: isDark
                         ? AppColors.textPrimaryDark
                         : AppColors.primaryTeal,
                     fontWeight: FontWeight.w700,
-                    fontSize: isUrdu ? 12 : 12,
-                    letterSpacing: isUrdu ? 0 : 0.3,
+                    fontSize: isRtl ? 12 : 12,
+                    letterSpacing: isRtl ? 0 : 0.3,
                   ),
                 ),
                 const SizedBox(width: 6),
                 Icon(
                   validPage >= _totalPages
                       ? Icons.celebration_rounded
-                      : (isUrdu
+                      : (isRtl
                           ? Icons.arrow_back_ios_rounded
                           : Icons.arrow_forward_ios_rounded),
                   size: 12,

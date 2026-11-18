@@ -36,12 +36,16 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
     final settings = ref.watch(settingsControllerProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bool isUrdu = settings.language == 'ur';
+    final bool isPashto = settings.language == 'ps';
+    final bool isRtl = isUrdu || isPashto;
 
-    return PageView.builder(
-      controller: _pageController,
-      itemCount: widget.dhikrList.length,
-      onPageChanged: (index) => setState(() => _currentIndex = index),
-      itemBuilder: (context, index) {
+    return Directionality(
+      textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+      child: PageView.builder(
+        controller: _pageController,
+        itemCount: widget.dhikrList.length,
+        onPageChanged: (index) => setState(() => _currentIndex = index),
+        itemBuilder: (context, index) {
         final dhikr = widget.dhikrList[index];
         final currentCount = ref.watch(adhkarCountProvider(dhikr.id));
         final remaining = (dhikr.targetCount - currentCount).clamp(
@@ -49,18 +53,31 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
           dhikr.targetCount,
         );
         final isCompleted = remaining == 0;
-        final bool showTranslation =
-            dhikr.english.isNotEmpty || dhikr.urdu.isNotEmpty;
+        final translationText = isUrdu
+            ? dhikr.urdu
+            : (isPashto ? (dhikr.pashto ?? dhikr.english) : dhikr.english);
+        final bool showTranslation = translationText.isNotEmpty;
 
         final bool isMorningEvening =
             widget.title.contains('Morning') ||
-            widget.title.contains('Evening');
-        final bool isSleeping = widget.title.contains('Sleeping');
+            widget.title.contains('Evening') ||
+            widget.title.contains('صبح') ||
+            widget.title.contains('شام') ||
+            widget.title.contains('سهار') ||
+            widget.title.contains('ماښام');
+        final bool isSleeping =
+            widget.title.contains('Sleeping') ||
+            widget.title.contains('سونے') ||
+            widget.title.contains('خوب');
 
         // 1-based positions as requested: 10, 12, 14, 16, 20 for Morning/Evening; 5 for Sleeping
         final bool shouldShowAd =
             (isMorningEvening && [10, 12, 14, 16, 20].contains(index + 1)) ||
             (isSleeping && index + 1 == 5);
+
+        final fazilatText = isUrdu
+            ? dhikr.fazilatUrdu
+            : (isPashto ? (dhikr.fazilatPashto ?? dhikr.fazilatEnglish) : dhikr.fazilatEnglish);
 
         return Scaffold(
           backgroundColor: isDark
@@ -69,11 +86,28 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
           appBar: AppBar(
             title: Text(
               widget.title,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                fontSize: isRtl ? 14 : 16,
+                fontWeight: FontWeight.w600,
+                fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                color: isDark
+                    ? AppColors.textPrimaryDark
+                    : AppColors.textPrimaryLight,
+              ),
             ),
             backgroundColor: Colors.transparent,
             elevation: 0,
             centerTitle: true,
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios_new,
+                size: 20,
+                color: isDark
+                    ? AppColors.textPrimaryDark
+                    : AppColors.textPrimaryLight,
+              ),
+              onPressed: () => Navigator.pop(context),
+            ),
             actions: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -95,6 +129,18 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
               if (remaining > 0) {
                 hapticFeedBack();
                 ref.read(adhkarCountProvider(dhikr.id).notifier).increment();
+                if (remaining == 1) {
+                  if (_currentIndex < widget.dhikrList.length - 1) {
+                    Future.delayed(const Duration(milliseconds: 350), () {
+                      if (mounted) {
+                        _pageController.nextPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        );
+                      }
+                    });
+                  }
+                }
               }
             },
             child: Center(
@@ -111,12 +157,8 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
                       const AdBannerWidget(),
                       const SizedBox(height: 20),
                     ],
-                    if ((isUrdu ? dhikr.fazilatUrdu : dhikr.fazilatEnglish) !=
-                        null)
-                      _buildTag(
-                        isUrdu ? dhikr.fazilatUrdu! : dhikr.fazilatEnglish!,
-                        isUrdu,
-                      ),
+                    if (fazilatText != null)
+                      _buildTag(fazilatText, isRtl),
 
                     const SizedBox(height: 40),
 
@@ -138,23 +180,26 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
 
                       // Translation Text
                       Text(
-                        isUrdu ? dhikr.urdu : dhikr.english,
-                        style: isUrdu
-                            ?  TextStyle(
+                        translationText,
+                        style: isRtl
+                            ? TextStyle(
                                 fontFamily: 'NotoNastaliqUrdu',
-                                fontSize: 15,
+                                fontSize: 13.5,
                                 color: isDark
-                                    ? Colors.white60
-                                    : const Color(0xFF757575),
-                                height: 2.0,
+                                    ? Colors.white70
+                                    : const Color(0xFF555555),
+                                height: 2.2,
                               )
                             : TextStyle(
                                 fontSize: 14,
                                 color: isDark
                                     ? Colors.white60
                                     : const Color(0xFF757575),
-                              ), // grey[600]
-                        textAlign: TextAlign.center,
+                              ),
+                        textAlign: isRtl ? TextAlign.right : TextAlign.center,
+                        textDirection: isRtl
+                            ? TextDirection.rtl
+                            : TextDirection.ltr,
                       ),
                     ],
 
@@ -210,10 +255,11 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
           ),
         );
       },
+    ),
     );
   }
 
-  Widget _buildTag(String text, bool isUrdu) {
+  Widget _buildTag(String text, bool isRtl) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -222,11 +268,14 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
       ),
       child: Text(
         text,
-        style: isUrdu
+        textAlign: isRtl ? TextAlign.right : TextAlign.center,
+        textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+        style: isRtl
             ? const TextStyle(
                 fontFamily: 'NotoNastaliqUrdu',
                 fontSize: 11,
                 color: AppColors.primaryTeal,
+                height: 1.6,
               )
             : const TextStyle(
                 fontSize: 11,

@@ -58,7 +58,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final settings = ref.watch(settingsControllerProvider);
-    final isUrdu = settings.language == 'ur';
+    final bool isUrdu = settings.language == 'ur';
+    final bool isPashto = settings.language == 'ps';
+    final bool isRtl = isUrdu || isPashto;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -91,7 +93,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       color: AppColors.primaryTeal,
                       size: 24,
                     ),
-                    tooltip: isUrdu ? "ترتیبات" : "Settings",
+                    tooltip: isRtl ? "ترتیبات" : "Settings",
                   ),
                 ],
               ),
@@ -127,19 +129,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           vertical: 8.0,
                         ),
                         child: Column(
-                          crossAxisAlignment: isUrdu
+                          crossAxisAlignment: isRtl
                               ? CrossAxisAlignment.end
                               : CrossAxisAlignment.start,
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               textDirection:
-                                  isUrdu ? TextDirection.rtl : TextDirection.ltr,
+                                  isRtl ? TextDirection.rtl : TextDirection.ltr,
                               children: [
                                 FeatureCard(
-                                  title: isUrdu ? "قرآن" : "Quran",
+                                  title: isUrdu
+                                      ? "قرآن"
+                                      : (isPashto ? "قرآن کریم" : "Quran"),
                                   icon: FlutterIslamicIcons.quran,
-                                  isUrdu: isUrdu,
+                                  isRtl: isRtl,
                                   onTap: () {
                                     hapticFeedBack();
                                     Navigator.push(
@@ -153,9 +157,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                 ),
                                 const SizedBox(width: 8),
                                 FeatureCard(
-                                  title: isUrdu ? "حدیث" : "Hadith",
+                                  title: isUrdu
+                                      ? "حدیث"
+                                      : (isPashto ? "حدیث" : "Hadith"),
                                   icon: FlutterIslamicIcons.quran2,
-                                  isUrdu: isUrdu,
+                                  isRtl: isRtl,
                                   onTap: () {
                                     Navigator.push(
                                       context,
@@ -167,9 +173,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                 ),
                                 const SizedBox(width: 8),
                                 FeatureCard(
-                                  title: isUrdu ? "اذکار" : "Adhkar",
+                                  title: isUrdu
+                                      ? "اذکار"
+                                      : (isPashto ? "اذکار" : "Adhkar"),
                                   icon: FlutterIslamicIcons.tasbihHand,
-                                  isUrdu: isUrdu,
+                                  isRtl: isRtl,
                                   onTap: () {
                                     Navigator.push(
                                       context,
@@ -186,12 +194,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               textDirection:
-                                  isUrdu ? TextDirection.rtl : TextDirection.ltr,
+                                  isRtl ? TextDirection.rtl : TextDirection.ltr,
                               children: [
                                 FeatureCard(
-                                  title: isUrdu ? "شفاء" : "Shifa",
+                                  title: isUrdu
+                                      ? "شفاء"
+                                      : (isPashto ? "شفا" : "Shifa"),
                                   icon: FlutterIslamicIcons.prayingPerson,
-                                  isUrdu: isUrdu,
+                                  isRtl: isRtl,
                                   onTap: () {
                                     hapticFeedBack();
                                     Navigator.push(
@@ -205,9 +215,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                 ),
                                 const SizedBox(width: 8),
                                 FeatureCard(
-                                  title: isUrdu ? "قبلہ" : "Qibla",
+                                  title: isUrdu
+                                      ? "قبلہ"
+                                      : (isPashto ? "قبله" : "Qibla"),
                                   icon: FlutterIslamicIcons.qibla2,
-                                  isUrdu: isUrdu,
+                                  isRtl: isRtl,
                                   onTap: () {
                                     Navigator.push(
                                       context,
@@ -219,9 +231,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                 ),
                                 const SizedBox(width: 8),
                                 FeatureCard(
-                                  title: isUrdu ? "دعائیں" : "Duas",
+                                  title: isUrdu
+                                      ? "دعائیں"
+                                      : (isPashto ? "دعاء ګانې" : "Duas"),
                                   icon: FlutterIslamicIcons.prayer,
-                                  isUrdu: isUrdu,
+                                  isRtl: isRtl,
                                   onTap: () {
                                     hapticFeedBack();
                                     Navigator.push(
@@ -237,15 +251,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                             ),
                             const SizedBox(height: 24),
                             Align(
-                              alignment: isUrdu
+                              alignment: isRtl
                                   ? Alignment.centerRight
                                   : Alignment.centerLeft,
                               child: Text(
-                                isUrdu ? "اسلامی رہنمائی" : "Islamic Guides",
+                                isUrdu
+                                    ? "اسلامی رہنمائی"
+                                    : (isPashto
+                                        ? "اسلامي لارښوونې"
+                                        : "Islamic Guides"),
                                 style: TextStyle(
                                   fontFamily:
-                                      isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
-                                  fontSize: isUrdu ? 16 : 16,
+                                      isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                                  fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                   color: Theme.of(
                                     context,
@@ -255,7 +273,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                             ),
                             const SizedBox(height: 12),
                             Directionality(
-                              textDirection: isUrdu
+                              textDirection: isRtl
                                   ? TextDirection.rtl
                                   : TextDirection.ltr,
                               child: SizedBox(
@@ -268,12 +286,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                     InfoGuideCard(
                                       title: isUrdu
                                           ? "نمازِ جنازہ کا طریقہ"
-                                          : "Funeral Prayer Guide",
+                                          : (isPashto
+                                              ? "د جنازې لمانځه تګلاره"
+                                              : "Funeral Prayer Guide"),
                                       subTitle: isUrdu
                                           ? "نمازِ جنازہ کا مسنون اور مستند طریقہ"
-                                          : "Step-by-step authentic method and supplications.",
+                                          : (isPashto
+                                              ? "د جنازې لمانځه مسنون او معتبره تګلاره"
+                                              : "Step-by-step authentic method and supplications."),
                                       imageUrl: "assets/app_logos/funeral.png",
-                                      isUrdu: isUrdu,
+                                      isRtl: isRtl,
                                       onTap: () {
                                         Navigator.push(
                                           context,
@@ -287,12 +309,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                     InfoGuideCard(
                                       title: isUrdu
                                           ? "استخارہ کا طریقہ"
-                                          : "Istikhara Prayer Guide",
+                                          : (isPashto
+                                              ? "د استخارې لمانځه تګلاره"
+                                              : "Istikhara Prayer Guide"),
                                       subTitle: isUrdu
                                           ? "اہم فیصلوں میں اللہ سے رہنمائی حاصل کریں"
-                                          : "Seek Allah's counsel for your important decisions.",
+                                          : (isPashto
+                                              ? "په مهمو پریکړو کې له الله څخه لارښوونه وغواړئ"
+                                              : "Seek Allah's counsel for your important decisions."),
                                       imageUrl: "assets/app_logos/istikhara.png",
-                                      isUrdu: isUrdu,
+                                      isRtl: isRtl,
                                       onTap: () {
                                         Navigator.push(
                                           context,
@@ -306,12 +332,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                     InfoGuideCard(
                                       title: isUrdu
                                           ? "نمازِ قصر کا طریقہ"
-                                          : "Traveler's Prayer",
+                                          : (isPashto
+                                              ? "د مسافر لمانځه (قصر) تګلاره"
+                                              : "Traveler's Prayer"),
                                       subTitle: isUrdu
                                           ? "سفر کے دوران نماز قصر کرنے کا مکمل طریقہ"
-                                          : "Guidelines and method for shortening prayers during travel.",
+                                          : (isPashto
+                                              ? "د سفر پر مهال د قصر لمانځه مکمل اصول او تګلاره"
+                                              : "Guidelines and method for shortening prayers during travel."),
                                       imageUrl: "assets/app_logos/qasar.png",
-                                      isUrdu: isUrdu,
+                                      isRtl: isRtl,
                                       onTap: () {
                                         Navigator.push(
                                           context,

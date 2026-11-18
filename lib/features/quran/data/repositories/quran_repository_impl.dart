@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:flutter/services.dart';
 import 'package:quran/quran.dart' as quran;
 
 import '../../domain/entities/juz.dart';
@@ -13,6 +15,25 @@ class QuranRepositoryImpl implements QuranRepository {
   final QuranLocalDataSource localDataSource;
 
   QuranRepositoryImpl({required this.localDataSource});
+
+  Map<String, dynamic>? _pashtoTarjamaCache;
+
+  Future<String> _getPashtoTranslation(int surah, int verse) async {
+    if (_pashtoTarjamaCache == null) {
+      try {
+        final jsonString = await rootBundle.loadString('assets/tafseer/pashto_tarjama.json');
+        _pashtoTarjamaCache = jsonDecode(jsonString) as Map<String, dynamic>;
+      } catch (e) {
+        _pashtoTarjamaCache = {};
+      }
+    }
+    final key = '$surah:$verse';
+    final entry = _pashtoTarjamaCache![key];
+    if (entry is Map && entry.containsKey('t')) {
+      return entry['t'] as String? ?? '';
+    }
+    return '';
+  }
 
   @override
   Future<List<Surah>> getSurahs({String lang = 'en'}) async {
@@ -91,10 +112,6 @@ class QuranRepositoryImpl implements QuranRepository {
       final List<dynamic> rawPageData = quran.getPageData(page);
       List<Verse> verses = [];
 
-      final translationType = lang == 'ur'
-          ? quran.Translation.urdu
-          : quran.Translation.enSaheeh;
-
       for (var element in rawPageData) {
         final Map<String, dynamic> data = element as Map<String, dynamic>;
         final int surah = data['surah'] as int;
@@ -102,11 +119,15 @@ class QuranRepositoryImpl implements QuranRepository {
         final int end = data['end'] as int;
 
         for (int v = start; v <= end; v++) {
-          final String translationText = quran.getVerseTranslation(
-            surah,
-            v,
-            translation: translationType,
-          );
+          final String translationText = lang == 'ps'
+              ? await _getPashtoTranslation(surah, v)
+              : quran.getVerseTranslation(
+                  surah,
+                  v,
+                  translation: lang == 'ur'
+                      ? quran.Translation.urdu
+                      : quran.Translation.enSaheeh,
+                );
 
           verses.add(
             Verse(

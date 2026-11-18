@@ -25,6 +25,8 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
     final quranState = ref.watch(surahJuzControllerProvider);
     final settings = ref.watch(settingsControllerProvider);
     final isUrdu = settings.language == 'ur';
+    final isPashto = settings.language == 'ps';
+    final isRtl = isUrdu || isPashto;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -33,9 +35,11 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
           : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-          isUrdu ? 'سورتوں کی فہرست' : 'Surah List',
+          isUrdu
+              ? 'سورتوں کی فہرست'
+              : (isPashto ? 'سورتونه' : 'Surah List'),
           style: TextStyle(
-            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
             color: isDark
@@ -69,20 +73,22 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
               onChanged: (val) => ref
                   .read(surahJuzControllerProvider.notifier)
                   .searchSurah(val),
-              textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
-              textAlign: isUrdu ? TextAlign.right : TextAlign.left,
+              textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+              textAlign: isRtl ? TextAlign.right : TextAlign.left,
               cursorColor: AppColors.primaryTeal,
               style: TextStyle(
-                fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
                 color: isDark
                     ? AppColors.textPrimaryDark
                     : AppColors.textPrimaryLight,
                 fontSize: 14,
               ),
               decoration: InputDecoration(
-                hintText: isUrdu ? 'سورت تلاش کریں' : 'Search Surah',
+                hintText: isUrdu
+                    ? 'سورت تلاش کریں'
+                    : (isPashto ? 'سورت لټول' : 'Search Surah'),
                 hintStyle: TextStyle(
-                  fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                  fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
                   color: isDark
                       ? AppColors.textSecondaryDark
                       : AppColors.textSecondaryLight,
@@ -130,9 +136,13 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
                 if (list.isEmpty) {
                   return Center(
                     child: Text(
-                      isUrdu ? 'کوئی سورت نہیں ملی' : 'No Surah found',
+                      isUrdu
+                          ? 'کوئی سورت نہیں ملی'
+                          : (isPashto
+                              ? 'هیڅ سورت ونه موندل شو'
+                              : 'No Surah found'),
                       style: TextStyle(
-                        fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                        fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
                         color: isDark
                             ? AppColors.textSecondaryDark
                             : AppColors.textSecondaryLight,
@@ -160,10 +170,14 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
                     final surah = list[index];
 
                     final totalVerses = quran.getVerseCount(surah.number);
-                    final rawRevelation = quran.getPlaceOfRevelation(surah.number);
+                    final rawRevelation = quran.getPlaceOfRevelation(
+                      surah.number,
+                    );
                     final revelationPlace = isUrdu
                         ? (rawRevelation == 'Makkah' ? "مکی" : "مدنی")
-                        : rawRevelation;
+                        : (isPashto
+                            ? (rawRevelation == 'Makkah' ? "مکی" : "مدني")
+                            : rawRevelation);
 
                     return InkWell(
                       onTap: () {
@@ -188,7 +202,7 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
                         ),
                         child: Row(
                           textDirection:
-                              isUrdu ? TextDirection.rtl : TextDirection.ltr,
+                              isRtl ? TextDirection.rtl : TextDirection.ltr,
                           children: [
                             // Number Badge
                             Container(
@@ -225,31 +239,39 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
                             // Surah Details
                             Expanded(
                               child: Column(
-                                crossAxisAlignment: isUrdu
+                                crossAxisAlignment: isRtl
                                     ? CrossAxisAlignment.end
                                     : CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    isUrdu ? surah.nameArabic : surah.nameEnglish,
+                                    isRtl ? surah.nameArabic : surah.nameEnglish,
+                                    textAlign: isRtl
+                                        ? TextAlign.right
+                                        : TextAlign.left,
                                     style: TextStyle(
-                                      fontFamily: isUrdu ? 'Amiri' : 'Poppins',
+                                      fontFamily: isRtl ? 'Amiri' : 'Poppins',
                                       fontWeight: FontWeight.bold,
-                                      fontSize: isUrdu ? 20 : 16,
+                                      fontSize: isRtl ? 20 : 16,
                                       color: isDark
                                           ? AppColors.textPrimaryDark
                                           : AppColors.textPrimaryLight,
-                                      letterSpacing: isUrdu ? 0 : 0.2,
+                                      letterSpacing: isRtl ? 0 : 0.2,
                                     ),
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
                                     isUrdu
                                         ? "$revelationPlace • $totalVerses آیات"
-                                        : "$revelationPlace • $totalVerses Verses",
+                                        : (isPashto
+                                            ? "$revelationPlace • $totalVerses آیتونه"
+                                            : "$revelationPlace • $totalVerses Verses"),
+                                    textAlign: isRtl
+                                        ? TextAlign.right
+                                        : TextAlign.left,
                                     style: TextStyle(
                                       fontFamily:
-                                          isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
-                                      fontSize: isUrdu ? 11 : 12,
+                                          isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                                      fontSize: isRtl ? 11 : 12,
                                       color: isDark
                                           ? AppColors.textSecondaryDark
                                           : AppColors.textSecondaryLight,
@@ -260,7 +282,7 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
                               ),
                             ),
 
-                            if (!isUrdu) ...[
+                            if (!isRtl) ...[
                               Text(
                                 surah.nameArabic,
                                 style: TextStyle(
@@ -276,7 +298,7 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
                             ],
 
                             Icon(
-                              isUrdu
+                              isRtl
                                   ? Icons.arrow_back_ios_rounded
                                   : Icons.arrow_forward_ios_rounded,
                               size: 12,
@@ -291,13 +313,25 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
                   },
                 );
               },
-              loading: () => const Center(
+              loading: () => Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircularProgressIndicator(color: AppColors.primaryTeal),
-                    SizedBox(height: 16),
-                    Text('Loading Surahs...', style: TextStyle(fontSize: 14)),
+                    const CircularProgressIndicator(
+                      color: AppColors.primaryTeal,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      isUrdu
+                          ? 'سورتیں لوڈ ہو رہی ہیں...'
+                          : (isPashto
+                              ? 'سورتونه باریږي...'
+                              : 'Loading Surahs...'),
+                      style: TextStyle(
+                        fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                        fontSize: 14,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -307,40 +341,20 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
                   children: [
                     Icon(
                       Icons.error_outline_rounded,
-                      color: AppColors.error.withOpacity(0.8),
+                      color: AppColors.error.withValues(alpha: 0.8),
                       size: 32,
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'Failed to load Surahs',
+                      isUrdu
+                          ? 'سورتیں لوڈ کرنے میں خرابی پیش آگئی'
+                          : (isPashto
+                              ? 'د سورتونو په پورته کولو کې تېروتنه وشوه'
+                              : 'Error loading Surahs'),
                       style: TextStyle(
-                        color: isDark
-                            ? AppColors.textPrimaryDark
-                            : AppColors.textPrimaryLight,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      err.toString(),
-                      style: TextStyle(
-                        color: isDark
-                            ? AppColors.textSecondaryDark
-                            : AppColors.textSecondaryLight,
-                        fontSize: 12,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 16),
-                    TextButton.icon(
-                      onPressed: () => ref
-                          .read(surahJuzControllerProvider.notifier)
-                          .loadSurahs(),
-                      icon: const Icon(Icons.refresh, size: 16),
-                      label: const Text('Retry'),
-                      style: TextButton.styleFrom(
-                        foregroundColor: AppColors.primaryTeal,
+                        fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                        color: AppColors.error,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],

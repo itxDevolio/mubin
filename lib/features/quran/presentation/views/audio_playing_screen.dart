@@ -29,7 +29,7 @@ class AudioPlayingScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final audioState = ref.watch(quranAudioPlayerControllerProvider);
     final settings = ref.watch(settingsControllerProvider);
-    final isUrdu = settings.language == 'ur';
+    final isUrdu = settings.language == 'ur' || settings.language == 'ps';
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     if (audioState.currentSurahNumber == null &&
@@ -833,7 +833,7 @@ class AudioPlayingScreen extends ConsumerWidget {
   void _showDownloadsInfo(BuildContext context, WidgetRef ref) {
     final audioState = ref.watch(quranAudioPlayerControllerProvider);
     final settings = ref.watch(settingsControllerProvider);
-    final isUrdu = settings.language == 'ur';
+    final isUrdu = settings.language == 'ur' || settings.language == 'ps';
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final surahNumber = audioState.currentSurahNumber;
 

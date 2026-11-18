@@ -78,7 +78,7 @@ class SettingsScreen extends ConsumerWidget {
                 title: 'App Language',
                 subtitle: settings.language == 'en'
                     ? 'English'
-                    : 'Urdu (اردو)',
+                    : (settings.language == 'ur' ? 'Urdu (اردو)' : 'Pashto (پښتو)'),
                 isDark: isDark,
                 onTap: () =>
                     _showLanguageDialog(context, ref, settings.language),
@@ -583,6 +583,18 @@ class SettingsScreen extends ConsumerWidget {
                 title: 'Urdu (اردو)',
                 value: 'ur',
                 isSelected: currentLang == 'ur',
+                isDark: isDark,
+                onSelect: (val) => ref
+                    .read(settingsControllerProvider.notifier)
+                    .setLanguage(val),
+              ),
+              const SizedBox(height: 12),
+              _buildOption(
+                context,
+                ref,
+                title: 'Pashto (پښتو)',
+                value: 'ps',
+                isSelected: currentLang == 'ps',
                 isDark: isDark,
                 onSelect: (val) => ref
                     .read(settingsControllerProvider.notifier)

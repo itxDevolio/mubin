@@ -105,7 +105,8 @@ class HadithRepositoryImpl implements HadithRepository {
         queryParameters: {
           'apiKey': apiKey,
           'book': bookSlug,
-          'chapter': chapterNumber
+          'chapter': chapterNumber,
+          'paginate': 1000,
         },
       );
 
@@ -147,7 +148,7 @@ class HadithRepositoryImpl implements HadithRepository {
           queryParameters: {
             'apiKey': apiKey,
             'hadithUrdu': trimmedQuery,
-            'paginate': 100,
+            'paginate': 1000,
           },
         );
       } else {
@@ -156,7 +157,7 @@ class HadithRepositoryImpl implements HadithRepository {
           queryParameters: {
             'apiKey': apiKey,
             'hadithEnglish': trimmedQuery,
-            'paginate': 100,
+            'paginate': 1000,
           },
         );
       }
@@ -178,7 +179,7 @@ class HadithRepositoryImpl implements HadithRepository {
           queryParameters: {
             'apiKey': apiKey,
             isUrdu ? 'hadithEnglish' : 'hadithUrdu': trimmedQuery,
-            'paginate': 100,
+            'paginate': 1000,
           },
         );
         if (fallbackResponse.statusCode == 200 && fallbackResponse.data != null) {
@@ -208,6 +209,102 @@ class HadithRepositoryImpl implements HadithRepository {
       return [];
     } catch (e) {
       debugPrint("Hadith search error: $e");
+      if (cachedData != null && cachedData is List) {
+        return cachedData.map((e) => HadithModel.fromJson(Map<String, dynamic>.from(e))).toList();
+      }
+      return [];
+    }
+  }
+
+  @override
+  Future<List<HadithEntity>> searchHadithsByBook(String bookSlug, String query, bool isUrdu) async {
+    final trimmedQuery = query.trim();
+    if (trimmedQuery.isEmpty) return [];
+
+    final String cacheKey = 'search_hadiths_${bookSlug}_${isUrdu ? "ur" : "en"}_${trimmedQuery.toLowerCase()}';
+
+    final cachedData = localDataSource.getCachedHadiths(cacheKey);
+    if (cachedData != null && cachedData is List && cachedData.isNotEmpty) {
+      return cachedData.map((e) => HadithModel.fromJson(Map<String, dynamic>.from(e))).toList();
+    }
+
+    try {
+      final response = await dio.get(
+        'https://hadithapi.com/api/hadiths',
+        queryParameters: {
+          'apiKey': apiKey,
+          'book': bookSlug,
+          'hadithNumber': trimmedQuery,
+          'paginate': 1000,
+        },
+      );
+
+      List rawList = [];
+      if (response.statusCode == 200 && response.data != null) {
+        final rawHadiths = response.data['hadiths'];
+        if (rawHadiths is Map && rawHadiths['data'] is List) {
+          rawList = rawHadiths['data'];
+        } else if (rawHadiths is List) {
+          rawList = rawHadiths;
+        }
+      }
+
+      if (rawList.isEmpty) {
+        final textResponse = await dio.get(
+          'https://hadithapi.com/api/hadiths',
+          queryParameters: {
+            'apiKey': apiKey,
+            'book': bookSlug,
+            isUrdu ? 'hadithUrdu' : 'hadithEnglish': trimmedQuery,
+            'paginate': 1000,
+          },
+        );
+        if (textResponse.statusCode == 200 && textResponse.data != null) {
+          final rawHadiths = textResponse.data['hadiths'];
+          if (rawHadiths is Map && rawHadiths['data'] is List) {
+            rawList = rawHadiths['data'];
+          } else if (rawHadiths is List) {
+            rawList = rawHadiths;
+          }
+        }
+      }
+
+      if (rawList.isEmpty) {
+        final fallbackResponse = await dio.get(
+          'https://hadithapi.com/api/hadiths',
+          queryParameters: {
+            'apiKey': apiKey,
+            'book': bookSlug,
+            isUrdu ? 'hadithEnglish' : 'hadithUrdu': trimmedQuery,
+            'paginate': 1000,
+          },
+        );
+        if (fallbackResponse.statusCode == 200 && fallbackResponse.data != null) {
+          final rawHadiths = fallbackResponse.data['hadiths'];
+          if (rawHadiths is Map && rawHadiths['data'] is List) {
+            rawList = rawHadiths['data'];
+          } else if (rawHadiths is List) {
+            rawList = rawHadiths;
+          }
+        }
+      }
+
+      if (rawList.isNotEmpty) {
+        await localDataSource.cacheHadiths(cacheKey, rawList);
+        List<HadithModel> hadiths = rawList.map((e) => HadithModel.fromJson(e)).toList();
+
+        final queryTokens = trimmedQuery.toLowerCase().split(RegExp(r'\s+'));
+        hadiths.sort((a, b) {
+          int scoreA = _calculateRelevance(a, queryTokens, isUrdu);
+          int scoreB = _calculateRelevance(b, queryTokens, isUrdu);
+          return scoreB.compareTo(scoreA);
+        });
+
+        return hadiths;
+      }
+      return [];
+    } catch (e) {
+      debugPrint("Book Hadith search error: $e");
       if (cachedData != null && cachedData is List) {
         return cachedData.map((e) => HadithModel.fromJson(Map<String, dynamic>.from(e))).toList();
       }

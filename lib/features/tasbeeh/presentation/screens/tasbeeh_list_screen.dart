@@ -289,15 +289,35 @@ class TasbeehListScreen extends ConsumerWidget {
           ? AppColors.backgroundDark
           : AppColors.backgroundLight,
       appBar: AppBar(
-        title: const Text("Tasbeeh"),
+        title: Text(
+          isUrdu ? "تسبیح" : "Tasbeeh",
+          style: TextStyle(
+            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontWeight: FontWeight.bold,
+            fontSize: isUrdu ? 16 : 18,
+            color: isDark
+                ? AppColors.textPrimaryDark
+                : AppColors.textPrimaryLight,
+          ),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            size: 20,
+            color: isDark
+                ? AppColors.textPrimaryDark
+                : AppColors.textPrimaryLight,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: ListView.separated(
         padding: const EdgeInsets.all(16),
         itemCount: tasbeehList.length,
-        separatorBuilder: (_, __) => const SizedBox(height: 12),
+        separatorBuilder: (context, _) => const SizedBox(height: 12),
         itemBuilder: (context, index) {
           final item = tasbeehList[index];
           return Card(

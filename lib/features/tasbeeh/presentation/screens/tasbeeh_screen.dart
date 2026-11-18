@@ -30,12 +30,13 @@ class TasbeehScreen extends ConsumerWidget {
           ? AppColors.backgroundDark
           : AppColors.backgroundLight,
       appBar: AppBar(
-        title: const Text(
-          "Tasbeeh Counter",
+        title: Text(
+          isUrdu ? "تسبیح کاؤنٹر" : "Tasbeeh Counter",
           style: TextStyle(
-            fontFamily: 'Poppins',
+            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
             fontWeight: FontWeight.bold,
-            fontSize: 18,
+            fontSize: isUrdu ? 16 : 18,
+            color: isDark ? Colors.white : Colors.black87,
           ),
         ),
         backgroundColor: Colors.transparent,
@@ -56,7 +57,7 @@ class TasbeehScreen extends ConsumerWidget {
               hapticFeedBack();
               notifier.reset();
             },
-            tooltip: 'Reset Count',
+            tooltip: isUrdu ? 'ری سیٹ کریں' : 'Reset Count',
           ),
         ],
       ),
@@ -86,11 +87,11 @@ class TasbeehScreen extends ConsumerWidget {
                       color: Colors.transparent,
                       child: Text(
                         dhikrTitle,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontFamily: 'Amiri',
-                          fontSize: 20,
+                          fontSize: 22,
                           color: AppColors.primaryTeal,
-                          height: 1.2,
+                          height: 1.4,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -106,10 +107,10 @@ class TasbeehScreen extends ConsumerWidget {
                       vertical: 12,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryTeal.withOpacity(0.1),
+                      color: AppColors.primaryTeal.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(30),
                       border: Border.all(
-                        color: AppColors.primaryTeal.withOpacity(0.2),
+                        color: AppColors.primaryTeal.withValues(alpha: 0.2),
                         width: 1.5,
                       ),
                     ),
@@ -163,12 +164,13 @@ class TasbeehScreen extends ConsumerWidget {
         ),
         const SizedBox(width: 8),
         Text(
-          "TAP ANYWHERE TO COUNT",
+          isUrdu ? "شمار کرنے کے لیے کہیں بھی ٹیپ کریں" : "TAP ANYWHERE TO COUNT",
           style: TextStyle(
             color: isDark ? Colors.white24 : Colors.black26,
             letterSpacing: isUrdu ? 0 : 1.5,
             fontWeight: FontWeight.bold,
-            fontSize: 11,
+            fontSize: isUrdu ? 12 : 11,
+            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
           ),
         ),
       ],

@@ -20,6 +20,8 @@ class QuranHomeScreen extends ConsumerWidget {
     final progressState = ref.watch(quranProgressControllerProvider);
     final settings = ref.watch(settingsControllerProvider);
     final isUrdu = settings.language == 'ur';
+    final isPashto = settings.language == 'ps';
+    final isRtl = isUrdu || isPashto;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -28,12 +30,12 @@ class QuranHomeScreen extends ConsumerWidget {
           : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-          isUrdu ? 'القرآن الکریم' : 'Al-Quran',
+          isUrdu ? 'القرآن الکریم' : (isPashto ? 'القرآن الكريم' : 'Al-Quran'),
           style: TextStyle(
-            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
-            fontSize: isUrdu ? 18 : 20,
+            fontSize: isRtl ? 18 : 20,
             color: isDark
                 ? AppColors.textPrimaryDark
                 : AppColors.textPrimaryLight,
@@ -67,7 +69,7 @@ class QuranHomeScreen extends ConsumerWidget {
           physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
-            crossAxisAlignment: isUrdu
+            crossAxisAlignment: isRtl
                 ? CrossAxisAlignment.end
                 : CrossAxisAlignment.start,
             children: [
@@ -78,6 +80,7 @@ class QuranHomeScreen extends ConsumerWidget {
                 data: (progress) => KhatamProgressCard(
                   lastReadPage: progress.lastReadPage,
                   isUrdu: isUrdu,
+                  isPashto: isPashto,
                   onTap: () {
                     Navigator.push(
                       context,
@@ -114,10 +117,10 @@ class QuranHomeScreen extends ConsumerWidget {
                     children: [
                       _buildMinimalMenu(
                         context,
-                        title: isUrdu ? 'سورتیں' : 'Surah',
+                        title: isUrdu ? 'سورتیں' : (isPashto ? 'سورتونه' : 'Surah'),
                         icon: FlutterIslamicIcons.solidQuran,
                         baseColor: AppColors.lightTeal,
-                        isUrdu: isUrdu,
+                        isUrdu: isRtl,
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -127,10 +130,10 @@ class QuranHomeScreen extends ConsumerWidget {
                       ),
                       _buildMinimalMenu(
                         context,
-                        title: isUrdu ? 'پارے' : 'Juz',
+                        title: isUrdu ? 'پارے' : (isPashto ? 'پارې' : 'Juz'),
                         icon: FlutterIslamicIcons.solidQuran2,
                         baseColor: AppColors.lightTeal,
-                        isUrdu: isUrdu,
+                        isUrdu: isRtl,
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -140,10 +143,10 @@ class QuranHomeScreen extends ConsumerWidget {
                       ),
                       _buildMinimalMenu(
                         context,
-                        title: isUrdu ? 'بک مارک' : 'Bookmarks',
+                        title: isUrdu ? 'بک مارک' : (isPashto ? 'نښانې' : 'Bookmarks'),
                         icon: Icons.bookmark_rounded,
                         baseColor: AppColors.lightTeal,
-                        isUrdu: isUrdu,
+                        isUrdu: isRtl,
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -153,10 +156,10 @@ class QuranHomeScreen extends ConsumerWidget {
                       ),
                       _buildMinimalMenu(
                         context,
-                        title: isUrdu ? 'تلاوت آڈیو' : 'Audio',
+                        title: isUrdu ? 'تلاوت آڈیو' : (isPashto ? 'تلاوت آډیو' : 'Audio'),
                         icon: Icons.audiotrack_rounded,
                         baseColor: AppColors.lightTeal,
-                        isUrdu: isUrdu,
+                        isUrdu: isRtl,
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(

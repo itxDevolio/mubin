@@ -84,6 +84,8 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
 
     final currentLang = ref.watch(settingsControllerProvider).language;
     final isUrdu = currentLang == 'ur';
+    final isPashto = currentLang == 'ps';
+    final isRtl = isUrdu || isPashto;
     final bookmarkedIds = bookmarksState.maybeWhen(
       data: (list) => list.map((b) => b.id).toSet(),
       orElse: () => <int>{},
@@ -117,14 +119,16 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
                   // 2. Juz Info
                   Expanded(
                     child: Text(
-                      isUrdu 
+                      isUrdu
                           ? "پارہ ${_getJuz(_currentPage)}"
-                          : QuranUtils.juzNamesEnglish[_getJuz(_currentPage) - 1],
+                          : (isPashto
+                              ? "پاره ${_getJuz(_currentPage)}"
+                              : QuranUtils.juzNamesEnglish[_getJuz(_currentPage) - 1]),
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
                         color: isDark ? Colors.white60 : Colors.black54,
-                        fontFamily: isUrdu ? 'NotoNastaliqUrdu' : null,
+                        fontFamily: isRtl ? 'NotoNastaliqUrdu' : null,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -132,10 +136,12 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
                   ),
                   // 3. Page Number
                   Text(
-                    isUrdu ? "صفحہ $_currentPage" : "$_currentPage",
+                    isUrdu
+                        ? "صفحہ $_currentPage"
+                        : (isPashto ? "مخ $_currentPage" : "$_currentPage"),
                     style: TextStyle(
-                      fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
-                      fontSize: isUrdu ? 11 : 13,
+                      fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                      fontSize: isRtl ? 11 : 13,
                       fontWeight: FontWeight.bold,
                       color: AppColors.primaryTeal,
                     ),
@@ -336,7 +342,7 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
   }
 
   Widget _buildStyledHeader(int surahNumber, double fontSize, bool isDark, double lineHeight, String lang) {
-    final isUrdu = lang == 'ur';
+    final isUrdu = lang == 'ur' || lang == 'ps';
     return Container(
       width: double.infinity,
       height: lineHeight,

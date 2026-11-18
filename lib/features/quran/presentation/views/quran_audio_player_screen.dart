@@ -30,6 +30,8 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
     final audioState = ref.watch(quranAudioPlayerControllerProvider);
     final settings = ref.watch(settingsControllerProvider);
     final isUrdu = settings.language == 'ur';
+    final isPashto = settings.language == 'ps';
+    final isRtl = isUrdu || isPashto;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -38,9 +40,9 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
           : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-          isUrdu ? 'تلاوت آڈیو' : 'Quran Audio',
+          isUrdu ? 'تلاوت آڈیو' : (isPashto ? 'د قرآن تلاوت آډیو' : 'Quran Audio'),
           style: TextStyle(
-            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
             color: isDark
@@ -74,20 +76,22 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
               onChanged: (val) => ref
                   .read(surahJuzControllerProvider.notifier)
                   .searchSurah(val),
-              textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
-              textAlign: isUrdu ? TextAlign.right : TextAlign.left,
+              textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+              textAlign: isRtl ? TextAlign.right : TextAlign.left,
               cursorColor: AppColors.primaryTeal,
               style: TextStyle(
-                fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
                 color: isDark
                     ? AppColors.textPrimaryDark
                     : AppColors.textPrimaryLight,
                 fontSize: 14,
               ),
               decoration: InputDecoration(
-                hintText: isUrdu ? 'سورت تلاش کریں' : 'Search Surah',
+                hintText: isUrdu
+                    ? 'سورت تلاش کریں'
+                    : (isPashto ? 'سورت لټول' : 'Search Surah'),
                 hintStyle: TextStyle(
-                  fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                  fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
                   color: isDark
                       ? AppColors.textSecondaryDark
                       : AppColors.textSecondaryLight,
@@ -135,9 +139,11 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
                 if (list.isEmpty) {
                   return Center(
                     child: Text(
-                      isUrdu ? 'کوئی سورت نہیں ملی' : 'No Surah found',
+                      isUrdu
+                          ? 'کوئی سورت نہیں ملی'
+                          : (isPashto ? 'هیڅ سورت ونه موندل شو' : 'No Surah found'),
                       style: TextStyle(
-                        fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                        fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
                         color: isDark
                             ? AppColors.textSecondaryDark
                             : AppColors.textSecondaryLight,
@@ -175,18 +181,10 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
                       final surah = list[index];
                       final isCurrent =
                           audioState.currentSurahNumber == surah.number;
-                      final int totalVerses = quran.getVerseCount(
-                        surah.number,
-                      );
                       final downloadInfo = audioState.downloadInfoMap[surah.number];
                       final isDownloading = downloadInfo?.status == DownloadStatus.downloading;
                       final downloadProgress = downloadInfo?.progress ?? 0.0;
                       final isDownloaded = audioState.downloadedSurahs.contains(surah.number);
-
-                      final rawRevelation = quran.getPlaceOfRevelation(surah.number);
-                      final revelationPlace = isUrdu
-                          ? (rawRevelation == 'Makkah' ? "مکی" : "مدنی")
-                          : rawRevelation;
 
                       return InkWell(
                         onTap: () {
@@ -220,7 +218,7 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
                             horizontal: 4.0,
                           ),
                           child: Row(
-                            textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
+                            textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
                             children: [
                               // Number Badge
                               Container(
@@ -252,40 +250,22 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
                               ),
                               const SizedBox(width: 16),
                               Expanded(
-                                child: Column(
-                                  crossAxisAlignment: isUrdu
-                                      ? CrossAxisAlignment.end
-                                      : CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      isUrdu ? surah.nameArabic : surah.nameEnglish,
-                                      style: TextStyle(
-                                        fontFamily: isUrdu ? 'Amiri' : 'Poppins',
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: isUrdu ? 20 : 16,
-                                        color: isCurrent
-                                            ? AppColors.primaryTeal
-                                            : (isDark
-                                                  ? AppColors.textPrimaryDark
-                                                  : AppColors.textPrimaryLight),
-                                        letterSpacing: isUrdu ? 0 : 0.2,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      isUrdu
-                                          ? "$revelationPlace • $totalVerses آیات"
-                                          : "$revelationPlace • $totalVerses Verses",
-                                      style: TextStyle(
-                                        fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
-                                        fontSize: isUrdu ? 11 : 12,
-                                        color: isDark
-                                            ? AppColors.textSecondaryDark
-                                            : AppColors.textSecondaryLight,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
+                                child: Text(
+                                  isRtl ? surah.nameArabic : surah.nameEnglish,
+                                  textAlign: isRtl
+                                      ? TextAlign.right
+                                      : TextAlign.left,
+                                  style: TextStyle(
+                                    fontFamily: isRtl ? 'Amiri' : 'Poppins',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: isRtl ? 20 : 16,
+                                    color: isCurrent
+                                        ? AppColors.primaryTeal
+                                        : (isDark
+                                              ? AppColors.textPrimaryDark
+                                              : AppColors.textPrimaryLight),
+                                    letterSpacing: isRtl ? 0 : 0.2,
+                                  ),
                                 ),
                               ),
                               if (isCurrent)

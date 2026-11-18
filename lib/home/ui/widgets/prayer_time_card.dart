@@ -10,7 +10,7 @@ class PrayerTimeCard extends StatelessWidget {
   final Prayer activePrayer;
   final Prayer currentCardPrayer;
   final int flexValue;
-  final bool isUrdu;
+  final bool isRtl;
 
   const PrayerTimeCard({
     super.key,
@@ -19,7 +19,7 @@ class PrayerTimeCard extends StatelessWidget {
     required this.activePrayer,
     required this.currentCardPrayer,
     this.flexValue = 10,
-    this.isUrdu = false,
+    this.isRtl = false,
   });
 
   @override
@@ -97,11 +97,11 @@ class PrayerTimeCard extends StatelessWidget {
               prayerName,
               maxLines: 1,
               style: TextStyle(
-                fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
                 color: textColor,
                 fontSize: isCurrentActive
-                    ? (isUrdu ? 11 : 12)
-                    : (isUrdu ? 10 : 11),
+                    ? (isRtl ? 11 : 12)
+                    : (isRtl ? 10 : 11),
                 fontWeight: isCurrentActive ? FontWeight.bold : FontWeight.w500,
                 letterSpacing: isCurrentActive ? 0.4 : 0.2,
               ),

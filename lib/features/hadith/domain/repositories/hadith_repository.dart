@@ -7,4 +7,5 @@ abstract class HadithRepository {
   Future<List<ChapterEntity>> getChapters(String bookSlug);
   Future<List<HadithEntity>> getHadiths(String bookSlug, String chapterNumber);
   Future<List<HadithEntity>> searchHadiths(String query, bool isUrdu);
+  Future<List<HadithEntity>> searchHadithsByBook(String bookSlug, String query, bool isUrdu);
 }

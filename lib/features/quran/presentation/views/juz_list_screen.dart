@@ -20,10 +20,12 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
   Widget build(BuildContext context) {
     final lang = ref.watch(settingsControllerProvider).language;
     final isUrdu = lang == 'ur';
+    final isPashto = lang == 'ps';
+    final isRtl = isUrdu || isPashto;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final filteredJuz = List.generate(30, (i) => i + 1).where((j) {
-      final name = isUrdu
+      final name = isRtl
           ? QuranUtils.juzNamesArabic[j - 1]
           : QuranUtils.juzNamesEnglish[j - 1];
       return name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
@@ -36,9 +38,11 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
           : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-          isUrdu ? 'پاروں کی فہرست' : 'Juz / Para List',
+          isUrdu
+              ? 'پاروں کی فہرست'
+              : (isPashto ? 'پارې' : 'Juz / Para List'),
           style: TextStyle(
-            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
             color: isDark
@@ -70,20 +74,22 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
             ),
             child: TextField(
               onChanged: (val) => setState(() => _searchQuery = val),
-              textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
-              textAlign: isUrdu ? TextAlign.right : TextAlign.left,
+              textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+              textAlign: isRtl ? TextAlign.right : TextAlign.left,
               cursorColor: AppColors.primaryTeal,
               style: TextStyle(
-                fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
                 color: isDark
                     ? AppColors.textPrimaryDark
                     : AppColors.textPrimaryLight,
                 fontSize: 14,
               ),
               decoration: InputDecoration(
-                hintText: isUrdu ? 'پارہ تلاش کریں' : 'Search Juz',
+                hintText: isUrdu
+                    ? 'پارہ تلاش کریں'
+                    : (isPashto ? 'پاره لټول' : 'Search Juz'),
                 hintStyle: TextStyle(
-                  fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                  fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
                   color: isDark
                       ? AppColors.textSecondaryDark
                       : AppColors.textSecondaryLight,
@@ -141,9 +147,11 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
                         Text(
                           isUrdu
                               ? "'$_searchQuery' کے نام سے کوئی پارہ نہیں ملا"
-                              : 'No Juz found for "$_searchQuery"',
+                              : (isPashto
+                                  ? "د '$_searchQuery' په نوم هیڅ پاره ونه موندل شوه"
+                                  : 'No Juz found for "$_searchQuery"'),
                           style: TextStyle(
-                            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
                             color: isDark
                                 ? AppColors.textSecondaryDark
                                 : AppColors.textSecondaryLight,
@@ -154,17 +162,20 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
                     ),
                   )
                 : filteredJuz.isEmpty
-                    ? const Center(
+                    ? Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            CircularProgressIndicator(
+                            const CircularProgressIndicator(
                               color: AppColors.primaryTeal,
                             ),
-                            SizedBox(height: 16),
+                            const SizedBox(height: 16),
                             Text(
-                              'Loading...',
+                              isUrdu
+                                  ? 'لوڈنگ...'
+                                  : (isPashto ? 'باریږي...' : 'Loading...'),
                               style: TextStyle(
+                                fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
                                 fontSize: 14,
                               ),
                             ),
@@ -223,7 +234,7 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
                                 horizontal: 4.0,
                               ),
                               child: Row(
-                                textDirection: isUrdu
+                                textDirection: isRtl
                                     ? TextDirection.rtl
                                     : TextDirection.ltr,
                                 children: [
@@ -233,8 +244,12 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
                                     height: 40,
                                     decoration: BoxDecoration(
                                       color: isDark
-                                          ? AppColors.primaryTeal.withValues(alpha: 0.12)
-                                          : AppColors.primaryTeal.withValues(alpha: 0.08),
+                                          ? AppColors.primaryTeal.withValues(
+                                              alpha: 0.12,
+                                            )
+                                          : AppColors.primaryTeal.withValues(
+                                              alpha: 0.08,
+                                            ),
                                       borderRadius: BorderRadius.circular(12),
                                       border: Border.all(
                                         color: AppColors.primaryTeal.withValues(
@@ -258,28 +273,38 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
                                   // Text Content Area
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: isUrdu
+                                      crossAxisAlignment: isRtl
                                           ? CrossAxisAlignment.end
                                           : CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          isUrdu ? juzArabicName : juzEnglishName,
+                                          isRtl
+                                              ? juzArabicName
+                                              : juzEnglishName,
                                           style: TextStyle(
-                                            fontFamily: isUrdu ? 'Amiri' : 'Poppins',
+                                            fontFamily: isRtl
+                                                ? 'Amiri'
+                                                : 'Poppins',
                                             fontWeight: FontWeight.bold,
-                                            fontSize: isUrdu ? 20 : 16,
+                                            fontSize: isRtl ? 20 : 16,
                                             color: isDark
                                                 ? AppColors.textPrimaryDark
                                                 : AppColors.textPrimaryLight,
-                                            letterSpacing: isUrdu ? 0 : 0.2,
+                                            letterSpacing: isRtl ? 0 : 0.2,
                                           ),
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
-                                          isUrdu ? "پارہ $juzNumber" : "Juz $juzNumber",
+                                          isUrdu
+                                              ? "پارہ $juzNumber"
+                                              : (isPashto
+                                                  ? "پاره $juzNumber"
+                                                  : "Juz $juzNumber"),
                                           style: TextStyle(
-                                            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
-                                            fontSize: isUrdu ? 11 : 12,
+                                            fontFamily: isRtl
+                                                ? 'NotoNastaliqUrdu'
+                                                : 'Poppins',
+                                            fontSize: isRtl ? 11 : 12,
                                             color: isDark
                                                 ? AppColors.textSecondaryDark
                                                 : AppColors.textSecondaryLight,
@@ -290,7 +315,7 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
                                     ),
                                   ),
 
-                                  if (!isUrdu) ...[
+                                  if (!isRtl) ...[
                                     Text(
                                       juzArabicName,
                                       style: TextStyle(
@@ -306,7 +331,7 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
                                   ],
 
                                   Icon(
-                                    isUrdu
+                                    isRtl
                                         ? Icons.arrow_back_ios_rounded
                                         : Icons.arrow_forward_ios_rounded,
                                     size: 12,

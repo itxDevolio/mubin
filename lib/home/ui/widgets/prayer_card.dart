@@ -21,7 +21,9 @@ class PrayerCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final prayer = ref.watch(prayerTimesProvider(date));
     final settings = ref.watch(settingsControllerProvider);
-    final isUrdu = settings.language == 'ur';
+    final bool isUrdu = settings.language == 'ur';
+    final bool isPashto = settings.language == 'ps';
+    final bool isRtl = isUrdu || isPashto;
 
     return prayer.when(
       data: (d) {
@@ -32,9 +34,11 @@ class PrayerCard extends ConsumerWidget {
               child: Text(
                 isUrdu
                     ? "براہِ کرم لوکیشن کی اجازت فراہم کریں۔"
-                    : "Please enable location settings.",
+                    : (isPashto
+                        ? "مهرباني وکئ د موقعیت (Location) اجازه ورکړئ."
+                        : "Please enable location settings."),
                 style: TextStyle(
-                  fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                  fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
                 ),
               ),
             ),
@@ -76,13 +80,13 @@ class PrayerCard extends ConsumerWidget {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
+                textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
                 children: [
                   Expanded(
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       textDirection:
-                          isUrdu ? TextDirection.rtl : TextDirection.ltr,
+                          isRtl ? TextDirection.rtl : TextDirection.ltr,
                       children: [
                         Icon(
                           FlutterIslamicIcons.mosque,
@@ -98,7 +102,7 @@ class PrayerCard extends ConsumerWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             textAlign:
-                                isUrdu ? TextAlign.right : TextAlign.left,
+                                isRtl ? TextAlign.right : TextAlign.left,
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 13,
@@ -152,43 +156,43 @@ class PrayerCard extends ConsumerWidget {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
+                textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
                 children: [
                   PrayerTimeCard(
-                    prayerName: isUrdu ? "فجر" : "Fajr",
+                    prayerName: isUrdu ? "فجر" : (isPashto ? "سهار" : "Fajr"),
                     prayerTime: d.fajr,
                     activePrayer: active,
                     currentCardPrayer: Prayer.fajr,
-                    isUrdu: isUrdu,
+                    isRtl: isRtl,
                   ),
                   PrayerTimeCard(
-                    prayerName: isUrdu ? "ظہر" : "Dhuhr",
+                    prayerName: isUrdu ? "ظہر" : (isPashto ? "ماسپښین" : "Dhuhr"),
                     prayerTime: d.dhuhr,
                     activePrayer: active,
                     currentCardPrayer: Prayer.dhuhr,
-                    isUrdu: isUrdu,
+                    isRtl: isRtl,
                   ),
                   PrayerTimeCard(
-                    prayerName: isUrdu ? "عصر" : "Asr",
+                    prayerName: isUrdu ? "عصر" : (isPashto ? "مازدیګر" : "Asr"),
                     prayerTime: d.asr,
                     activePrayer: active,
                     currentCardPrayer: Prayer.asr,
-                    isUrdu: isUrdu,
+                    isRtl: isRtl,
                   ),
                   PrayerTimeCard(
-                    prayerName: isUrdu ? "مغرب" : "Maghrib",
+                    prayerName: isUrdu ? "مغرب" : (isPashto ? "ماښام" : "Maghrib"),
                     prayerTime: d.maghrib,
                     activePrayer: active,
                     currentCardPrayer: Prayer.maghrib,
                     flexValue: 13,
-                    isUrdu: isUrdu,
+                    isRtl: isRtl,
                   ),
                   PrayerTimeCard(
-                    prayerName: isUrdu ? "عشاء" : "Isha",
+                    prayerName: isUrdu ? "عشاء" : (isPashto ? "ماخوستن" : "Isha"),
                     prayerTime: d.isha,
                     activePrayer: active,
                     currentCardPrayer: Prayer.isha,
-                    isUrdu: isUrdu,
+                    isRtl: isRtl,
                   ),
                 ],
               ),

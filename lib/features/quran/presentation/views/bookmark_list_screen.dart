@@ -13,6 +13,8 @@ class BookmarkListScreen extends ConsumerWidget {
     final bookmarksState = ref.watch(bookmarkControllerProvider);
     final settings = ref.watch(settingsControllerProvider);
     final isUrdu = settings.language == 'ur';
+    final isPashto = settings.language == 'ps';
+    final isRtl = isUrdu || isPashto;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -21,9 +23,11 @@ class BookmarkListScreen extends ConsumerWidget {
           : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-          isUrdu ? 'محفوظ شدہ نشانات (بک مارکس)' : 'Saved Bookmarks',
+          isUrdu
+              ? 'محفوظ شدہ نشانات (بک مارکس)'
+              : (isPashto ? 'نښانې' : 'Saved Bookmarks'),
           style: TextStyle(
-            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
             color: isDark
@@ -70,14 +74,18 @@ class BookmarkListScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    isUrdu ? 'کوئی نشان محفوظ نہیں ہے' : 'No bookmarks saved yet',
+                    isUrdu
+                        ? 'کوئی نشان محفوظ نہیں ہے'
+                        : (isPashto
+                            ? 'هیڅ نښه نه ده خوندي شوې'
+                            : 'No bookmarks saved yet'),
                     style: TextStyle(
-                      fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                      fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
                       color: isDark
                           ? AppColors.textSecondaryDark
                           : AppColors.textSecondaryLight,
                       fontWeight: FontWeight.w500,
-                      fontSize: isUrdu ? 14 : 15,
+                      fontSize: isRtl ? 14 : 15,
                     ),
                   ),
                 ],
@@ -118,7 +126,7 @@ class BookmarkListScreen extends ConsumerWidget {
                     horizontal: 4.0,
                   ),
                   child: Row(
-                    textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
+                    textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
                     children: [
                       // Left Icon Badge
                       Container(
@@ -146,7 +154,7 @@ class BookmarkListScreen extends ConsumerWidget {
                       // Text Content (Title & Subtitle Info)
                       Expanded(
                         child: Column(
-                          crossAxisAlignment: isUrdu
+                          crossAxisAlignment: isRtl
                               ? CrossAxisAlignment.end
                               : CrossAxisAlignment.start,
                           children: [
@@ -181,10 +189,14 @@ class BookmarkListScreen extends ConsumerWidget {
                             Text(
                               isUrdu
                                   ? 'سورة ${verse.surahNumber} • آیت ${verse.verseNumber} • صفحہ ${verse.pageNumber}'
-                                  : 'Surah ${verse.surahNumber} • Verse ${verse.verseNumber} • Page ${verse.pageNumber}',
+                                  : (isPashto
+                                      ? 'سورت ${verse.surahNumber} • آیت ${verse.verseNumber} • مخ ${verse.pageNumber}'
+                                      : 'Surah ${verse.surahNumber} • Verse ${verse.verseNumber} • Page ${verse.pageNumber}'),
                               style: TextStyle(
-                                fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
-                                fontSize: isUrdu ? 11 : 12,
+                                fontFamily: isRtl
+                                    ? 'NotoNastaliqUrdu'
+                                    : 'Poppins',
+                                fontSize: isRtl ? 11 : 12,
                                 color: isDark
                                     ? AppColors.textSecondaryDark
                                     : AppColors.textSecondaryLight,
