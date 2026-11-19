@@ -135,8 +135,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              textDirection:
-                                  isRtl ? TextDirection.rtl : TextDirection.ltr,
+                              textDirection: isRtl
+                                  ? TextDirection.rtl
+                                  : TextDirection.ltr,
                               children: [
                                 FeatureCard(
                                   title: isUrdu
@@ -193,8 +194,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                             const SizedBox(height: 12),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              textDirection:
-                                  isRtl ? TextDirection.rtl : TextDirection.ltr,
+                              textDirection: isRtl
+                                  ? TextDirection.rtl
+                                  : TextDirection.ltr,
                               children: [
                                 FeatureCard(
                                   title: isUrdu
@@ -249,28 +251,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 24),
-                            Align(
-                              alignment: isRtl
-                                  ? Alignment.centerRight
-                                  : Alignment.centerLeft,
-                              child: Text(
-                                isUrdu
-                                    ? "اسلامی رہنمائی"
-                                    : (isPashto
-                                        ? "اسلامي لارښوونې"
-                                        : "Islamic Guides"),
-                                style: TextStyle(
-                                  fontFamily:
-                                      isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(
-                                    context,
-                                  ).textTheme.titleLarge?.color,
-                                ),
-                              ),
-                            ),
+
                             const SizedBox(height: 12),
                             Directionality(
                               textDirection: isRtl
@@ -287,13 +268,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                       title: isUrdu
                                           ? "نمازِ جنازہ کا طریقہ"
                                           : (isPashto
-                                              ? "د جنازې لمانځه تګلاره"
-                                              : "Funeral Prayer Guide"),
+                                                ? "د جنازې لمانځه تګلاره"
+                                                : "Funeral Prayer Guide"),
                                       subTitle: isUrdu
                                           ? "نمازِ جنازہ کا مسنون اور مستند طریقہ"
                                           : (isPashto
-                                              ? "د جنازې لمانځه مسنون او معتبره تګلاره"
-                                              : "Step-by-step authentic method and supplications."),
+                                                ? "د جنازې لمانځه مسنون او معتبره تګلاره"
+                                                : "Step-by-step authentic method and supplications."),
                                       imageUrl: "assets/app_logos/funeral.png",
                                       isRtl: isRtl,
                                       onTap: () {
@@ -310,14 +291,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                       title: isUrdu
                                           ? "استخارہ کا طریقہ"
                                           : (isPashto
-                                              ? "د استخارې لمانځه تګلاره"
-                                              : "Istikhara Prayer Guide"),
+                                                ? "د استخارې لمانځه تګلاره"
+                                                : "Istikhara Prayer Guide"),
                                       subTitle: isUrdu
                                           ? "اہم فیصلوں میں اللہ سے رہنمائی حاصل کریں"
                                           : (isPashto
-                                              ? "په مهمو پریکړو کې له الله څخه لارښوونه وغواړئ"
-                                              : "Seek Allah's counsel for your important decisions."),
-                                      imageUrl: "assets/app_logos/istikhara.png",
+                                                ? "په مهمو پریکړو کې له الله څخه لارښوونه وغواړئ"
+                                                : "Seek Allah's counsel for your important decisions."),
+                                      imageUrl:
+                                          "assets/app_logos/istikhara.png",
                                       isRtl: isRtl,
                                       onTap: () {
                                         Navigator.push(
@@ -333,13 +315,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                       title: isUrdu
                                           ? "نمازِ قصر کا طریقہ"
                                           : (isPashto
-                                              ? "د مسافر لمانځه (قصر) تګلاره"
-                                              : "Traveler's Prayer"),
+                                                ? "د مسافر لمانځه (قصر) تګلاره"
+                                                : "Traveler's Prayer"),
                                       subTitle: isUrdu
                                           ? "سفر کے دوران نماز قصر کرنے کا مکمل طریقہ"
                                           : (isPashto
-                                              ? "د سفر پر مهال د قصر لمانځه مکمل اصول او تګلاره"
-                                              : "Guidelines and method for shortening prayers during travel."),
+                                                ? "د سفر پر مهال د قصر لمانځه مکمل اصول او تګلاره"
+                                                : "Guidelines and method for shortening prayers during travel."),
                                       imageUrl: "assets/app_logos/qasar.png",
                                       isRtl: isRtl,
                                       onTap: () {

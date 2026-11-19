@@ -21,117 +21,145 @@ class InfoGuideCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final bool isDark = themeDark(context);
+    final TextDirection textDirection = isRtl
+        ? TextDirection.rtl
+        : TextDirection.ltr;
 
     const double componentHeight = 105.0;
 
     return UnconstrainedBox(
       alignment: Alignment.topCenter,
-      child: GestureDetector(
-        onTap: () {
-          onTap();
-        },
-        child: Container(
-          width: screenWidth * 0.82,
-          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(
-            color: getThemeColor(context, light: Colors.white, dark: Colors.black54),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color: getThemeColor(context, light: Colors.black.withValues(alpha: 0.05), dark: Colors.white.withValues(alpha: 0.08)),
+      child: Directionality(
+        textDirection: textDirection,
+        child: GestureDetector(
+          onTap: onTap,
+          child: Container(
+            width: screenWidth * 0.82,
+            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: getThemeColor(
+                context,
+                light: Colors.white,
+                dark: Colors.black54,
+              ),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: getThemeColor(
+                  context,
+                  light: Colors.black.withValues(alpha: 0.05),
+                  dark: Colors.white.withValues(alpha: 0.08),
+                ),
+              ),
+              boxShadow: isDark
+                  ? []
+                  : [
+                      BoxShadow(
+                        color: getThemeColor(
+                          context,
+                          light: Colors.black.withValues(alpha: 0.02),
+                          dark: Colors.white.withValues(alpha: 0.02),
+                        ),
+                        blurRadius: 8,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
             ),
-            boxShadow: isDark
-                ? []
-                : [
-                    BoxShadow(
-                      color: getThemeColor(context, light: Colors.black.withValues(alpha: 0.02), dark: Colors.white.withValues(alpha: 0.02)),
-                      blurRadius: 8,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: isRtl ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-            children: [
-              // 1. IMAGE SECTION
-              ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(14),
-                  topRight: Radius.circular(14),
-                ),
-                child: imageUrl.startsWith('assets') 
-                  ? Image.asset(
-                      imageUrl,
-                      height: componentHeight,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    )
-                  : Image.network(
-                      imageUrl,
-                      height: componentHeight,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // 1. IMAGE SECTION
+                ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(14),
+                    topRight: Radius.circular(14),
+                  ),
+                  child: imageUrl.startsWith('assets')
+                      ? Image.asset(
+                          imageUrl,
                           height: componentHeight,
-                          color: getThemeColor(context, light: Colors.grey[200]!, dark: Colors.grey[800]!),
-                          child: const Center(
-                            child: Icon(
-                              Icons.image_not_supported_outlined,
-                              size: 20,
-                            ),
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.network(
+                          imageUrl,
+                          height: componentHeight,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              height: componentHeight,
+                              color: getThemeColor(
+                                context,
+                                light: Colors.grey[200]!,
+                                dark: Colors.grey[800]!,
+                              ),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.image_not_supported_outlined,
+                                  size: 20,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                ),
+
+                // 2. TEXT CONTENT SECTION
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 12.0,
+                    right: 12.0,
+                    top: 8.0,
+                    bottom: 6.0,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // TITLE
+                      Text(
+                        title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                          fontSize: isRtl ? 13 : 13.5,
+                          fontWeight: FontWeight.bold,
+                          color: getThemeColor(
+                            context,
+                            light: Colors.black87,
+                            dark: Colors.white,
                           ),
-                        );
-                      },
-                    ),
-              ),
-
-              // 2. TEXT CONTENT SECTION
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 12.0,
-                  right: 12.0,
-                  top: 8.0,
-                  bottom: 6.0,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: isRtl ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-                  children: [
-                    // TITLE
-                    Text(
-                      title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: isRtl ? TextAlign.right : TextAlign.left,
-                      style: TextStyle(
-                        fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
-                        fontSize: isRtl ? 13 : 13.5,
-                        fontWeight: FontWeight.bold,
-                        color: getThemeColor(context, light: Colors.black87, dark: Colors.white),
+                        ),
                       ),
-                    ),
 
-                    const SizedBox(height: 1),
+                      const SizedBox(height: 1),
 
-                    // SUBTITLE
-                    Text(
-                      subTitle,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: isRtl ? TextAlign.right : TextAlign.left,
-                      style: TextStyle(
-                        fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
-                        fontSize: isRtl ? 10.5 : 10.5,
-                        fontWeight: FontWeight.w400,
-                        color: getThemeColor(context, light: Colors.black54, dark: Colors.white60),
-                        height: isRtl ? 1.6 : 1.25,
+                      // SUBTITLE
+                      Text(
+                        subTitle,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                          fontSize: isRtl ? 10.5 : 10.5,
+                          fontWeight: FontWeight.w400,
+                          color: getThemeColor(
+                            context,
+                            light: Colors.black54,
+                            dark: Colors.white60,
+                          ),
+                          height: isRtl ? 1.6 : 1.25,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

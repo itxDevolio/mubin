@@ -20,6 +20,192 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = "";
 
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      if (!mounted) return;
+      final settings = ref.read(settingsControllerProvider);
+      if (settings.language == 'ps') {
+        _showPashtoHadithNoticeDialog(context);
+      }
+    });
+  }
+
+  void _showPashtoHadithNoticeDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        final theme = Theme.of(context);
+        final isDark = theme.brightness == Brightness.dark;
+
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: AlertDialog(
+            backgroundColor: isDark ? const Color(0xFF1A1E24) : Colors.white,
+            surfaceTintColor: Colors.transparent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+              side: BorderSide(
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.08)
+                    : Colors.black.withValues(alpha: 0.05),
+              ),
+            ),
+            contentPadding: const EdgeInsets.fromLTRB(22, 24, 22, 20),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Top Icon + Pashto Title
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryTeal.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: const Icon(
+                        Icons.translate_rounded,
+                        color: AppColors.primaryTeal,
+                        size: 22,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'د حدیثو پښتو ترجمه',
+                            style: TextStyle(
+                              fontFamily: 'NotoNastaliqUrdu',
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: isDark ? Colors.white : Colors.black87,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'ژر به پوره شي',
+                            style: TextStyle(
+                              fontFamily: 'NotoNastaliqUrdu',
+                              fontSize: 11.5,
+                              color: isDark ? Colors.white60 : Colors.black54,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 16),
+
+                // Simple Pashto Message Box
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryTeal.withValues(
+                      alpha: isDark ? 0.08 : 0.05,
+                    ),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(
+                      color: AppColors.primaryTeal.withValues(alpha: 0.16),
+                    ),
+                  ),
+                  child: Text(
+                    'د حدیثو پښتو ترجمه لا روانه ده. مهرباني وکړئ د اوس لپاره په اردو یا انګلش کې ولولئ.',
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      fontFamily: 'NotoNastaliqUrdu',
+                      fontSize: 13.5,
+                      height: 1.85,
+                      color: isDark
+                          ? Colors.white.withValues(alpha: 0.92)
+                          : Colors.black87,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // Action Buttons
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          ref
+                              .read(settingsControllerProvider.notifier)
+                              .setLanguage('ur');
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryTeal,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          padding: const EdgeInsets.symmetric(vertical: 11),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text(
+                          'اردو',
+                          style: TextStyle(
+                            fontFamily: 'NotoNastaliqUrdu',
+                            fontSize: 13.5,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {
+                          ref
+                              .read(settingsControllerProvider.notifier)
+                              .setLanguage('en');
+                          Navigator.pop(context);
+                        },
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor:
+                          isDark ? Colors.white : Colors.black87,
+                          side: BorderSide(
+                            color: isDark
+                                ? Colors.white24
+                                : Colors.black.withValues(alpha: 0.15),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 11),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text(
+                          'انګلش',
+                          style: TextStyle(
+                            fontFamily: 'NotoNastaliqUrdu',
+                            fontSize: 13.5,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
   final List<String> _urduTopics = [
     'نماز',
     'روزہ',

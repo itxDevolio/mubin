@@ -1,68 +1,118 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/app_colors.dart';
+import '../../../../core/services/settings_controller.dart';
 import '../../domain/entities/guide_step.dart';
 
 class GuideStepWidget extends ConsumerWidget {
   final GuideStep step;
-  final bool isUrdu;
+  final bool isUrdu; // kept for backwards compatibility or override
 
   const GuideStepWidget({
     super.key,
     required this.step,
-    required this.isUrdu,
+    this.isUrdu = false,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final settings = ref.watch(settingsControllerProvider);
+    final isUrduLang = settings.language == 'ur';
+    final isPashtoLang = settings.language == 'ps';
+    final isRtl = isUrdu || isUrduLang || isPashtoLang;
+
+    final title = isPashtoLang && step.titlePs.isNotEmpty
+        ? step.titlePs
+        : (isRtl ? step.titleUr : step.titleEn);
+
+    final content = isPashtoLang && step.contentPs.isNotEmpty
+        ? step.contentPs
+        : (isRtl ? step.contentUr : step.contentEn);
+
+    final translation = isPashtoLang && step.translationPs?.isNotEmpty == true
+        ? step.translationPs!
+        : (isRtl ? step.translationUr : step.translationEn);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 48),
       child: Column(
-        crossAxisAlignment: isUrdu ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment:
+            isRtl ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           // Step Header
           Row(
-            mainAxisAlignment: isUrdu ? MainAxisAlignment.end : MainAxisAlignment.start,
+            mainAxisAlignment:
+                isRtl ? MainAxisAlignment.end : MainAxisAlignment.start,
             children: [
-              if (!isUrdu) _buildStepCircle(step.stepNumber),
+              if (!isRtl) _buildStepCircle(step.stepNumber),
               const SizedBox(width: 16),
               Expanded(
                 child: Text(
-                  isUrdu ? step.titleUr : step.titleEn,
-                  textAlign: isUrdu ? TextAlign.right : TextAlign.left,
-                  style: isUrdu 
-                    ? const TextStyle(fontFamily: 'NotoNastaliqUrdu', fontSize: 19, fontWeight: FontWeight.bold, height: 1.6)
-                    : const TextStyle(fontFamily: 'Poppins', fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: -0.5),
+                  title,
+                  textAlign: isRtl ? TextAlign.right : TextAlign.left,
+                  style: isRtl
+                      ? const TextStyle(
+                          fontFamily: 'NotoNastaliqUrdu',
+                          fontSize: 19,
+                          fontWeight: FontWeight.bold,
+                          height: 1.6,
+                        )
+                      : const TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: -0.5,
+                        ),
                 ),
               ),
               const SizedBox(width: 16),
-              if (isUrdu) _buildStepCircle(step.stepNumber),
+              if (isRtl) _buildStepCircle(step.stepNumber),
             ],
           ),
           const SizedBox(height: 18),
-          
+
           // Step Content with Vertical Line
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
               border: Border(
-                left: !isUrdu ? BorderSide(color: AppColors.primaryTeal.withOpacity(0.15), width: 1.5) : BorderSide.none,
-                right: isUrdu ? BorderSide(color: AppColors.primaryTeal.withOpacity(0.15), width: 1.5) : BorderSide.none,
+                left: !isRtl
+                    ? BorderSide(
+                        color: AppColors.primaryTeal.withValues(alpha: 0.15),
+                        width: 1.5,
+                      )
+                    : BorderSide.none,
+                right: isRtl
+                    ? BorderSide(
+                        color: AppColors.primaryTeal.withValues(alpha: 0.15),
+                        width: 1.5,
+                      )
+                    : BorderSide.none,
               ),
             ),
             child: Column(
-              crossAxisAlignment: isUrdu ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  isRtl ? CrossAxisAlignment.end : CrossAxisAlignment.start,
               children: [
                 // Instructions
                 Text(
-                  isUrdu ? step.contentUr : step.contentEn,
-                  textAlign: isUrdu ? TextAlign.right : TextAlign.left,
-                  style: isUrdu 
-                    ? TextStyle(fontFamily: 'NotoNastaliqUrdu', fontSize: 15, color: isDark ? Colors.white70 : Colors.black87, height: 2.3)
-                    : TextStyle(fontFamily: 'Poppins', fontSize: 15, color: isDark ? Colors.white70 : Colors.black87, height: 1.7),
+                  content,
+                  textAlign: isRtl ? TextAlign.right : TextAlign.left,
+                  style: isRtl
+                      ? TextStyle(
+                          fontFamily: 'NotoNastaliqUrdu',
+                          fontSize: 15,
+                          color: isDark ? Colors.white70 : Colors.black87,
+                          height: 2.3,
+                        )
+                      : TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 15,
+                          color: isDark ? Colors.white70 : Colors.black87,
+                          height: 1.7,
+                        ),
                 ),
 
                 // Arabic Prayer Card
@@ -70,17 +120,25 @@ class GuideStepWidget extends ConsumerWidget {
                   const SizedBox(height: 20),
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 32,
+                    ),
                     decoration: BoxDecoration(
                       color: isDark ? Colors.black26 : Colors.white,
                       borderRadius: BorderRadius.circular(24),
-                      border: Border.all(color: isDark ? Colors.white10 : Colors.black.withOpacity(0.04)),
+                      border: Border.all(
+                        color: isDark
+                            ? Colors.white10
+                            : Colors.black.withValues(alpha: 0.04),
+                      ),
                       boxShadow: [
-                        if (!isDark) BoxShadow(
-                          color: Colors.black.withOpacity(0.03),
-                          blurRadius: 15,
-                          offset: const Offset(0, 8),
-                        ),
+                        if (!isDark)
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.03),
+                            blurRadius: 15,
+                            offset: const Offset(0, 8),
+                          ),
                       ],
                     ),
                     child: Text(
@@ -98,62 +156,64 @@ class GuideStepWidget extends ConsumerWidget {
                   ),
                 ],
 
-                // Localized Translation
-                if (isUrdu && step.translationUr != null) ...[
-                  const SizedBox(height: 18),
-                  Text(
-                    step.translationUr!,
-                    textDirection: TextDirection.rtl,
-                    textAlign: TextAlign.right,
-                    style: const TextStyle(fontFamily: 'NotoNastaliqUrdu', fontSize: 14, height: 2.4, color: AppColors.primaryTeal),
-                  ),
-                ],
-                if (!isUrdu && step.translationEn != null) ...[
-                  const SizedBox(height: 18),
-                  Text(
-                    step.translationEn!,
-                    style: TextStyle(fontFamily: 'Poppins', fontSize: 14, fontStyle: FontStyle.italic, color: AppColors.primaryTeal.withOpacity(0.9), height: 1.6),
+                // Translation Card
+                if (translation != null) ...[
+                  const SizedBox(height: 16),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? AppColors.primaryTeal.withValues(alpha: 0.05)
+                          : AppColors.primaryTeal.withValues(alpha: 0.03),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: AppColors.primaryTeal.withValues(alpha: 0.1),
+                      ),
+                    ),
+                    child: Text(
+                      translation,
+                      textAlign: isRtl ? TextAlign.right : TextAlign.left,
+                      textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+                      style: isRtl
+                          ? TextStyle(
+                              fontFamily: 'NotoNastaliqUrdu',
+                              fontSize: 15,
+                              color: isDark ? Colors.white70 : Colors.black87,
+                              height: 2.2,
+                            )
+                          : TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 14,
+                              color: isDark ? Colors.white70 : Colors.black87,
+                              height: 1.6,
+                            ),
+                    ),
                   ),
                 ],
 
-                if (step.reference.trim().isNotEmpty) ...[
-                  const SizedBox(height: 24),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: isDark
-                          ? Colors.white.withOpacity(0.04)
-                          : Colors.black.withOpacity(0.025),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
-                      children: [
-                        Icon(Icons.bookmark_added_rounded,
-                            size: 14, color: Colors.grey.shade500),
-                        const SizedBox(width: 8),
-                        Flexible(
-                          child: Text(
-                            isUrdu
-                                ? "حوالہ: ${step.reference}"
-                                : "Reference: ${step.reference}",
-                            style: isUrdu
-                                ? TextStyle(
-                                    fontFamily: 'NotoNastaliqUrdu',
-                                    fontSize: 12,
-                                    color: Colors.grey.shade600)
-                                : TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.grey.shade600,
-                                    letterSpacing: 0.5),
-                          ),
+                // Reference
+                if (step.reference.isNotEmpty) ...[
+                  const SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment:
+                        isRtl ? MainAxisAlignment.end : MainAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.menu_book_rounded,
+                        size: 14,
+                        color: AppColors.primaryTeal.withValues(alpha: 0.7),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        step.reference,
+                        style: TextStyle(
+                          fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                          fontSize: 12,
+                          color: Colors.grey,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ],
@@ -166,16 +226,23 @@ class GuideStepWidget extends ConsumerWidget {
 
   Widget _buildStepCircle(String number) {
     return Container(
-      width: 30,
-      height: 30,
-      decoration: const BoxDecoration(
-        color: AppColors.primaryTeal,
+      width: 36,
+      height: 36,
+      decoration: BoxDecoration(
+        color: AppColors.primaryTeal.withValues(alpha: 0.1),
         shape: BoxShape.circle,
+        border: Border.all(
+          color: AppColors.primaryTeal.withValues(alpha: 0.3),
+        ),
       ),
       child: Center(
         child: Text(
           number,
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+          style: const TextStyle(
+            color: AppColors.primaryTeal,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
         ),
       ),
     );

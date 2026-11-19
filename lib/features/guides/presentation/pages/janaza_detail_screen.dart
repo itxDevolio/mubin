@@ -16,6 +16,26 @@ class JanazaDetailScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final settings = ref.watch(settingsControllerProvider);
     final isUrdu = settings.language == 'ur';
+    final isPashto = settings.language == 'ps';
+    final isRtl = isUrdu || isPashto;
+
+    final appTitle = isUrdu
+        ? (isAdult ? "نمازِ جنازہ (بالغ)" : "نمازِ جنازہ (نابالغ)")
+        : (isPashto
+            ? (isAdult ? "د جنازې لمونځ (لویان)" : "د جنازې لمونځ (ماشومان)")
+            : (isAdult ? "Adult Funeral Prayer" : "Child Funeral Prayer"));
+
+    final manTitle = isUrdu
+        ? (isAdult ? "مرد (بالغ)" : "لڑکا (نابالغ)")
+        : (isPashto
+            ? (isAdult ? "نارینه (لوی)" : "هلک (ماشوم)")
+            : (isAdult ? "Man" : "Boy"));
+
+    final womanTitle = isUrdu
+        ? (isAdult ? "عورت (بالغہ)" : "لڑکی (نابالغہ)")
+        : (isPashto
+            ? (isAdult ? "ښځه (لویه)" : "نجلی (ماشومه)")
+            : (isAdult ? "Woman" : "Girl"));
 
     return DefaultTabController(
       length: 2,
@@ -25,64 +45,67 @@ class JanazaDetailScreen extends ConsumerWidget {
           centerTitle: true,
           elevation: 0,
           title: Text(
-            isUrdu
-              ? (isAdult ? "نمازِ جنازہ (بالغ)" : "نمازِ جنازہ (نابالغ)")
-              : (isAdult ? "Adult Funeral Prayer" : "Child Funeral Prayer"),
-            style: isUrdu
-              ? const TextStyle(fontFamily: 'NotoNastaliqUrdu', fontWeight: FontWeight.bold, fontSize: 18)
-              : const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          bottom: TabBar(
-            indicatorColor: AppColors.primaryTeal,
-            indicatorWeight: 3,
-            labelColor: AppColors.primaryTeal,
-            unselectedLabelColor: Colors.grey.withOpacity(0.6),
-            labelStyle: TextStyle(
-              fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+            appTitle,
+            style: TextStyle(
+              fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
               fontWeight: FontWeight.bold,
-              fontSize: isUrdu ? 14 : 14,
+              fontSize: isRtl ? 16 : 18,
             ),
-            tabs: [
-              Tab(
-                text: isUrdu
-                    ? (isAdult ? "مرد (بالغ)" : "لڑکا (نابالغ)")
-                    : (isAdult ? "Man" : "Boy"),
-                icon: Icon(
-                  isAdult
-                      ? FlutterIslamicIcons.muslim
-                      : FlutterIslamicIcons.muslim2,
-                  size: 24,
+          ),
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(48),
+            child: Directionality(
+              textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+              child: TabBar(
+                indicatorColor: AppColors.primaryTeal,
+                indicatorWeight: 3,
+                labelColor: AppColors.primaryTeal,
+                unselectedLabelColor: Colors.grey.withValues(alpha: 0.6),
+                labelStyle: TextStyle(
+                  fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
                 ),
+                tabs: [
+                  Tab(
+                    text: manTitle,
+                    icon: Icon(
+                      isAdult
+                          ? FlutterIslamicIcons.muslim
+                          : FlutterIslamicIcons.muslim2,
+                      size: 24,
+                    ),
+                  ),
+                  Tab(
+                    text: womanTitle,
+                    icon: Icon(
+                      isAdult
+                          ? FlutterIslamicIcons.muslimah
+                          : FlutterIslamicIcons.muslimah2,
+                      size: 24,
+                    ),
+                  ),
+                ],
               ),
-              Tab(
-                text: isUrdu
-                    ? (isAdult ? "عورت (بالغہ)" : "لڑکی (نابالغہ)")
-                    : (isAdult ? "Woman" : "Girl"),
-                icon: Icon(
-                  isAdult
-                      ? FlutterIslamicIcons.muslimah
-                      : FlutterIslamicIcons.muslimah2,
-                  size: 24,
-                ),
+            ),
+          ),
+        ),
+        body: Directionality(
+          textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+          child: TabBarView(
+            children: [
+              _JanazaContent(
+                steps: isAdult
+                    ? JanazaData.getAdultSteps(true, settings.madhab)
+                    : JanazaData.getChildSteps(true, settings.madhab),
+              ),
+              _JanazaContent(
+                steps: isAdult
+                    ? JanazaData.getAdultSteps(false, settings.madhab)
+                    : JanazaData.getChildSteps(false, settings.madhab),
               ),
             ],
           ),
-        ),
-        body: TabBarView(
-          children: [
-            _JanazaContent(
-              steps: isAdult
-                ? JanazaData.getAdultSteps(true, settings.madhab)
-                : JanazaData.getChildSteps(true, settings.madhab),
-              isUrdu: isUrdu
-            ),
-            _JanazaContent(
-              steps: isAdult
-                ? JanazaData.getAdultSteps(false, settings.madhab)
-                : JanazaData.getChildSteps(false, settings.madhab),
-              isUrdu: isUrdu
-            ),
-          ],
         ),
       ),
     );
@@ -91,8 +114,7 @@ class JanazaDetailScreen extends ConsumerWidget {
 
 class _JanazaContent extends StatelessWidget {
   final List<dynamic> steps;
-  final bool isUrdu;
-  const _JanazaContent({required this.steps, required this.isUrdu});
+  const _JanazaContent({required this.steps});
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +129,7 @@ class _JanazaContent extends StatelessWidget {
             child: AdBannerWidget(),
           );
         }
-        return GuideStepWidget(step: steps[index], isUrdu: isUrdu);
+        return GuideStepWidget(step: steps[index]);
       },
     );
   }
