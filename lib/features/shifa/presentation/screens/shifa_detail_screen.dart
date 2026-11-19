@@ -218,83 +218,72 @@ class _ShifaPageContentState extends State<_ShifaPageContent>
               ),
               const SizedBox(height: 16),
 
-              // Reference
-              Align(
-                alignment: isRtl ? Alignment.centerRight : Alignment.centerLeft,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isDark
-                        ? Colors.white.withValues(alpha: 0.05)
-                        : Colors.black.withValues(alpha: 0.03),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    widget.dua.reference,
-                    style: const TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 10,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // Banner Ad center of reference and instruction
-              const AdBannerWidget(),
-              const SizedBox(height: 20),
-
               // Instructions (Golden text color, center aligned, no header)
-              if (instruction.isNotEmpty)
+              if (instruction.isNotEmpty) ...[
                 _InstructionSection(
                   text: instruction,
                   isRtl: isRtl,
                 ),
+                const SizedBox(height: 30),
+              ],
 
-              const SizedBox(height: 40),
+              // Banner Ad above the counter
+              const AdBannerWidget(),
+              const SizedBox(height: 30),
 
-              // Counter
+              // Counter (styled like Adhkar)
               Center(
                 child: ScaleTransition(
                   scale: _scaleAnimation,
                   child: GestureDetector(
                     onTap: _decrement,
                     child: Container(
-                      height: 120,
-                      width: 120,
+                      height: 100,
+                      width: 100,
+                      alignment: Alignment.center,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: AppColors.primaryTeal.withValues(alpha: 0.1),
+                        color: _count == 0
+                            ? AppColors.primaryTeal.withValues(alpha: 0.1)
+                            : Colors.transparent,
                         border: Border.all(
-                          color: AppColors.primaryTeal,
-                          width: 3,
+                          color: AppColors.primaryTeal.withValues(alpha: 0.3),
+                          width: 1.5,
                         ),
                       ),
-                      child: Center(
-                        child: _count == 0
-                            ? const Icon(
-                                Icons.check_circle_rounded,
-                                size: 50,
-                                color: Colors.green,
-                              )
-                            : Text(
-                                '$_count',
-                                style: const TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primaryTeal,
-                                ),
+                      child: _count == 0
+                          ? const Icon(
+                              Icons.check,
+                              size: 40,
+                              color: AppColors.primaryTeal,
+                            )
+                          : Text(
+                              '$_count',
+                              style: const TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 32,
+                                fontWeight: FontWeight.w300,
+                                color: AppColors.primaryTeal,
                               ),
-                      ),
+                            ),
                     ),
                   ),
                 ),
               ),
+
+              // Reference at the bottom like Adhkar
+              if (widget.dua.reference.isNotEmpty) ...[
+                const SizedBox(height: 30),
+                Text(
+                  widget.dua.reference,
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: Colors.grey.withValues(alpha: 0.5),
+                    letterSpacing: 1.2,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
               const SizedBox(height: 30),
             ],
           ),

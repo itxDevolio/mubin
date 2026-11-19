@@ -42,8 +42,8 @@ class DuaListScreen extends ConsumerWidget {
               textAlign: isRtl ? TextAlign.right : TextAlign.left,
               decoration: InputDecoration(
                 hintText: isUrdu
-                    ? 'دعائیں تلاش کریں...'
-                    : (isPashto ? 'دعاګانې لټول...' : 'Search Duas...'),
+                    ? 'دعائیں تلاش کریں'
+                    : (isPashto ? 'دعاګانې لټول' : 'Search Duas'),
                 hintStyle: TextStyle(
                   fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
                   color: Colors.grey.shade500,

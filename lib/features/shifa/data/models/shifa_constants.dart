@@ -37,7 +37,7 @@ class ShifaConstants {
       'دردناک جگہ پر سیدھا ہاتھ رکھیں۔ بسم اللہ 3 مرتبہ کہیں، پھر یہ دعا 7 مرتبہ پڑھیں۔',
       instructionPs:
       'خپل ښی لاس پر دردناک ځای کېږده. ۳ ځله بسم الله ووایه، بیا ۷ ځله دا دعا ولوله.',
-      reference: 'Sahih Muslim: 2202',
+      reference: 'Sahih Muslim: 5737',
       targetCount: 7,
     ),
     ShifaEntity(
@@ -65,8 +65,8 @@ class ShifaConstants {
     ShifaEntity(
       id: 'p3',
       titleEn: 'Dua for Fever and Illness',
-      titleUr: 'بخار اور بیماری کے لیے دعا',
-      titlePs: 'د تبې او ناروغۍ لپاره دعا',
+      titleUr: ' بیماری کے لیے دعا',
+      titlePs: ' بیمارئ لپاره دعا',
       arabic:
       'اللَّهُمَّ رَبَّ النَّاسِ أَذْهِبِ الْبَأْسَ اشْفِ أَنْتَ الشَّافِي لَا شِفَاءَ إِلَّا شِفَاؤُكَ شِفَاءً لَا يُغَادِرُ سَقَمًا',
       translationEn:
@@ -81,7 +81,7 @@ class ShifaConstants {
       'مریض پر سیدھا ہاتھ رکھیں اور پڑھتے ہوئے ہاتھ پھیریں۔',
       instructionPs:
       'پر ناروغ ښی لاس کېږده او په لوستلو سره لاس پرې ووهه.',
-      reference: 'Sahih al-Bukhari: 5750, Sahih Muslim: 2191',
+      reference: 'Sahih al-Bukhari: 5750',
       targetCount: 1,
     ),
     ShifaEntity(
@@ -98,12 +98,12 @@ class ShifaConstants {
       translationPs:
       'د الله په نوم زه پر تا دم کوم، له هر هغه شي څخه چې تا ته تکلیف درکوي، د هر نفس یا حسد کوونکې سترګې له شر څخه. الله دې تا روغ کړي؛ د الله په نوم پر تا دم کوم.',
       instructionEn:
-      'Jibril (AS) recited this upon the Prophet ﷺ. Recite and blow gently on the sick person.',
+      'Jibril (AS) recited this upon the Prophet ﷺ.',
       instructionUr:
-      'جبریل علیہ السلام نے یہ نبی ﷺ پر پڑھی تھی۔ پڑھ کر مریض پر دم کریں۔',
+      'جبریل علیہ السلام نے یہ نبی ﷺ پر پڑھی تھی۔۔',
       instructionPs:
-      'جبرائیل علیه السلام دا پر نبی ﷺ لوستې وه. ولوله او پر ناروغ لږ پوخ کړه.',
-      reference: 'Sahih Muslim: 2186',
+      'جبرائیل علیه السلام دا پر نبی ﷺ لوستې وه. .',
+      reference: 'Sunan at-Tirmidhi: 972',
       targetCount: 3,
     ),
     ShifaEntity(

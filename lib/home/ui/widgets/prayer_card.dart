@@ -159,7 +159,7 @@ class PrayerCard extends ConsumerWidget {
                 textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
                 children: [
                   PrayerTimeCard(
-                    prayerName: isUrdu ? "فجر" : (isPashto ? "سهار" : "Fajr"),
+                    prayerName: isUrdu ? "فجر" : (isPashto ? "سحر" : "Fajr"),
                     prayerTime: d.fajr,
                     activePrayer: active,
                     currentCardPrayer: Prayer.fajr,

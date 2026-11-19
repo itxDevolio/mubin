@@ -268,12 +268,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                       title: isUrdu
                                           ? "نمازِ جنازہ کا طریقہ"
                                           : (isPashto
-                                                ? "د جنازې لمانځه تګلاره"
+                                                ? "د جنازې لمانځه طریقہ"
                                                 : "Funeral Prayer Guide"),
                                       subTitle: isUrdu
                                           ? "نمازِ جنازہ کا مسنون اور مستند طریقہ"
                                           : (isPashto
-                                                ? "د جنازې لمانځه مسنون او معتبره تګلاره"
+                                                ? "•  د جنازې د لمانځه مسنونه طریقه"
                                                 : "Step-by-step authentic method and supplications."),
                                       imageUrl: "assets/app_logos/funeral.png",
                                       isRtl: isRtl,

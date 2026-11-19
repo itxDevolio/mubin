@@ -41,8 +41,8 @@ class ShifaListScreen extends ConsumerWidget {
               textAlign: isRtl ? TextAlign.right : TextAlign.left,
               decoration: InputDecoration(
                 hintText: isUrdu
-                    ? 'شفا تلاش کریں...'
-                    : (isPashto ? 'شفا لټول...' : 'Search Shifa...'),
+                    ? 'شفا تلاش کریں'
+                    : (isPashto ? 'شفا لټول' : 'Search Shifa'),
                 hintStyle: TextStyle(
                   fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
                   fontWeight: FontWeight.normal,
