@@ -175,8 +175,9 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                           Navigator.pop(context);
                         },
                         style: OutlinedButton.styleFrom(
-                          foregroundColor:
-                          isDark ? Colors.white : Colors.black87,
+                          foregroundColor: isDark
+                              ? Colors.white
+                              : Colors.black87,
                           side: BorderSide(
                             color: isDark
                                 ? Colors.white24
@@ -206,6 +207,7 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
       },
     );
   }
+
   final List<String> _urduTopics = [
     'نماز',
     'روزہ',

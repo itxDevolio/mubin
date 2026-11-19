@@ -46,7 +46,8 @@ class AdhkarConstants {
       english:
           'Recitation of the Three Muawwidhat (Surah Al-Ikhlas, Al-Falaq, An-Nas)',
       urdu: 'تینوں معوذات کی تلاوت (سورۃ الاخلاص، سورۃ الفلق، سورۃ الناس)',
-      pashto: 'د دریو واړو معوذاتو تلاوت (سورة الإخلاص، سورة الفلق، سورة الناس)',
+      pashto:
+          'د دریو واړو معوذاتو تلاوت (سورة الإخلاص، سورة الفلق، سورة الناس)',
       reference: 'Jami` at-Tirmidhi 3575',
       fazilatEnglish:
           'The recitation of Muawwidhat will suffice you against everything (against Jinn and magic).',
@@ -66,14 +67,14 @@ class AdhkarConstants {
       urdu:
           'نہیں کوئی معبود مگر اللہ، وہ اکیلا ہے، نہیں کوئی شریک اُسکا، اُسی کی بادشاہی ہے، اور اسی کے لئے سب تعریفیں ہیں، اور وہ ہر شے پر پوری طرح قدرت رکھتا ہے۔',
       pashto:
-          'له الله پرته بل د عبادت وړ نشته، هغه یو دی، هیڅ شریک نه لري، ټول واک د هغه دی، او ټول ستاینې د هغه دي، او هغه پر هر شی پوره واک لري.',
-      reference: 'Sunan Abi Dawud 5082',
+          'له الله پرته بل د عبادت لائق نشته، هغه یو دی، هیڅ شریک نه لري، ټول اختیار د هغه دی، او ټول تعریفونہ د هغه دي، او هغه پر هر شی پوره اختیار لري.',
+      reference: '',
       fazilatEnglish:
-          'The one who recites these words gets reward of freeing 4 slaves. And he is guarded against every dangerous thing and Shaitan during the entire day and night. (Note: Reciting 100 times everyday is the best practice - Bukhari: 6403, Muslim: 6842)',
+          'The one who recites these words gets reward of freeing 10 slaves from the descendants of Ismail (peace be upon him). And he is guarded against every dangerous thing and Shaitan during the entire day and night. (Note: Reciting 100 times everyday is the best practice - Bukhari: 6403, Muslim: 6842)',
       fazilatUrdu:
-          'کلمات پڑھنے والے کو 4 غلام آزاد کرنے کا ثواب ملتا ہے اور تمام دن رات میں ہر خطرناک چیز اور شیطان کے خلاف اُسکا بچاؤ ہو جاتا ہے۔ (نوٹ: ہر روز 100 بار پڑھنا فضل ترین عمل ہے - بخاری: 6403، مسلم: 6842)',
+          'کلمات پڑھنے والے کو اولادِ اسماعیل علیہ السلام میں سے 10 غلام آزاد کرنے کا ثواب ملتا ہے اور تمام دن رات میں ہر خطرناک چیز اور شیطان کے خلاف اُسکا بچاؤ ہو جاتا ہے۔ (نوٹ: ہر روز 100 بار پڑھنا فضل ترین عمل ہے - بخاری: 6403، مسلم: 6842)',
       fazilatPashto:
-          'چا چې دا کلمات وویل، د ۴ غلامانو د آزادولو ثواب ورته ورکول کیږي. او د ټولې ورځې او شپې لپاره د هر خطرناک شی او شیطان څخه ساتل کیږي. (نوټ: هره ورځ ۱۰۰ ځله لوستل غوره عمل دی - بخاری: ۶۴۰۳، مسلم: ۶۸۴۲)',
+          'چا چې دا کلمات وویل، د اسماعیل علیه السلام د اولاد څخه د ۱۰ غلامانو د آزادولو ثواب ورته ورکول کیږي. او د ټولې ورځې او شپې لپاره د هر خطرناک شی او شیطان څخه ساتل کیږي. (نوټ: هره ورځ ۱۰۰ ځله لوستل غوره عمل دی - بخاری: ۶۴۰۳، مسلم: ۶۸۴۲)',
       count: 0,
       targetCount: 10,
     ),
@@ -106,7 +107,7 @@ class AdhkarConstants {
       urdu:
           'اللہ کے نام کے ساتھ، جس کے نام کے ساتھ زمین و آسمان میں کوئی چیز نقصان نہیں پہنچا سکتی، اور وہی سننے والا جاننے والا ہے۔',
       pashto:
-          'د الله په نوم چې په نوم یې په ځمکه او اسمان کې هېڅ شي زیان نه شي رسولی، او هغه اوریدونکی، پوه دی.',
+          'د هغه الله په نوم، چې د نوم سره یې په ځمکه او اسمان کې هېڅ شی نقصان نه شي رسولی، او هغه هر څه اورېدونکی او پر هر څه پوه دی.',
       reference: 'Jami` at-Tirmidhi 3388, Sunan Abi Dawud 5088',
       fazilatEnglish:
           'Nothing can harm the person who recites these words nor will any sudden disaster reach him. (Recite 3 times in the morning and in the evening.)',
@@ -125,7 +126,7 @@ class AdhkarConstants {
       urdu:
           'میں اللہ کے کلماتِ کاملہ کی پناہ پکڑتا ہوں ہر اس چیز کے شر سے جو اُس نے پیدا کی۔',
       pashto:
-          'زه د الله په بشپړو کلماتو پناه غواړم د هر هغه شي له شره چې هغه پیدا کړی دی.',
+          'زه د الله په  کلماتو پناه غواړم د هر هغه شي له شره چې هغه پیدا کړی دی.',
       reference: 'Muslim 6880',
       fazilatEnglish:
           'The sting of the poisonous animal will not cause harm to the person who recites these words. (Recite 3 times in the morning.)',
@@ -390,7 +391,8 @@ class AdhkarConstants {
       english:
           'Recitation of the Three Muawwidhat (Surah Al-Ikhlas, Al-Falaq, An-Nas)',
       urdu: 'تینوں معوذات کی تلاوت (سورۃ الاخلاص، سورۃ الفلق، سورۃ الناس)',
-      pashto: 'د دریو واړو معوذاتو تلاوت (سورة الإخلاص، سورة الفلق، سورة الناس)',
+      pashto:
+          'د دریو واړو معوذاتو تلاوت (سورة الإخلاص، سورة الفلق، سورة الناس)',
       reference: 'Jami` at-Tirmidhi 3575',
       fazilatEnglish:
           'The recitation of Muawwidhat will suffice you against everything (against Jinn and magic).',
@@ -410,7 +412,7 @@ class AdhkarConstants {
       urdu:
           'نہیں کوئی معبود مگر اللہ، وہ اکیلا ہے، نہیں کوئی شریک اُسکا، اُسی کی بادشاہی ہے، اور اسی کے لئے سب تعریفیں ہیں، اور وہ ہر شے پر پوری طرح قدرت رکھتا ہے۔',
       pashto:
-          'له الله پرته بل د عبادت وړ نشته، هغه یو دی، هیڅ شریک نه لري، ټول واک د هغه دی، او ټول ستاینې د هغه دي، او هغه پر هر شی پوره واک لري.',
+          'له الله پرته بل د عبادت لائق نشته، هغه یو دی، هیڅ شریک نه لري، ټول اختیار د هغه دی، او ټول تعریفونہ د هغه دي، او هغه پر هر شی پوره اختیار لري.',
       reference: 'Sahih Muslim 6844, Sunan Abi Dawud 5082',
       fazilatEnglish:
           'The one who recites these words gets reward of freeing 4 slaves. And he is guarded against every dangerous thing and Shaitan during the entire day and night.',
@@ -450,7 +452,7 @@ class AdhkarConstants {
       urdu:
           'اللہ کے نام کے ساتھ، جس کے نام کے ساتھ زمین و آسمان میں کوئی چیز نقصان نہیں پہنچا سکتی، اور وہی سننے والا جاننے والا ہے۔',
       pashto:
-          'د الله په نوم چې په نوم یې په ځمکه او اسمان کې هېڅ شي زیان نه شي رسولی، او هغه اوریدونکی، پوه دی.',
+          "'د هغه الله په نوم، چې د نوم سره یې په ځمکه او اسمان کې هېڅ شی نقصان نه شي رسولی، او هغه هر څه اورېدونکی او پر هر څه پوه دی.',",
       reference: 'Sunan Abi Dawud 5088',
       fazilatEnglish:
           'Nothing can harm the person who recites these words nor will any sudden disaster reach him. (Recite 3 times in the morning and in the evening.)',
@@ -469,7 +471,7 @@ class AdhkarConstants {
       urdu:
           'میں اللہ کے کلماتِ کاملہ کی پناہ پکڑتا ہوں ہر اس چیز کے شر سے جو اُس نے پیدا کی۔',
       pashto:
-          'زه د الله په بشپړو کلماتو پناه غواړم د هر هغه شي له شره چې هغه پیدا کړی دی.',
+          'زه د خدای په پوره خبرو (کلماتو) پناه غواړم، د هر پیدا شوي شي له بدۍ او تاوان',
       reference: 'Muslim 6880',
       fazilatEnglish:
           'The sting of the poisonous animal will not cause harm to the person who recites these words. (Recite 3 times in the evening.)',
@@ -493,7 +495,8 @@ class AdhkarConstants {
       reference: 'Muslim 6913',
       fazilatEnglish:
           'The one who recites these words gets more reward than the person who worships continuously from the Fajr prayer till forenoon. (Recite 3 times in the evening.)',
-      fazilatUrdu: 'یہ کلمات پڑھنے والے کو زیادہ ثواب حاصل ہوتا ہے۔ (3 مرتبہ شام)',
+      fazilatUrdu:
+          'یہ کلمات پڑھنے والے کو زیادہ ثواب حاصل ہوتا ہے۔ (3 مرتبہ شام)',
       fazilatPashto: 'چا چې دا کلمات ووایي، ډیر ثواب ترلاسه کوي. (ماښام ۳ ځله)',
       count: 0,
       targetCount: 3,
@@ -513,7 +516,8 @@ class AdhkarConstants {
           'All sins of the person who recites these words will be forgiven. (Recite 3 times in the evening.)',
       fazilatUrdu:
           'یہ کلمات پڑھنے والے کے سارے گناہ معاف کر دیئے جائیں گے۔ (3 مرتبہ شام)',
-      fazilatPashto: 'د دې کلماتو په ویلو سره ټول ګناهونه بښل کیږي. (ماښام ۳ ځله)',
+      fazilatPashto:
+          'د دې کلماتو په ویلو سره ټول ګناهونه بښل کیږي. (ماښام ۳ ځله)',
       count: 0,
       targetCount: 3,
     ),
@@ -609,8 +613,10 @@ class AdhkarConstants {
           'اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِينِي وَدُنْيَايَ وَأَهْلِي وَمَالِي اللَّهُمَّ اسْتُرْ عَوْرَاتِي وَآمِنْ رَوْعَاتِي اللَّهُمَّ احْفَظْنِي مِنْ بَيْنِ يَدَيَّ وَمِنْ خَلْفِي وَعَنْ يَمِينِي وَعَنْ شِمَالِي وَمِنْ فَوْقِي وَأَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي',
       english:
           'O Allah, I ask You for well being in this world and in the Hereafter...',
-      urdu: 'اے اللہ! میں تجھ سے سوال کرتا ہوں عافیت کا دنیا اور آخرت میں...',
-      pashto: 'اې الله! زه په دنیا او آخرت کې له تا څخه عافیت غواړم...',
+      urdu:
+          "اے اللہ! میں تجھ سے دنیا اور آخرت میں عافیت (سلامتی) مانگتا ہوں۔ اے اللہ! میں تجھ سے اپنے دین، اپنی دنیا، اپنے گھر والوں اور اپنے مال میں معافی اور عافیت کا سوال کرتا ہوں۔ اے اللہ! میرے عیبوں پر پردہ ڈال دے اور میرے خوف (اور گھبراہٹ) کو امن میں بدل دے۔ اے اللہ! میری حفاظت فرما میرے آگے سے، میرے پیچھے سے، میری دائیں جانب سے، میری بائیں جانب سے اور میرے اوپر سے، اور میں تیری عظمت کی پناہ مانگتا ہوں اس بات سے کہ میں اپنے نیچے سے (اچانک) ہلاک کیا جاؤں۔",
+      pashto:
+          "اې الله! زه له تا څخه په دنیا او اخرت کې عافیت (روغتیا او سلامتیا) غواړم. اې الله! زه له تا څخه په خپل دین، خپله دنیا، خپله کورنۍ او خپل مال کې بخښنه او عافیت غواړم. اې الله! زما پر عیبونو پرده واچوه او زما وېره په امن بدله کړه. اې الله! زما ساتنه وکړه زما له مخې، زما له شا، زما له ښي اړخه، زما له کیڼ اړخه او زما له پورته خوا څخه، او زه ستا په لویۍ پناه غواړم له دې څخه چې له لاندې خوا (ناڅاپه) هلاک کړل شم.",
       reference: 'Sunan Abi Dawud: 5074',
       fazilatPashto: 'د دنیا او آخرت د عافیت جامع دعا.',
       count: 0,
@@ -621,9 +627,11 @@ class AdhkarConstants {
       arabic:
           'اللَّهُمَّ عَالِمَ الْغَيْبِ وَالشَّهَادَةِ فَاطِرَ السَّمَاوَاتِ وَالْأَرْضِ رَبَّ كُلِّ شَيْءٍ وَمَلِيكَهُ أَشْهَدُ أَنْ لَّا إِلَهَ إِلَّا أَنْتَ أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي وَمِنْ شَرِّ الشَّيْطَانِ وَشِرْكِهِ',
       english: 'O Allah! Knower of the Unseen and the Seen...',
+
       urdu:
-          'اے اللہ! جاننے والے غیب اور حاضر کے، پیدا کرنے والے آسمانوں اور زمین کو...',
-      pashto: 'اې الله! د پټو او ښکاره پوهه، د اسمانونو او ځمکې پیدا کونکي...',
+          'اے اللہ! جاننے والے غیب اور حاضر کے، پیدا کرنے والے آسمانوں اور زمین کو، پالنے والے ہر چیز کے اور مالک بھی، میں گواہی دیتا ہوں کہ نہیں ہے کوئی معبود مگر تو، میں تیری پناہ میں آتا ہوں اپنے نفس کی برائی سے اور شیطان کے شر سے اور اسکے (میرے کاموں میں) شریک ہونے سے۔',
+      pashto:
+          'اې الله! د پټو او ښکاره پوهه، د اسمانونو او ځمکې پیدا کونکي، د هر شی رب او مالک، زه شهادت ورکوم چې له تا پرته بل خدای نشته، زه د خپل نفس او د شیطان او د هغه د شریکولو له شره په تا پناه غواړم.',
       reference: 'Jami` at-Tirmidhi: 3392',
       fazilatPashto: 'د غیب او شهادت د پوه په دربار کې پناه غوښتنه.',
       count: 0,
@@ -634,8 +642,10 @@ class AdhkarConstants {
       arabic:
           'اللَّهُمَّ أَنْتَ رَبِّي، لَا إِلَهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ',
       english: 'O Allah! You are my Lord...',
-      urdu: 'اے اللہ! تو ہی میرا رب ہے، نہیں ہے کوئی معبود مگر تو...',
-      pashto: 'اې الله! ته زما رب یې، له تا پرته بل معبود نشته...',
+      urdu:
+      'اے اللہ! تو ہی میرا رب ہے، نہیں ہے کوئی معبود مگر تو، تو نے مجھے پیدا کیا، میں تیرا بندہ ہوں اور میں تیرے عہد اور وعدے پر (قائم) ہوں جس قدر میری طاقت ہے، میں تیری پناہ میں آتا ہوں اُس کے شر سے جو میں نے کیا، اپنے آپ پر تیری نعمت کا اقرار کرتا ہوں، اور اپنے گناہ کا اعتراف کرتا ہوں پس مجھے بخش دے کیونکہ نہیں ہے کوئی گناہوں کو بخشنے والا مگر تو۔',
+      pashto:
+      'اې الله! ته زما رب یې، له تا پرته بل معبود نشته، ته ما پیدا کړی او زه بنده ستا یم، او زه تر هغه ځایه چې توان لرم د خپل عهد او ژمنې په سر ولاړ یم. زه له هر هغه شر څخه چې ما کړی دی په تا پناه غواړم. په ما باندې د ستا نعمتونو او په خپل ځان د ګناه اعتراف کوم، نو ما وبښه ځکه چې له تا پرته بل څوک ګناهونه نه بخښي.',
       reference: 'Bukhari: 6306',
       fazilatPashto: 'سید الاستغفار.',
       count: 0,
@@ -874,24 +884,7 @@ class AdhkarConstants {
           'څوک چې دا ووایي او په همغه شپه مړ شي، د اسلام په فطرت مړ کیږي.',
       targetCount: 1,
     ),
-    DhikrEntity(
-      id: 's5',
-      arabic:
-          'اللَّهُمَّ خَلَقْتَ نَفْسِي وَأَنْتَ تَتَوَفَّاهَا، لَكَ مَمَاتُهَا وَمَحْيَاهَا، '
-          'إِنْ أَحْيَيْتَهَا فَاحْفَظْهَا، وَإِنْ أَمَتَّهَا فَاغْفِرْ لَهَا. '
-          'اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَافِيَةَ',
-      english: '',
-      urdu: '',
-      pashto: '',
-      reference: 'Sahih Muslim: 2712',
-      fazilatEnglish:
-          'A comprehensive dua acknowledging Allah\'s complete authority over life and death, and asking for His protection and forgiveness.',
-      fazilatUrdu:
-          'زندگی اور موت پر اللہ کے مکمل اختیار کا اعتراف اور اس کی حفاظت و مغفرت طلب کرنے کی جامع دعا۔',
-      fazilatPashto:
-          'د ژوند او مرګ په اړه د الله په واک اقرار او د هغه د ساتنې او بخښنې غوښتنې دعا.',
-      targetCount: 1,
-    ),
+
     DhikrEntity(
       id: 's7',
       arabic:
@@ -903,46 +896,11 @@ class AdhkarConstants {
       fazilatEnglish:
           'Seeking refuge from three great trials: disbelief, poverty, and punishment of the grave.',
       fazilatUrdu: 'تین بڑی آزمائشوں سے پناہ: کفر، فقر اور عذاب قبر۔',
-      fazilatPashto: 'د دریو لویو ازموینو (کفر، فقر، او قبر عذاب) څخه پناه غوښتل.',
+      fazilatPashto:
+          'د دریو لویو ازموینو (کفر، فقر، او قبر عذاب) څخه پناه غوښتل.',
       targetCount: 3,
     ),
-    DhikrEntity(
-      id: 's8',
-      arabic:
-          'اللَّهُمَّ رَبَّ السَّمَاوَاتِ وَرَبَّ الْأَرْضِ وَرَبَّ الْعَرْشِ الْعَظِيمِ، '
-          'رَبَّنَا وَرَبَّ كُلِّ شَيْءٍ، فَالِقَ الْحَبِّ وَالنَّوَى، '
-          'مُنْزِلَ التَّوْرَاةِ وَالْإِنْجِيلِ وَالْقُرْآنِ، '
-          'أَعُوذُ بِكَ مِنْ شَرِّ كُلِّ ذِي شَرٍّ أَنْتَ آخِذٌ بِنَاصِيَتِهِ، '
-          'أَنْتَ الْأَوَّلُ فَلَيْسَ قَبْلَكَ شَيْءٌ، وَأَنْتَ الْآخِرُ فَلَيْسَ بَعْدَكَ شَيْءٌ، '
-          'وَأَنْتَ الظَّاهِرُ فَلَيْسَ فَوْقَكَ شَيْءٌ، وَأَنْتَ الْبَاطِنُ فَلَيْسَ دُونَكَ شَيْءٌ، '
-          'اقْضِ عَنَّا الدَّيْنَ وَأَغْنِنَا مِنَ الْفَقْرِ',
-      english: '',
-      urdu: '',
-      pashto: '',
-      reference: 'Sahih Muslim: 2713',
-      fazilatEnglish:
-          'A comprehensive dua recited by the Prophet (ﷺ) before sleeping, affirming Allah\'s absolute dominion and seeking refuge from all evil.',
-      fazilatUrdu:
-          'نبی کریم ﷺ کی سونے سے پہلے کی جامع دعا جو اللہ کی مکمل بادشاہت کا اعتراف اور ہر شر سے پناه ہے۔',
-      fazilatPashto:
-          'د نبي کریم ﷺ جامع دعا چې د خوب پر مهال لوستل کیده او د هر شر څخه پکې پناه غوښتل شوې.',
-      targetCount: 1,
-    ),
-    DhikrEntity(
-      id: 's9',
-      arabic:
-          'الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا وَسَقَانَا، وَكَفَانَا، وَآوَانَا، فَكَمْ مِمَّنْ لَا كَافِيَ لَهُ وَلَا مُؤْوِيَ',
-      english: '',
-      urdu: '',
-      pashto: '',
-      reference: 'Sahih Muslim: 2715',
-      fazilatEnglish:
-          'Expressing gratitude to Allah for His countless blessings before sleeping.',
-      fazilatUrdu:
-          'سونے سے پہلے اللہ کی بے شمار نعمتوں پر شکر ادا کرنے کی دعا۔',
-      fazilatPashto: 'د خوب پر مهال د الله د نعمتونو شکر ادا کول.',
-      targetCount: 1,
-    ),
+
     DhikrEntity(
       id: 's10',
       arabic: 'اللَّهُمَّ بِاسْمِكَ أَحْيَا وَأَمُوتُ',
@@ -967,11 +925,12 @@ class AdhkarConstants {
       english: 'I seek forgiveness from Allah (3 times)',
       urdu: 'میں اللہ سے مغفرت طلب کرتا ہوں۔ (3 مرتبہ)',
       pashto: 'زه له الله څخه بخښنه غواړم. (۳ ځله)',
-      reference: 'Sahih Muslim: 591',
+      reference: 'Sahih Muslim: 1334',
       fazilatEnglish:
           'The Prophet (ﷺ), upon finishing the prayer, would seek forgiveness from Allah three times.',
       fazilatUrdu: 'نبی کریم ﷺ جب نماز مکمل فرماتے تو تین بار استغفار کرتے۔',
-      fazilatPashto: 'رسول الله ﷺ به چې لمانځه څخه فارغ شو، ۳ ځله به یې استغفار وکړ.',
+      fazilatPashto:
+          'رسول الله ﷺ به چې لمانځه څخه فارغ شو، ۳ ځله به یې استغفار وکړ.',
       targetCount: 3,
     ),
     DhikrEntity(
@@ -984,7 +943,7 @@ class AdhkarConstants {
           'اے اللہ! تو ہی سلامتی والا ہے اور تجھ ہی سے سلامتی ہے، تو بابرکت ہے اے جلال اور بزرگی والے۔',
       pashto:
           'اې الله! ته خپله سلامتي یې او له تا څخه سلامتي ده، برکت والا یې اې د جلال او لویۍ څښتنه.',
-      reference: 'Sahih Muslim: 591',
+      reference: 'Sahih Muslim: 1334',
       fazilatEnglish:
           'After seeking forgiveness three times, the Prophet (ﷺ) would not remain seated except for the time it takes to say this supplication.',
       fazilatUrdu:
@@ -1002,7 +961,7 @@ class AdhkarConstants {
           'اللہ کے سوا کوئی معبود نہیں، وہ اکیلا ہے، اس کا کوئی شریک نہیں، اسی کی بادشاہی ہے اور اسی کے لیے تمام تعریفیں ہیں اور وہ ہر چیز پر قادر ہے۔ اے اللہ! جو تو دے اسے کوئی روکنے والا نہیں، اور جسے تو روکے اسے کوئی دینے والا نہیں، اور کسی صاحبِ دولت و حیثیت کو اس کی دولت و حیثیت تجھ سے بچا نہیں سکتی۔',
       pashto:
           'له الله پرته بل معبود نشته، هغه یو دی، شریک نه لري، ټول واک او ستاینې د هغه دي، او هغه پر هر شی قادر دی. اې الله! هغه څه چې ته یې ورکوې هېڅوک یې نه شي منع کولی، او کوم څه چې ته یې منع کوې هېڅوک یې نه شي ورکولی، او د هېڅ شتمن شتمني د تا په وړاندې ګټه نه شي رسولی.',
-      reference: 'Sahih al-Bukhari: 844, Sahih Muslim: 593',
+      reference: 'Sahih al-Bukhari: 844',
       fazilatEnglish:
           'The Prophet (ﷺ) used to recite this at the end of every obligatory prayer.',
       fazilatUrdu: 'نبی کریم ﷺ ہر فرض نماز کے بعد یہ پڑھا کرتے تھے۔',
@@ -1015,7 +974,7 @@ class AdhkarConstants {
       english: 'SubhanAllah — Glory be to Allah (33 times)',
       urdu: 'سبحان اللہ (33 مرتبہ)',
       pashto: 'سبحان الله (۳۳ ځله)',
-      reference: 'Sahih Muslim: 597',
+      reference: 'Sahih Muslim: 1352',
       fazilatEnglish:
           'Whoever glorifies Allah 33 times, praises Him 33 times and declares His greatness 33 times after every prayer...',
       fazilatUrdu:
@@ -1030,7 +989,7 @@ class AdhkarConstants {
       english: 'Alhamdulillah — All praise is for Allah (33 times)',
       urdu: 'الحمدللہ (33 مرتبہ)',
       pashto: 'الحمدلله (۳۳ ځله)',
-      reference: 'Sahih Muslim: 597',
+      reference: 'Sahih Muslim: 1352',
       fazilatEnglish: 'Part of the post-prayer tasbih (33 + 33 + 33 + 1).',
       fazilatUrdu: 'یہ نماز کے بعد کی تسبیحات (33، 33، 33 اور 1) کا حصہ ہے۔',
       fazilatPashto: 'د لمانځه وروسته د تسبیحاتو برخه.',
@@ -1042,7 +1001,7 @@ class AdhkarConstants {
       english: 'Allahu Akbar — Allah is the Greatest (33 times)',
       urdu: 'اللہ اکبر (33 مرتبہ)',
       pashto: 'الله اکبر (۳۳ ځله)',
-      reference: 'Sahih Muslim: 597',
+      reference: 'Sahih Muslim: 1352',
       fazilatEnglish: 'Part of the post-prayer tasbih (33 + 33 + 33 + 1).',
       fazilatUrdu: 'یہ نماز کے بعد کی تسبیحات (33، 33، 33 اور 1) کا حصہ ہے۔',
       fazilatPashto: 'د لمانځه وروسته د تسبیحاتو برخه.',
@@ -1058,7 +1017,7 @@ class AdhkarConstants {
           'اللہ کے سوا کوئی معبود نہیں، وہ اکیلا ہے، اس کا کوئی شریک نہیں، اسی کی بادشاہی ہے اور اسی کے لیے تمام تعریفیں ہیں اور وہ ہر چیز پر قادر ہے۔ (1 مرتبہ)',
       pashto:
           'له الله پرته بل معبود نشته، هغه یو دی، شریک نه لري، ټول واک او ستاینې د هغه دي، او هغه پر هر شی قادر دی. (۱ ځل)',
-      reference: 'Sahih Muslim: 597',
+      reference: 'Sahih Muslim: 1352',
       fazilatEnglish:
           'With this the count reaches one hundred, and the sins of the one who recites it are forgiven even if they are like the foam of the sea.',
       fazilatUrdu:
