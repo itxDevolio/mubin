@@ -158,6 +158,8 @@ class _ShifaListView extends StatelessWidget {
         final dua = duas[index];
         return ShifaTile(
           dua: dua,
+          duas: duas,
+          index: index,
           isRtl: isRtl,
           isUrdu: isUrdu,
           isPashto: isPashto,
@@ -169,6 +171,8 @@ class _ShifaListView extends StatelessWidget {
 
 class ShifaTile extends StatelessWidget {
   final ShifaEntity dua;
+  final List<ShifaEntity> duas;
+  final int index;
   final bool isRtl;
   final bool isUrdu;
   final bool isPashto;
@@ -176,6 +180,8 @@ class ShifaTile extends StatelessWidget {
   const ShifaTile({
     super.key,
     required this.dua,
+    required this.duas,
+    required this.index,
     required this.isRtl,
     required this.isUrdu,
     required this.isPashto,
@@ -225,16 +231,14 @@ class ShifaTile extends StatelessWidget {
                 )
               : const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
         ),
-        trailing: Icon(
-          isRtl ? Icons.chevron_left : Icons.chevron_right,
-          size: 18,
-          color: AppColors.primaryTeal.withValues(alpha: 0.5),
-        ),
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ShifaDetailScreen(dua: dua),
+              builder: (context) => ShifaDetailScreen(
+                duas: duas,
+                initialIndex: index,
+              ),
             ),
           );
         },

@@ -15,6 +15,8 @@ class DuaListScreen extends ConsumerWidget {
     final state = ref.watch(duaProvider);
     final settings = ref.watch(settingsControllerProvider);
     final isUrdu = settings.language == 'ur';
+    final isPashto = settings.language == 'ps';
+    final isRtl = isUrdu || isPashto;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -22,34 +24,64 @@ class DuaListScreen extends ConsumerWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          isUrdu ? 'دعائیں' : 'All Duas',
-          style: isUrdu ? const TextStyle(fontFamily: 'NotoNastaliqUrdu', fontWeight: FontWeight.bold) : const TextStyle(fontWeight: FontWeight.bold),
+          isUrdu
+              ? 'دعائیں'
+              : (isPashto ? 'دعاګانې' : 'All Duas'),
+          style: TextStyle(
+            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontWeight: FontWeight.bold,
+            fontSize: isRtl ? 16 : 18,
+          ),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(70),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
             child: TextField(
+              textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+              textAlign: isRtl ? TextAlign.right : TextAlign.left,
               decoration: InputDecoration(
-                hintText:  'Search Duas...',
-                hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 14),
-                prefixIcon:  Icon(Icons.search, color: AppColors.primaryTeal.withOpacity(0.7)),
-
+                hintText: isUrdu
+                    ? 'دعائیں تلاش کریں...'
+                    : (isPashto ? 'دعاګانې لټول...' : 'Search Duas...'),
+                hintStyle: TextStyle(
+                  fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                  color: Colors.grey.shade500,
+                  fontSize: 14,
+                ),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: AppColors.primaryTeal.withValues(alpha: 0.7),
+                ),
                 filled: true,
                 fillColor: isDark ? Colors.black26 : Colors.white,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide(color: isDark ? Colors.white10 : Colors.black.withOpacity(0.05)),
+                  borderSide: BorderSide(
+                    color: isDark
+                        ? Colors.white10
+                        : Colors.black.withValues(alpha: 0.05),
+                  ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
-                  borderSide: BorderSide(color: isDark ? Colors.white10 : Colors.black.withOpacity(0.05)),
+                  borderSide: BorderSide(
+                    color: isDark
+                        ? Colors.white10
+                        : Colors.black.withValues(alpha: 0.05),
+                  ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
-                  borderSide: const BorderSide(color: AppColors.primaryTeal, width: 1),
+                  borderSide: const BorderSide(
+                    color: AppColors.primaryTeal,
+                    width: 1,
+                  ),
                 ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 0,
+                ),
               ),
               onChanged: (value) {
                 ref.read(duaProvider.notifier).searchDuas(value);
@@ -59,13 +91,19 @@ class DuaListScreen extends ConsumerWidget {
         ),
       ),
       body: Directionality(
-        textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
+        textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
         child: switch (state) {
-          DuaInitial() || DuaLoading() => const Center(child: CircularProgressIndicator(color: AppColors.primaryTeal)),
+          DuaInitial() || DuaLoading() => const Center(
+            child: CircularProgressIndicator(color: AppColors.primaryTeal),
+          ),
           DuaLoaded loaded => _DuaListView(
-              duas: loaded.searchQuery.isEmpty ? loaded.allDuas : loaded.searchedDuas,
-              isUrdu: isUrdu
-            ),
+            duas: loaded.searchQuery.isEmpty
+                ? loaded.allDuas
+                : loaded.searchedDuas,
+            isRtl: isRtl,
+            isUrdu: isUrdu,
+            isPashto: isPashto,
+          ),
         },
       ),
     );
@@ -74,8 +112,16 @@ class DuaListScreen extends ConsumerWidget {
 
 class _DuaListView extends StatelessWidget {
   final List<DuaEntity> duas;
+  final bool isRtl;
   final bool isUrdu;
-  const _DuaListView({required this.duas, required this.isUrdu});
+  final bool isPashto;
+
+  const _DuaListView({
+    required this.duas,
+    required this.isRtl,
+    required this.isUrdu,
+    required this.isPashto,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -84,11 +130,22 @@ class _DuaListView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.search_off, size: 64, color: Colors.grey.withOpacity(0.5)),
+            Icon(
+              Icons.search_off,
+              size: 64,
+              color: Colors.grey.withValues(alpha: 0.5),
+            ),
             const SizedBox(height: 16),
             Text(
-       'No duas found.',
-              style: isUrdu ? const TextStyle(fontFamily: 'NotoNastaliqUrdu', color: Colors.grey) : const TextStyle(color: Colors.grey),
+              isUrdu
+                  ? 'کوئی دعا نہیں ملی۔'
+                  : (isPashto
+                      ? 'هیڅ دعا ونه موندل شوه.'
+                      : 'No duas found.'),
+              style: TextStyle(
+                fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                color: Colors.grey,
+              ),
             ),
           ],
         ),
@@ -107,7 +164,14 @@ class _DuaListView extends StatelessWidget {
           );
         }
         final dua = duas[index];
-        return DuaTile(dua: dua, isUrdu: isUrdu);
+        return DuaTile(
+          dua: dua,
+          duas: duas,
+          index: index,
+          isRtl: isRtl,
+          isUrdu: isUrdu,
+          isPashto: isPashto,
+        );
       },
     );
   }
@@ -115,12 +179,30 @@ class _DuaListView extends StatelessWidget {
 
 class DuaTile extends StatelessWidget {
   final DuaEntity dua;
+  final List<DuaEntity> duas;
+  final int index;
+  final bool isRtl;
   final bool isUrdu;
-  const DuaTile({super.key, required this.dua, required this.isUrdu});
+  final bool isPashto;
+
+  const DuaTile({
+    super.key,
+    required this.dua,
+    required this.duas,
+    required this.index,
+    required this.isRtl,
+    required this.isUrdu,
+    required this.isPashto,
+  });
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final title = isUrdu
+        ? dua.titleUr
+        : (isPashto
+            ? (dua.titlePs.isNotEmpty ? dua.titlePs : dua.titleUr)
+            : dua.titleEn);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -128,35 +210,43 @@ class DuaTile extends StatelessWidget {
         color: isDark ? Colors.black45 : Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.05),
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.08)
+              : Colors.black.withValues(alpha: 0.05),
         ),
         boxShadow: [
-          if(!isDark) BoxShadow(
-            color: Colors.black.withOpacity(0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
+          if (!isDark)
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.02),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
         ],
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        title: Text(
-          isUrdu ? dua.titleUr : dua.titleEn,
-          style: isUrdu 
-            ? const TextStyle(fontFamily: 'NotoNastaliqUrdu', fontWeight: FontWeight.w600, fontSize: 16, height: 1.8)
-            : const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 10,
         ),
-
-        trailing: Icon(
-        Icons.chevron_right,
-          size: 18,
-          color: AppColors.primaryTeal.withOpacity(0.5),
+        title: Text(
+          title,
+          style: isRtl
+              ? const TextStyle(
+                  fontFamily: 'NotoNastaliqUrdu',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                  height: 1.8,
+                )
+              : const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
         ),
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => DuaDetailScreen(dua: dua),
+              builder: (context) => DuaDetailScreen(
+                duas: duas,
+                initialIndex: index,
+              ),
             ),
           );
         },

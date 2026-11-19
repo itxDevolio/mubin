@@ -7,15 +7,80 @@ import '../../domain/entities/shifa_entity.dart';
 import '../../../../core/widgets/ad_banner_widget.dart';
 
 class ShifaDetailScreen extends ConsumerStatefulWidget {
-  final ShifaEntity dua;
+  final List<ShifaEntity> duas;
+  final int initialIndex;
 
-  const ShifaDetailScreen({super.key, required this.dua});
+  const ShifaDetailScreen({
+    super.key,
+    required this.duas,
+    required this.initialIndex,
+  });
 
   @override
   ConsumerState<ShifaDetailScreen> createState() => _ShifaDetailScreenState();
 }
 
-class _ShifaDetailScreenState extends ConsumerState<ShifaDetailScreen>
+class _ShifaDetailScreenState extends ConsumerState<ShifaDetailScreen> {
+  late PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: widget.initialIndex);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final settings = ref.watch(settingsControllerProvider);
+    final isUrdu = settings.language == 'ur';
+    final isPashto = settings.language == 'ps';
+    final isRtl = isUrdu || isPashto;
+
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          isUrdu
+              ? 'شفا اور علاج'
+              : (isPashto ? 'شفا او درملنه' : 'Shifa & Healing'),
+          style: TextStyle(
+            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontWeight: FontWeight.bold,
+            fontSize: isRtl ? 16 : 18,
+          ),
+        ),
+      ),
+      body: Directionality(
+        textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+        child: PageView.builder(
+          controller: _pageController,
+          itemCount: widget.duas.length,
+          itemBuilder: (context, index) {
+            return _ShifaPageContent(dua: widget.duas[index]);
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _ShifaPageContent extends StatefulWidget {
+  final ShifaEntity dua;
+
+  const _ShifaPageContent({required this.dua});
+
+  @override
+  State<_ShifaPageContent> createState() => _ShifaPageContentState();
+}
+
+class _ShifaPageContentState extends State<_ShifaPageContent>
     with SingleTickerProviderStateMixin {
   late int _count;
   late AnimationController _animationController;
@@ -54,70 +119,72 @@ class _ShifaDetailScreenState extends ConsumerState<ShifaDetailScreen>
 
   @override
   Widget build(BuildContext context) {
-    final settings = ref.watch(settingsControllerProvider);
-    final isUrdu = settings.language == 'ur';
-    final isPashto = settings.language == 'ps';
-    final isRtl = isUrdu || isPashto;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Consumer(
+      builder: (context, ref, _) {
+        final settings = ref.watch(settingsControllerProvider);
+        final isUrdu = settings.language == 'ur';
+        final isPashto = settings.language == 'ps';
+        final isRtl = isUrdu || isPashto;
+        final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final title = isUrdu
-        ? widget.dua.titleUr
-        : (isPashto
-            ? (widget.dua.titlePs.isNotEmpty
-                ? widget.dua.titlePs
-                : widget.dua.titleUr)
-            : widget.dua.titleEn);
+        final title = isUrdu
+            ? widget.dua.titleUr
+            : (isPashto
+                ? (widget.dua.titlePs.isNotEmpty
+                    ? widget.dua.titlePs
+                    : widget.dua.titleUr)
+                : widget.dua.titleEn);
 
-    final translation = isUrdu
-        ? widget.dua.translationUr
-        : (isPashto
-            ? (widget.dua.translationPs.isNotEmpty
-                ? widget.dua.translationPs
-                : widget.dua.translationUr)
-            : widget.dua.translationEn);
+        final translation = isUrdu
+            ? widget.dua.translationUr
+            : (isPashto
+                ? (widget.dua.translationPs.isNotEmpty
+                    ? widget.dua.translationPs
+                    : widget.dua.translationUr)
+                : widget.dua.translationEn);
 
-    final instruction = isUrdu
-        ? widget.dua.instructionUr
-        : (isPashto
-            ? (widget.dua.instructionPs.isNotEmpty
-                ? widget.dua.instructionPs
-                : widget.dua.instructionUr)
-            : widget.dua.instructionEn);
+        final instruction = isUrdu
+            ? widget.dua.instructionUr
+            : (isPashto
+                ? (widget.dua.instructionPs.isNotEmpty
+                    ? widget.dua.instructionPs
+                    : widget.dua.instructionUr)
+                : widget.dua.instructionEn);
 
-    // Poppins font for English, NotoNastaliq for Urdu/Pashto
-    TextStyle bodyStyle = isRtl
-        ? TextStyle(
-            fontFamily: 'NotoNastaliqUrdu',
-            fontSize: 14,
-            height: 2.0,
-            color: isDark ? Colors.white70 : Colors.black87,
-          )
-        : TextStyle(
-            fontFamily: 'Poppins',
-            fontSize: 15,
-            height: 1.6,
-            color: isDark ? Colors.white70 : Colors.black87,
-          );
+        TextStyle bodyStyle = isRtl
+            ? TextStyle(
+                fontFamily: 'NotoNastaliqUrdu',
+                fontSize: 14,
+                height: 2.0,
+                color: isDark ? Colors.white70 : Colors.black87,
+              )
+            : TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 15,
+                height: 1.6,
+                color: isDark ? Colors.white70 : Colors.black87,
+              );
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          title,
-          style: TextStyle(
-            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-      body: Directionality(
-        textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
-        child: SingleChildScrollView(
+        return SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              // Title banner
+              Center(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: AppColors.primaryTeal,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(height: 16),
+
               // Arabic Text
               Container(
                 padding: const EdgeInsets.all(24),
@@ -130,7 +197,7 @@ class _ShifaDetailScreenState extends ConsumerState<ShifaDetailScreen>
                         : Colors.black.withValues(alpha: 0.05),
                   ),
                 ),
-                child: Text(
+                child: SelectableText(
                   widget.dua.arabic,
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -143,16 +210,13 @@ class _ShifaDetailScreenState extends ConsumerState<ShifaDetailScreen>
               ),
               const SizedBox(height: 20),
 
-              // Translation
+              // Translation (Borderless, Center aligned, no header)
               _TranslationSection(
-                title: isUrdu
-                    ? 'ترجمہ'
-                    : (isPashto ? 'ژباړه' : 'Translation'),
                 text: translation,
                 isRtl: isRtl,
                 bodyStyle: bodyStyle,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 16),
 
               // Reference
               Align(
@@ -184,12 +248,9 @@ class _ShifaDetailScreenState extends ConsumerState<ShifaDetailScreen>
               const AdBannerWidget(),
               const SizedBox(height: 20),
 
-              // Instructions
+              // Instructions (Golden text color, center aligned, no header)
               if (instruction.isNotEmpty)
                 _InstructionSection(
-                  title: isUrdu
-                      ? 'ہدایات'
-                      : (isPashto ? 'لارښوونې' : 'Instructions'),
                   text: instruction,
                   isRtl: isRtl,
                 ),
@@ -234,21 +295,21 @@ class _ShifaDetailScreenState extends ConsumerState<ShifaDetailScreen>
                   ),
                 ),
               ),
+              const SizedBox(height: 30),
             ],
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
 
 class _TranslationSection extends StatelessWidget {
-  final String title, text;
+  final String text;
   final bool isRtl;
   final TextStyle bodyStyle;
 
   const _TranslationSection({
-    required this.title,
     required this.text,
     required this.isRtl,
     required this.bodyStyle,
@@ -256,75 +317,45 @@ class _TranslationSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment:
-          isRtl ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
-            fontWeight: FontWeight.w700,
-            color: AppColors.primaryTeal,
-            fontSize: 12,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          text,
-          textAlign: isRtl ? TextAlign.right : TextAlign.left,
-          style: bodyStyle,
-        ),
-      ],
+    return SelectableText(
+      text,
+      textAlign: TextAlign.center,
+      textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+      style: bodyStyle,
     );
   }
 }
 
 class _InstructionSection extends StatelessWidget {
-  final String title, text;
+  final String text;
   final bool isRtl;
 
   const _InstructionSection({
-    required this.title,
     required this.text,
     required this.isRtl,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.amber.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment:
-            isRtl ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
-              fontWeight: FontWeight.bold,
-              color: Colors.amber.shade800,
-              fontSize: 12,
+    return SelectableText(
+      text,
+      textAlign: TextAlign.center,
+      textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+      style: isRtl
+          ? const TextStyle(
+              fontFamily: 'NotoNastaliqUrdu',
+              fontSize: 13,
+              height: 1.9,
+              color: AppColors.accentGold,
+              fontWeight: FontWeight.w600,
+            )
+          : const TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 13,
+              height: 1.6,
+              color: AppColors.accentGold,
+              fontWeight: FontWeight.w600,
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            text,
-            textAlign: isRtl ? TextAlign.right : TextAlign.left,
-            style: isRtl
-                ? const TextStyle(
-                    fontFamily: 'NotoNastaliqUrdu',
-                    fontSize: 12,
-                    height: 1.8,
-                  )
-                : const TextStyle(fontFamily: 'Poppins', fontSize: 12),
-          ),
-        ],
-      ),
     );
   }
 }
