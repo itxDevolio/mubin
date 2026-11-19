@@ -13,32 +13,42 @@ class IstikharaGuideScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final settings = ref.watch(settingsControllerProvider);
     final isUrdu = settings.language == 'ur';
+    final isPashto = settings.language == 'ps';
+    final isRtl = isUrdu || isPashto;
+    final textDirection = isRtl ? TextDirection.rtl : TextDirection.ltr;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          isUrdu ? "استخارہ کا طریقہ" : "Istikhara Prayer Guide",
-          style: isUrdu 
-            ? const TextStyle(fontFamily: 'NotoNastaliqUrdu', fontWeight: FontWeight.bold, fontSize: 18)
-            : const TextStyle(fontWeight: FontWeight.bold),
+          isUrdu
+              ? "استخارہ کا طریقہ"
+              : (isPashto ? "د استخارې لمانځه طريقه" : "Istikhara Prayer Guide"),
+          style: TextStyle(
+            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontWeight: FontWeight.bold,
+            fontSize: isRtl ? 16 : 18,
+          ),
         ),
       ),
-      body: ListView.builder(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-        itemCount: IstikharaData.getSteps().length + 1,
-        itemBuilder: (context, index) {
-          final steps = IstikharaData.getSteps();
-          if (index == steps.length) {
-            return const Padding(
-              padding: EdgeInsets.only(top: 20.0),
-              child: AdBannerWidget(),
-            );
-          }
-          return GuideStepWidget(step: steps[index], isUrdu: isUrdu);
-        },
+      body: Directionality(
+        textDirection: textDirection,
+        child: ListView.builder(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+          itemCount: IstikharaData.getSteps().length + 1,
+          itemBuilder: (context, index) {
+            final steps = IstikharaData.getSteps();
+            if (index == steps.length) {
+              return const Padding(
+                padding: EdgeInsets.only(top: 20.0),
+                child: AdBannerWidget(),
+              );
+            }
+            return GuideStepWidget(step: steps[index], isUrdu: isUrdu);
+          },
+        ),
       ),
     );
   }

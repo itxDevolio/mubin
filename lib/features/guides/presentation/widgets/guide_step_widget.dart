@@ -43,10 +43,8 @@ class GuideStepWidget extends ConsumerWidget {
         children: [
           // Step Header
           Row(
-            mainAxisAlignment:
-                isRtl ? MainAxisAlignment.end : MainAxisAlignment.start,
             children: [
-              if (!isRtl) _buildStepCircle(step.stepNumber),
+              _buildStepCircle(step.stepNumber),
               const SizedBox(width: 16),
               Expanded(
                 child: Text(
@@ -67,8 +65,6 @@ class GuideStepWidget extends ConsumerWidget {
                         ),
                 ),
               ),
-              const SizedBox(width: 16),
-              if (isRtl) _buildStepCircle(step.stepNumber),
             ],
           ),
           const SizedBox(height: 18),
@@ -196,8 +192,6 @@ class GuideStepWidget extends ConsumerWidget {
                 if (step.reference.isNotEmpty) ...[
                   const SizedBox(height: 12),
                   Row(
-                    mainAxisAlignment:
-                        isRtl ? MainAxisAlignment.end : MainAxisAlignment.start,
                     children: [
                       Icon(
                         Icons.menu_book_rounded,
@@ -205,12 +199,15 @@ class GuideStepWidget extends ConsumerWidget {
                         color: AppColors.primaryTeal.withValues(alpha: 0.7),
                       ),
                       const SizedBox(width: 6),
-                      Text(
-                        step.reference,
-                        style: TextStyle(
-                          fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
-                          fontSize: 12,
-                          color: Colors.grey,
+                      Expanded(
+                        child: Text(
+                          step.reference,
+                          textAlign: isRtl ? TextAlign.right : TextAlign.left,
+                          style: TextStyle(
+                            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
                         ),
                       ),
                     ],
