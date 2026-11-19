@@ -1,9 +1,9 @@
 import 'package:mubin/core/app_colors.dart';
 import 'package:mubin/core/services/haptic_feedback.dart';
-import 'package:mubin/core/services/settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../controller/data_provider.dart';
+import '../controller/hadith_notifier.dart';
 import '../../data/models/book_model.dart';
 import 'hadith_list_screen.dart';
 import 'hadith_detail_screen.dart';
@@ -30,9 +30,9 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
   @override
   Widget build(BuildContext context) {
     final chaptersAsync = ref.watch(chaptersProvider(widget.bookSlug));
-    final settings = ref.watch(settingsControllerProvider);
+    final hadithLang = ref.watch(hadithLanguageProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bool isUrdu = settings.language == 'ur';
+    final bool isUrdu = hadithLang == 'ur';
     final bool isSearching = _searchQuery.trim().isNotEmpty;
 
     return Scaffold(

@@ -1,23 +1,22 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
 import '../../data/datasources/local_data_source.dart';
 
 final adhkarDataSourceProvider = Provider((ref) => AdhkarLocalDataSource());
 
-final adhkarCountProvider = StateNotifierProvider.family<DhikrNotifier, int, String>((ref, id) {
-  final dataSource = ref.watch(adhkarDataSourceProvider);
-  return DhikrNotifier(id, dataSource);
-});
+final adhkarCountProvider = NotifierProvider.family<DhikrNotifier, int, String>(DhikrNotifier.new);
 
-class DhikrNotifier extends StateNotifier<int> {
+class DhikrNotifier extends Notifier<int> {
   final String id;
-  final AdhkarLocalDataSource dataSource;
+  DhikrNotifier(this.id);
 
-  DhikrNotifier(this.id, this.dataSource) : super(0) {
-    _loadCount();
+  @override
+  int build() {
+    _loadCount(id);
+    return 0;
   }
 
-  Future<void> _loadCount() async {
+  Future<void> _loadCount(String id) async {
+    final dataSource = ref.read(adhkarDataSourceProvider);
     final data = await dataSource.getDhikrData(id);
     if (data != null) {
       state = data['count'] ?? 0;
@@ -26,11 +25,11 @@ class DhikrNotifier extends StateNotifier<int> {
 
   void increment() {
     state++;
-    dataSource.updateCount(id, state);
+    ref.read(adhkarDataSourceProvider).updateCount(id, state);
   }
 
   void reset() {
     state = 0;
-    dataSource.updateCount(id, 0);
+    ref.read(adhkarDataSourceProvider).updateCount(id, 0);
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
 import '../../domain/entities/dua_entity.dart';
 import '../../domain/repositories/dua_repository.dart';
 import '../../data/repositories/dua_repository_impl.dart';
@@ -32,15 +31,16 @@ class DuaLoaded extends DuaState {
   }
 }
 
-class DuaNotifier extends StateNotifier<DuaState> {
-  final DuaRepository repository;
-
-  DuaNotifier(this.repository) : super(DuaInitial()) {
-    loadDuas();
+class DuaNotifier extends Notifier<DuaState> {
+  @override
+  DuaState build() {
+    Future.microtask(() => loadDuas());
+    return DuaInitial();
   }
 
   void loadDuas() {
     state = DuaLoading();
+    final repository = ref.read(duaRepositoryProvider);
     final duas = repository.getAllDuas();
     state = DuaLoaded(allDuas: duas);
   }
@@ -48,6 +48,7 @@ class DuaNotifier extends StateNotifier<DuaState> {
   void searchDuas(String query) {
     if (state is DuaLoaded) {
       final currentState = state as DuaLoaded;
+      final repository = ref.read(duaRepositoryProvider);
       if (query.isEmpty) {
         state = currentState.copyWith(searchedDuas: [], searchQuery: '');
       } else {
@@ -62,7 +63,6 @@ final duaRepositoryProvider = Provider<DuaRepository>((ref) {
   return DuaRepositoryImpl();
 });
 
-final duaProvider = StateNotifierProvider<DuaNotifier, DuaState>((ref) {
-  final repository = ref.watch(duaRepositoryProvider);
-  return DuaNotifier(repository);
+final duaProvider = NotifierProvider<DuaNotifier, DuaState>(() {
+  return DuaNotifier();
 });

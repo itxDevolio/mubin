@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
 import 'package:geolocator/geolocator.dart';
 import '../../data/repositories/qibla_repository_impl.dart';
 import '../../domain/repositories/qibla_repository.dart';
@@ -11,30 +10,35 @@ final qiblaRepositoryProvider = Provider<QiblaRepository>((ref) {
   return QiblaRepositoryImpl();
 });
 
-final qiblaProvider = StateNotifierProvider<QiblaNotifier, QiblaState>((ref) {
-  return QiblaNotifier(ref.watch(qiblaRepositoryProvider));
+final qiblaProvider = NotifierProvider<QiblaNotifier, QiblaState>(() {
+  return QiblaNotifier();
 });
 
-class QiblaNotifier extends StateNotifier<QiblaState> {
-  final QiblaRepository _repository;
+class QiblaNotifier extends Notifier<QiblaState> {
   StreamSubscription? _compassSubscription;
   double _qiblaDirection = 0;
 
-  QiblaNotifier(this._repository) : super(QiblaState.initial()) {
-    _init();
+  @override
+  QiblaState build() {
+    ref.onDispose(() {
+      _compassSubscription?.cancel();
+    });
+    Future.microtask(() => _init());
+    return QiblaState.initial();
   }
 
   Future<void> _init() async {
     try {
       state = state.copyWith(isLoading: true);
       
-      final position = await _repository.getCurrentLocation();
+      final repository = ref.read(qiblaRepositoryProvider);
+      final position = await repository.getCurrentLocation();
       _updateDirection(position);
       
       double smoothedHeading = 0;
       const double alpha = 0.15; // Smoothing factor (0.1 to 0.3 is typical)
 
-      _compassSubscription = _repository.getCompassStream().listen((event) {
+      _compassSubscription = repository.getCompassStream().listen((event) {
         final heading = event.heading;
         if (heading == null) return;
 
@@ -71,7 +75,8 @@ class QiblaNotifier extends StateNotifier<QiblaState> {
   }
 
   void _updateDirection(Position position) {
-    _qiblaDirection = _repository.calculateQiblaDirection(
+    final repository = ref.read(qiblaRepositoryProvider);
+    _qiblaDirection = repository.calculateQiblaDirection(
       position.latitude,
       position.longitude,
     );
@@ -84,11 +89,5 @@ class QiblaNotifier extends StateNotifier<QiblaState> {
 
   void dismissCalibration() {
     state = state.copyWith(needsCalibration: false);
-  }
-
-  @override
-  void dispose() {
-    _compassSubscription?.cancel();
-    super.dispose();
   }
 }

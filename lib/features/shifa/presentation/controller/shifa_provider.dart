@@ -1,23 +1,22 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
 import '../../data/datasources/shifa_local_data_source.dart';
 
 final shifaDataSourceProvider = Provider((ref) => ShifaLocalDataSource());
 
-final shifaCountProvider = StateNotifierProvider.family<ShifaNotifier, int, String>((ref, id) {
-  final dataSource = ref.watch(shifaDataSourceProvider);
-  return ShifaNotifier(id, dataSource);
-});
+final shifaCountProvider = NotifierProvider.family<ShifaNotifier, int, String>(ShifaNotifier.new);
 
-class ShifaNotifier extends StateNotifier<int> {
+class ShifaNotifier extends Notifier<int> {
   final String id;
-  final ShifaLocalDataSource dataSource;
+  ShifaNotifier(this.id);
 
-  ShifaNotifier(this.id, this.dataSource) : super(0) {
-    _loadCount();
+  @override
+  int build() {
+    _loadCount(id);
+    return 0;
   }
 
-  Future<void> _loadCount() async {
+  Future<void> _loadCount(String id) async {
+    final dataSource = ref.read(shifaDataSourceProvider);
     final data = await dataSource.getShifaData(id);
     if (data != null) {
       state = data['count'] ?? 0;
@@ -26,11 +25,11 @@ class ShifaNotifier extends StateNotifier<int> {
 
   void increment() {
     state++;
-    dataSource.updateCount(id, state);
+    ref.read(shifaDataSourceProvider).updateCount(id, state);
   }
 
   void reset() {
     state = 0;
-    dataSource.updateCount(id, 0);
+    ref.read(shifaDataSourceProvider).updateCount(id, 0);
   }
 }

@@ -37,9 +37,9 @@ class _HadithListScreenState extends ConsumerState<HadithListScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(hadithProvider);
-    final settings = ref.watch(settingsControllerProvider);
+    final hadithLang = ref.watch(hadithLanguageProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bool isUrdu = settings.language == 'ur';
+    final bool isUrdu = hadithLang == 'ur';
     final String bookName = BookModel.getBookNameFromSlug(
       widget.bookSlug,
       isUrdu,
@@ -91,11 +91,11 @@ class _HadithListScreenState extends ConsumerState<HadithListScreen> {
 
                 final String heading = isUrdu
                     ? (hadith.headingUrdu.isNotEmpty
-                        ? hadith.headingUrdu
-                        : hadith.headingEnglish)
+                          ? hadith.headingUrdu
+                          : hadith.headingEnglish)
                     : (hadith.headingEnglish.isNotEmpty
-                        ? hadith.headingEnglish
-                        : hadith.headingUrdu);
+                          ? hadith.headingEnglish
+                          : hadith.headingUrdu);
 
                 return InkWell(
                   onTap: () {
@@ -120,7 +120,9 @@ class _HadithListScreenState extends ConsumerState<HadithListScreen> {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.04),
+                          color: Colors.black.withValues(
+                            alpha: isDark ? 0.3 : 0.04,
+                          ),
                           blurRadius: 8,
                           offset: const Offset(0, 3),
                         ),
@@ -132,17 +134,23 @@ class _HadithListScreenState extends ConsumerState<HadithListScreen> {
                           : CrossAxisAlignment.start,
                       children: [
                         // Header Row: Book Name + Hadith Number + Status Badge
-                        Row(
-                          textDirection:
-                              isUrdu ? TextDirection.rtl : TextDirection.ltr,
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 4,
+                          textDirection: isUrdu
+                              ? TextDirection.rtl
+                              : TextDirection.ltr,
                           children: [
-                            if (bookName.isNotEmpty) ...[
+                            if (bookName.isNotEmpty)
                               Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 4),
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
                                 decoration: BoxDecoration(
-                                  color: AppColors.primaryTeal
-                                      .withValues(alpha: 0.12),
+                                  color: AppColors.primaryTeal.withValues(
+                                    alpha: 0.12,
+                                  ),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Text(
@@ -157,11 +165,11 @@ class _HadithListScreenState extends ConsumerState<HadithListScreen> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 8),
-                            ],
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
                               decoration: BoxDecoration(
                                 color: isDark
                                     ? Colors.white10
@@ -173,8 +181,9 @@ class _HadithListScreenState extends ConsumerState<HadithListScreen> {
                                     ? "حدیث ${hadith.hadithNumber}"
                                     : "Hadith ${hadith.hadithNumber}",
                                 style: TextStyle(
-                                  fontFamily:
-                                      isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                                  fontFamily: isUrdu
+                                      ? 'NotoNastaliqUrdu'
+                                      : 'Poppins',
                                   color: isDark
                                       ? Colors.white70
                                       : Colors.black87,
@@ -183,11 +192,12 @@ class _HadithListScreenState extends ConsumerState<HadithListScreen> {
                                 ),
                               ),
                             ),
-                            const Spacer(),
                             if (hadith.status.isNotEmpty)
                               Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 4),
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
                                 decoration: BoxDecoration(
                                   color: isDark
                                       ? Colors.white10
@@ -209,21 +219,24 @@ class _HadithListScreenState extends ConsumerState<HadithListScreen> {
                         // Compact Title Row with Arrow Indicator
                         const SizedBox(height: 10),
                         Row(
-                          textDirection:
-                              isUrdu ? TextDirection.rtl : TextDirection.ltr,
+                          textDirection: isUrdu
+                              ? TextDirection.rtl
+                              : TextDirection.ltr,
                           children: [
                             Expanded(
                               child: Text(
                                 heading.isNotEmpty
                                     ? heading
                                     : (isUrdu
-                                        ? "حدیث نمبر ${hadith.hadithNumber}"
-                                        : "Hadith Number ${hadith.hadithNumber}"),
-                                textAlign:
-                                    isUrdu ? TextAlign.right : TextAlign.left,
+                                          ? "حدیث نمبر ${hadith.hadithNumber}"
+                                          : "Hadith Number ${hadith.hadithNumber}"),
+                                textAlign: isUrdu
+                                    ? TextAlign.right
+                                    : TextAlign.left,
                                 style: TextStyle(
-                                  fontFamily:
-                                      isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                                  fontFamily: isUrdu
+                                      ? 'NotoNastaliqUrdu'
+                                      : 'Poppins',
                                   fontSize: isUrdu ? 14 : 14.5,
                                   fontWeight: FontWeight.bold,
                                   height: isUrdu ? 1.5 : 1.3,
@@ -239,8 +252,9 @@ class _HadithListScreenState extends ConsumerState<HadithListScreen> {
                                   ? Icons.arrow_back_ios_rounded
                                   : Icons.arrow_forward_ios_rounded,
                               size: 12,
-                              color: AppColors.primaryTeal
-                                  .withValues(alpha: 0.6),
+                              color: AppColors.primaryTeal.withValues(
+                                alpha: 0.6,
+                              ),
                             ),
                           ],
                         ),

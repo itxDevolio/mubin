@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
 
 import '../../data/datasources/tasbeeh_local_data_source.dart';
 import '../../data/repositories/tasbeeh_repository_impl.dart';
@@ -17,29 +16,26 @@ final incrementUseCaseProvider = Provider((ref) => IncrementTasbeehUseCase(ref.r
 final resetUseCaseProvider = Provider((ref) => ResetTasbeehUseCase(ref.read(tasbeehRepositoryProvider)));
 
 // 4. State Management
-final tasbeehProvider = StateNotifierProvider.family<TasbeehNotifier, int, String>((ref, id) {
-  return TasbeehNotifier(
-    id,
-    ref.read(tasbeehRepositoryProvider).getCount(id),
-    ref.read(incrementUseCaseProvider),
-    ref.read(resetUseCaseProvider),
-  );
-});
+final tasbeehProvider = NotifierProvider.family<TasbeehNotifier, int, String>(TasbeehNotifier.new);
 
-class TasbeehNotifier extends StateNotifier<int> {
+class TasbeehNotifier extends Notifier<int> {
   final String id;
-  final IncrementTasbeehUseCase incrementUseCase;
-  final ResetTasbeehUseCase resetUseCase;
+  TasbeehNotifier(this.id);
 
-  TasbeehNotifier(this.id, int initialCount, this.incrementUseCase, this.resetUseCase) : super(initialCount);
+  @override
+  int build() {
+    return ref.read(tasbeehRepositoryProvider).getCount(id);
+  }
 
   Future<void> increment() async {
     state = (state >= 999999) ? 0 : state + 1;
+    final incrementUseCase = ref.read(incrementUseCaseProvider);
     await incrementUseCase.call(id, state);
   }
 
   Future<void> reset() async {
     state = 0;
+    final resetUseCase = ref.read(resetUseCaseProvider);
     await resetUseCase.call(id);
   }
 }

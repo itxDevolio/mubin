@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
 import '../../domain/entities/hadith.dart';
 import '../../domain/repositories/hadith_repository.dart';
 import '../../data/repositories/hadith_repository_impl.dart';
 import '../../data/datasources/hadith_local_data_source.dart';
+import '../../../../core/services/settings_controller.dart';
 
 // 1. Define State Classes
 sealed class HadithState {}
@@ -19,14 +19,14 @@ class HadithError extends HadithState {
 }
 
 // 2. Define Notifier Class
-class HadithNotifier extends StateNotifier<HadithState> {
-  final HadithRepository repository;
-
-  HadithNotifier(this.repository) : super(HadithInitial());
+class HadithNotifier extends Notifier<HadithState> {
+  @override
+  HadithState build() => HadithInitial();
 
   Future<void> fetchHadiths(String bookSlug, String chapterNumber) async {
     state = HadithLoading();
     try {
+      final repository = ref.read(hadithRepositoryProvider);
       final data = await repository.getHadiths(bookSlug, chapterNumber);
       state = HadithLoaded(data);
     } catch (e) {
@@ -40,7 +40,31 @@ final hadithRepositoryProvider = Provider<HadithRepository>((ref) {
   return HadithRepositoryImpl(HadithLocalDataSource());
 });
 
-final hadithProvider = StateNotifierProvider<HadithNotifier, HadithState>((ref) {
-  final repository = ref.read(hadithRepositoryProvider);
-  return HadithNotifier(repository);
+final hadithProvider = NotifierProvider<HadithNotifier, HadithState>(() {
+  return HadithNotifier();
+});
+
+class HadithLanguageNotifier extends Notifier<String> {
+  String? _userSelectedLang;
+
+  @override
+  String build() {
+    final settings = ref.watch(settingsControllerProvider);
+    if (settings.language == 'en') {
+      return 'en';
+    } else if (settings.language == 'ur') {
+      return 'ur';
+    } else {
+      return _userSelectedLang ?? 'ur';
+    }
+  }
+
+  void setHadithLanguage(String lang) {
+    _userSelectedLang = lang;
+    state = lang;
+  }
+}
+
+final hadithLanguageProvider = NotifierProvider<HadithLanguageNotifier, String>(() {
+  return HadithLanguageNotifier();
 });

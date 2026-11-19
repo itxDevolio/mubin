@@ -15,7 +15,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../features/qibla/presentation/pages/qibla_page.dart';
 import '../../../features/guides/presentation/pages/istikhara_guide_screen.dart';
 import '../../../features/guides/presentation/pages/janaza_guide_screen.dart';
-import '../../../features/guides/presentation/pages/qasar_guide_screen.dart';
 import '../widgets/feature_card.dart';
 import '../widgets/guide_card.dart';
 import '../widgets/user_profile_widget.dart';
@@ -291,7 +290,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                       title: isUrdu
                                           ? "استخارہ کا طریقہ"
                                           : (isPashto
-                                                ? "د استخارې لمانځه تګلاره"
+                                                ? "د استخارې لمانځه طریقہ"
                                                 : "Istikhara Prayer Guide"),
                                       subTitle: isUrdu
                                           ? "اہم فیصلوں میں اللہ سے رہنمائی حاصل کریں"
@@ -311,29 +310,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                         );
                                       },
                                     ),
-                                    InfoGuideCard(
-                                      title: isUrdu
-                                          ? "نمازِ قصر کا طریقہ"
-                                          : (isPashto
-                                                ? "د مسافر لمانځه (قصر) تګلاره"
-                                                : "Traveler's Prayer"),
-                                      subTitle: isUrdu
-                                          ? "سفر کے دوران نماز قصر کرنے کا مکمل طریقہ"
-                                          : (isPashto
-                                                ? "د سفر پر مهال د قصر لمانځه مکمل اصول او تګلاره"
-                                                : "Guidelines and method for shortening prayers during travel."),
-                                      imageUrl: "assets/app_logos/qasar.png",
-                                      isRtl: isRtl,
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const QasarGuideScreen(),
-                                          ),
-                                        );
-                                      },
-                                    ),
+
                                   ],
                                 ),
                               ),

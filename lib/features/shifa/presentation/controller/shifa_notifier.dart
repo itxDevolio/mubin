@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
 import '../../domain/entities/shifa_entity.dart';
 import '../../domain/repositories/shifa_repository.dart';
 import '../../data/repositories/shifa_repository_impl.dart';
@@ -33,15 +32,16 @@ class ShifaLoaded extends ShifaState {
   }
 }
 
-class ShifaNotifier extends StateNotifier<ShifaState> {
-  final ShifaRepository repository;
-
-  ShifaNotifier(this.repository) : super(ShifaInitial()) {
-    loadDuas();
+class ShifaNotifier extends Notifier<ShifaState> {
+  @override
+  ShifaState build() {
+    Future.microtask(() => loadDuas());
+    return ShifaInitial();
   }
 
   void loadDuas() {
     state = ShifaLoading();
+    final repository = ref.read(shifaRepositoryProvider);
     final duas = repository.getAllDuas();
     state = ShifaLoaded(allDuas: duas);
   }
@@ -49,6 +49,7 @@ class ShifaNotifier extends StateNotifier<ShifaState> {
   void searchDuas(String query) {
     if (state is ShifaLoaded) {
       final currentState = state as ShifaLoaded;
+      final repository = ref.read(shifaRepositoryProvider);
       if (query.isEmpty) {
         state = currentState.copyWith(searchedDuas: [], searchQuery: '');
       } else {
@@ -64,7 +65,6 @@ final shifaRepositoryProvider = Provider<ShifaRepository>((ref) {
   return ShifaRepositoryImpl();
 });
 
-final shifaProvider = StateNotifierProvider<ShifaNotifier, ShifaState>((ref) {
-  final repository = ref.watch(shifaRepositoryProvider);
-  return ShifaNotifier(repository);
+final shifaProvider = NotifierProvider<ShifaNotifier, ShifaState>(() {
+  return ShifaNotifier();
 });

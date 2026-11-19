@@ -218,6 +218,9 @@ class SettingsController extends Notifier<SettingsState> {
   Future<void> setLanguage(String lang) async {
     final box = Hive.box(DbConstants.appBox);
     await box.put('language', lang);
+    if (lang == 'ps') {
+      await box.put('pashto_hadith_notice_shown', false);
+    }
     state = state.copyWith(language: lang);
   }
 

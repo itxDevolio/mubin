@@ -1,9 +1,9 @@
 import 'package:mubin/core/app_colors.dart';
-import 'package:mubin/core/services/settings_controller.dart';
 import 'package:mubin/features/hadith/domain/entities/hadith.dart';
 import 'package:mubin/features/hadith/data/models/book_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../controller/hadith_notifier.dart';
 
 class HadithDetailScreen extends ConsumerWidget {
   final HadithEntity hadith;
@@ -12,9 +12,9 @@ class HadithDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final settings = ref.watch(settingsControllerProvider);
+    final hadithLang = ref.watch(hadithLanguageProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bool isUrdu = settings.language == 'ur';
+    final bool isUrdu = hadithLang == 'ur';
 
     final String bookName = BookModel.getBookNameFromSlug(
       hadith.bookSlug,
@@ -97,8 +97,10 @@ class HadithDetailScreen extends ConsumerWidget {
                         topRight: Radius.circular(24),
                       ),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 6,
+                      alignment: WrapAlignment.spaceBetween,
                       textDirection:
                           isUrdu ? TextDirection.rtl : TextDirection.ltr,
                       children: [

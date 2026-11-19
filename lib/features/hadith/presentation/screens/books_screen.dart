@@ -1,9 +1,12 @@
 import 'package:mubin/core/app_colors.dart';
 import 'package:mubin/core/services/haptic_feedback.dart';
 import 'package:mubin/core/services/settings_controller.dart';
+import 'package:mubin/core/constant/db_consts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import '../controller/data_provider.dart';
+import '../controller/hadith_notifier.dart';
 import '../../data/models/book_model.dart';
 import 'chapters_screen.dart';
 import 'hadith_detail_screen.dart';
@@ -26,7 +29,9 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
     Future.microtask(() {
       if (!mounted) return;
       final settings = ref.read(settingsControllerProvider);
-      if (settings.language == 'ps') {
+      final box = Hive.box(DbConstants.appBox);
+      final bool shown = box.get('pashto_hadith_notice_shown', defaultValue: false);
+      if (settings.language == 'ps' && !shown) {
         _showPashtoHadithNoticeDialog(context);
       }
     });
@@ -141,9 +146,9 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          ref
-                              .read(settingsControllerProvider.notifier)
-                              .setLanguage('ur');
+                          final box = Hive.box(DbConstants.appBox);
+                          box.put('pashto_hadith_notice_shown', true);
+                          ref.read(hadithLanguageProvider.notifier).setHadithLanguage('ur');
                           Navigator.pop(context);
                         },
                         style: ElevatedButton.styleFrom(
@@ -169,9 +174,9 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                     Expanded(
                       child: OutlinedButton(
                         onPressed: () {
-                          ref
-                              .read(settingsControllerProvider.notifier)
-                              .setLanguage('en');
+                          final box = Hive.box(DbConstants.appBox);
+                          box.put('pashto_hadith_notice_shown', true);
+                          ref.read(hadithLanguageProvider.notifier).setHadithLanguage('en');
                           Navigator.pop(context);
                         },
                         style: OutlinedButton.styleFrom(
@@ -242,9 +247,9 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
   @override
   Widget build(BuildContext context) {
     final booksAsync = ref.watch(booksProvider);
-    final settings = ref.watch(settingsControllerProvider);
+    final hadithLang = ref.watch(hadithLanguageProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bool isUrdu = settings.language == 'ur';
+    final bool isUrdu = hadithLang == 'ur';
 
     final isSearching = _searchQuery.trim().length >= 2;
     final topics = isUrdu ? _urduTopics : _englishTopics;
@@ -559,12 +564,14 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                                     : CrossAxisAlignment.start,
                                 children: [
                                   // Top Row: Book Name, Hadith Number & Status Badge
-                                  Row(
+                                  Wrap(
+                                    spacing: 8,
+                                    runSpacing: 4,
                                     textDirection: isUrdu
                                         ? TextDirection.rtl
                                         : TextDirection.ltr,
                                     children: [
-                                      if (bookName.isNotEmpty) ...[
+                                      if (bookName.isNotEmpty)
                                         Container(
                                           padding: const EdgeInsets.symmetric(
                                             horizontal: 10,
@@ -589,8 +596,6 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                                             ),
                                           ),
                                         ),
-                                        const SizedBox(width: 8),
-                                      ],
                                       Container(
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 8,
@@ -622,7 +627,6 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                                           ),
                                         ),
                                       ),
-                                      const Spacer(),
                                       if (hadith.status.isNotEmpty)
                                         Container(
                                           padding: const EdgeInsets.symmetric(
