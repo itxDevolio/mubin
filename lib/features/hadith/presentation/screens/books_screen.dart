@@ -429,19 +429,24 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
                 children: [
-                  Text(
-                    isUrdu
-                        ? "موضوعاتی تلاش کے نتائج ('$_searchQuery'):"
-                        : "Topic Search Results for '$_searchQuery':",
-                    style: TextStyle(
-                      fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
-                      fontSize: isUrdu ? 15 : 16,
-                      fontWeight: FontWeight.bold,
-                      color: isDark
-                          ? AppColors.textPrimaryDark
-                          : AppColors.textPrimaryLight,
+                  Expanded(
+                    child: Text(
+                      isUrdu
+                          ? "موضوعاتی تلاش کے نتائج ('$_searchQuery'):"
+                          : "Topic Search Results for '$_searchQuery':",
+                      style: TextStyle(
+                        fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                        fontSize: isUrdu ? 14 : 15,
+                        fontWeight: FontWeight.bold,
+                        color: isDark
+                            ? AppColors.textPrimaryDark
+                            : AppColors.textPrimaryLight,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
+                  const SizedBox(width: 8),
                   TextButton(
                     onPressed: () {
                       _searchController.clear();
@@ -509,6 +514,8 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                             const SizedBox(height: 12),
                         itemBuilder: (context, index) {
                           final hadith = hadiths[index];
+                          final bool showAd = (index > 0 && index % 5 == 0);
+
                           final String bookName = BookModel.getBookNameFromSlug(
                             hadith.bookSlug,
                             isUrdu,
@@ -524,7 +531,7 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                               ? hadith.urduText
                               : hadith.englishText;
 
-                          return InkWell(
+                          Widget hadithCard = InkWell(
                             onTap: () {
                               hapticFeedBack();
                               Navigator.push(
@@ -723,6 +730,20 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                               ),
                             ),
                           );
+
+                          if (showAd) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(bottom: 12.0),
+                                  child: AdBannerWidget(),
+                                ),
+                                hadithCard,
+                              ],
+                            );
+                          }
+                          return hadithCard;
                         },
                       );
                     },

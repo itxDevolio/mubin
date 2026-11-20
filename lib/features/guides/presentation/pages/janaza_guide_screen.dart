@@ -3,13 +3,36 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
 import '../../../../core/app_colors.dart';
 import '../../../../core/services/settings_controller.dart';
+import '../../../../core/services/ad_helper.dart';
+import '../../../../core/widgets/ad_banner_widget.dart';
 import 'janaza_detail_screen.dart';
 
-class JanazaGuideScreen extends ConsumerWidget {
+class JanazaGuideScreen extends ConsumerStatefulWidget {
   const JanazaGuideScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<JanazaGuideScreen> createState() => _JanazaGuideScreenState();
+}
+
+class _JanazaGuideScreenState extends ConsumerState<JanazaGuideScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AdHelper.maybeShowGuideAd(
+        context,
+        onContinue: () {},
+        onSkip: () {
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+          }
+        },
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final settings = ref.watch(settingsControllerProvider);
     final isUrdu = settings.language == 'ur';
@@ -85,6 +108,9 @@ class JanazaGuideScreen extends ConsumerWidget {
                   ),
                 ),
               ),
+              const Spacer(),
+              const AdBannerWidget(),
+              const SizedBox(height: 10),
             ],
           ),
         ),

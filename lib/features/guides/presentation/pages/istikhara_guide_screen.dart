@@ -1,15 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/services/settings_controller.dart';
+import '../../../../core/services/ad_helper.dart';
 import '../widgets/guide_step_widget.dart';
 import '../../data/models/istikhara_data.dart';
 import '../../../../core/widgets/ad_banner_widget.dart';
 
-class IstikharaGuideScreen extends ConsumerWidget {
+class IstikharaGuideScreen extends ConsumerStatefulWidget {
   const IstikharaGuideScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<IstikharaGuideScreen> createState() => _IstikharaGuideScreenState();
+}
+
+class _IstikharaGuideScreenState extends ConsumerState<IstikharaGuideScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AdHelper.maybeShowGuideAd(
+        context,
+        onContinue: () {},
+        onSkip: () {
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+          }
+        },
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final settings = ref.watch(settingsControllerProvider);
     final isUrdu = settings.language == 'ur';

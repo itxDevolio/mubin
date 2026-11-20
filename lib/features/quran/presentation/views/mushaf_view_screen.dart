@@ -1,4 +1,5 @@
 import 'package:mubin/core/app_colors.dart';
+import 'package:mubin/core/services/ad_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -49,6 +50,18 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
           .read(quranProgressControllerProvider.notifier)
           .updateProgress(_currentPage);
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AdHelper.maybeShowSurahJuzAd(
+        context,
+        onContinue: () {},
+        onSkip: () {
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+          }
+        },
+      );
+    });
   }
 
   void _loadPages(int page) {

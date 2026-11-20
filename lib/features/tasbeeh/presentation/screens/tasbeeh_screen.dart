@@ -1,4 +1,5 @@
 import 'package:mubin/core/app_colors.dart';
+import 'package:mubin/core/services/ad_helper.dart';
 import 'package:mubin/core/services/haptic_feedback.dart';
 import 'package:mubin/core/services/settings_controller.dart';
 import 'package:flutter/material.dart';
@@ -73,6 +74,9 @@ class TasbeehScreen extends ConsumerWidget {
             onTap: () {
               hapticFeedBack();
               notifier.increment();
+              if ((count + 1) > 0 && (count + 1) % 5 == 0) {
+                AdHelper.showInterstitialWithLoading(context, onContinue: () {}, onSkip: () {});
+              }
             },
             behavior: HitTestBehavior.opaque,
             child: Container(
@@ -141,6 +145,9 @@ class TasbeehScreen extends ConsumerWidget {
                     onTap: () {
                       hapticFeedBack();
                       notifier.increment();
+                      if ((count + 1) > 0 && (count + 1) % 5 == 0) {
+                        AdHelper.showInterstitialWithLoading(context, onContinue: () {}, onSkip: () {});
+                      }
                     },
                   ),
 

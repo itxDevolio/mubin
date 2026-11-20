@@ -1,10 +1,14 @@
+import 'dart:async';
+import 'dart:io';
 import 'package:mubin/core/app_colors.dart';
 import 'package:mubin/core/services/haptic_feedback.dart';
 import 'package:mubin/core/services/settings_controller.dart';
+import 'package:mubin/core/widgets/glass_loading_overlay.dart';
 import 'package:mubin/features/quran/domain/entities/reciter.dart';
 import 'package:mubin/features/quran/presentation/controllers/quran_audio_player_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:quran/quran.dart' as quran;
 
@@ -367,17 +371,6 @@ class AudioPlayingScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          surahName,
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: isDark ? Colors.white : Colors.black87,
-                          ),
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
                           audioState.currentReciter.name,
                           style: TextStyle(
                             fontSize: 16,
@@ -633,26 +626,39 @@ class AudioPlayingScreen extends ConsumerWidget {
                         
                         // Download button (if surah is not downloaded)
                         if (surahNumber != null && !isDownloaded && downloadStatus != DownloadStatus.downloading)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16.0),
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                hapticFeedBack();
-                                ref
-                                    .read(quranAudioPlayerControllerProvider.notifier)
-                                    .downloadSurah(surahNumber);
-                              },
-                              icon: const Icon(Icons.download_rounded),
-                              label: const Text("Download for Offline"),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primaryTeal,
-                                foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 24,
-                                  vertical: 12,
+                          Builder(
+                            builder: (context) {
+                              final isProtected = ref.read(quranAudioPlayerControllerProvider.notifier).isAdProtectedSurah(surahNumber);
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 16.0),
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    hapticFeedBack();
+                                    if (isProtected) {
+                                      _loadAndShowAd(context, () {
+                                        ref
+                                            .read(quranAudioPlayerControllerProvider.notifier)
+                                            .downloadSurah(surahNumber);
+                                      });
+                                    } else {
+                                      ref
+                                          .read(quranAudioPlayerControllerProvider.notifier)
+                                          .downloadSurah(surahNumber);
+                                    }
+                                  },
+                                  icon: const Icon(Icons.download_rounded),
+                                  label: const Text("Download for Offline"),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.primaryTeal,
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 24,
+                                      vertical: 12,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
+                              );
+                            },
                           ),
                         
                         // Cancel download button
@@ -793,12 +799,38 @@ class AudioPlayingScreen extends ConsumerWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    reciter.name,
-                                    style: TextStyle(
-                                      fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                                      color: isDark ? Colors.white : Colors.black87,
-                                    ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        reciter.name,
+                                        style: TextStyle(
+                                          fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                                          color: isDark ? Colors.white : Colors.black87,
+                                        ),
+                                      ),
+                                      if (reciter.name.contains('Sudais')) ...[
+                                        const SizedBox(width: 8),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                          decoration: BoxDecoration(
+                                            color: Colors.amber.withValues(alpha: 0.2),
+                                            borderRadius: BorderRadius.circular(6),
+                                            border: Border.all(color: Colors.amber, width: 0.8),
+                                          ),
+                                          child: const Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Icon(Icons.ondemand_video_rounded, size: 12, color: Colors.amber),
+                                              SizedBox(width: 4),
+                                              Text(
+                                                'Download Ad',
+                                                style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.amber),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ],
                                   ),
                                   if (reciter.arabicName != null)
                                     Text(
@@ -964,6 +996,56 @@ class AudioPlayingScreen extends ConsumerWidget {
           ),
         ),
       ],
+    );
+  }
+
+  void _loadAndShowAd(BuildContext context, VoidCallback onRewarded) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Dialog(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        child: GlassLoadingOverlay(message: "Loading Ad..."),
+      ),
+    );
+
+    final String rewardedAdUnitId = Platform.isAndroid
+        ? 'ca-app-pub-3940256099942544/5224354917'
+        : 'ca-app-pub-3940256099942544/1712485313';
+
+    RewardedAd.load(
+      adUnitId: rewardedAdUnitId,
+      request: const AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (ad) {
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context); // Dismiss loading overlay
+          }
+
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (ad) {
+              ad.dispose();
+            },
+            onAdFailedToShowFullScreenContent: (ad, err) {
+              ad.dispose();
+              onRewarded(); // Fallback
+            },
+          );
+          ad.show(
+            onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+              onRewarded();
+            },
+          );
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          debugPrint('RewardedAd failed to load: $error');
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context); // Dismiss loading overlay
+          }
+          onRewarded(); // Fallback if ad fails to load
+        },
+      ),
     );
   }
 }

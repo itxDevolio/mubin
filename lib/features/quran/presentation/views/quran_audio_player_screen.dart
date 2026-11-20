@@ -1,8 +1,12 @@
+import 'dart:async';
+import 'dart:io';
 import 'package:mubin/core/app_colors.dart';
 import 'package:mubin/core/services/haptic_feedback.dart';
 import 'package:mubin/core/services/settings_controller.dart';
+import 'package:mubin/core/widgets/glass_loading_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:quran/quran.dart' as quran;
 import 'package:mubin/features/quran/presentation/controllers/quran_audio_player_controller.dart';
 import 'package:mubin/features/quran/presentation/controllers/surah_juz_controller.dart';
@@ -300,20 +304,35 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
                                   size: 20,
                                 )
                               else
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.download_for_offline_outlined,
-                                    size: 20,
-                                  ),
-                                  onPressed: () {
-                                    hapticFeedBack();
-                                    ref.read(quranAudioPlayerControllerProvider.notifier).downloadSurah(surah.number);
+                                Builder(
+                                  builder: (context) {
+                                    final isProtected = ref.read(quranAudioPlayerControllerProvider.notifier).isAdProtectedSurah(surah.number);
+                                    return IconButton(
+                                      icon: const Icon(
+                                        Icons.download_for_offline_outlined,
+                                        size: 20,
+                                      ),
+                                      onPressed: () {
+                                        hapticFeedBack();
+                                        if (isProtected) {
+                                          _loadAndShowAd(() {
+                                            ref
+                                                .read(quranAudioPlayerControllerProvider.notifier)
+                                                .downloadSurah(surah.number);
+                                          });
+                                        } else {
+                                          ref
+                                              .read(quranAudioPlayerControllerProvider.notifier)
+                                              .downloadSurah(surah.number);
+                                        }
+                                      },
+                                      padding: EdgeInsets.zero,
+                                      constraints: const BoxConstraints(),
+                                      color: isDark
+                                          ? Colors.white54
+                                          : Colors.black54,
+                                    );
                                   },
-                                  padding: EdgeInsets.zero,
-                                  constraints: const BoxConstraints(),
-                                  color: isDark
-                                      ? Colors.white54
-                                      : Colors.black54,
                                 ),
                             ],
                           ),
@@ -475,6 +494,56 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
                   ),
                 )
               : null),
+    );
+  }
+
+  void _loadAndShowAd(VoidCallback onRewarded) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Dialog(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        child: GlassLoadingOverlay(message: "Loading Ad..."),
+      ),
+    );
+
+    final String rewardedAdUnitId = Platform.isAndroid
+        ? 'ca-app-pub-3940256099942544/5224354917'
+        : 'ca-app-pub-3940256099942544/1712485313';
+
+    RewardedAd.load(
+      adUnitId: rewardedAdUnitId,
+      request: const AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (ad) {
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context); // Dismiss loading overlay
+          }
+
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (ad) {
+              ad.dispose();
+            },
+            onAdFailedToShowFullScreenContent: (ad, err) {
+              ad.dispose();
+              onRewarded(); // Fallback
+            },
+          );
+          ad.show(
+            onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+              onRewarded();
+            },
+          );
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          debugPrint('RewardedAd failed to load: $error');
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context); // Dismiss loading overlay
+          }
+          onRewarded(); // Fallback if ad fails to load
+        },
+      ),
     );
   }
 }

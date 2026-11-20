@@ -1,4 +1,5 @@
 import 'package:mubin/core/app_colors.dart';
+import 'package:mubin/core/services/ad_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
 
@@ -28,7 +29,11 @@ class KhatamProgressCard extends StatelessWidget {
     final int percentInt = (percentage * 100).round();
 
     return InkWell(
-      onTap: onTap,
+      onTap: () => AdHelper.maybeShowKhatamAd(
+        context,
+        onContinue: onTap,
+        onSkip: () {},
+      ),
       borderRadius: BorderRadius.circular(20),
       child: Container(
         width: double.infinity,

@@ -2,16 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/app_colors.dart';
 import '../../../../core/services/settings_controller.dart';
+import '../../../../core/services/ad_helper.dart';
 import '../widgets/qibla_compass_widget.dart';
 import '../controller/qibla_controller.dart';
 import '../../domain/entities/qibla_state.dart';
 import '../../../../core/widgets/ad_banner_widget.dart';
 
-class QiblaPage extends ConsumerWidget {
+class QiblaPage extends ConsumerStatefulWidget {
   const QiblaPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<QiblaPage> createState() => _QiblaPageState();
+}
+
+class _QiblaPageState extends ConsumerState<QiblaPage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AdHelper.maybeShowQiblaAd(
+        context,
+        onContinue: () {},
+        onSkip: () {
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+          }
+        },
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
     final qiblaState = ref.watch(qiblaProvider);

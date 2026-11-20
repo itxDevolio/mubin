@@ -10,8 +10,6 @@ import 'package:just_audio_background/just_audio_background.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quran/quran.dart' as quran;
 
-import '../../../../core/services/settings_controller.dart';
-
 /// Download status for a surah
 enum DownloadStatus { notDownloaded, downloading, downloaded, failed }
 
@@ -348,14 +346,31 @@ class QuranAudioPlayerController extends Notifier<AudioState>
     return File('${dir.path}/surahs/$reciterFolder/surah_$surahNumber.mp3');
   }
 
+  String getVerseAudioUrl(int surahNumber, int verseNumber, Reciter reciter) {
+    final surahStr = surahNumber.toString().padLeft(3, '0');
+    final verseStr = verseNumber.toString().padLeft(3, '0');
+
+    if (reciter.name.contains('Sudais')) {
+      return "https://everyayah.com/data/Abdurrahmaan_As-Sudais_192kbps/$surahStr$verseStr.mp3";
+    } else {
+      return "https://everyayah.com/data/Alafasy_128kbps/$surahStr$verseStr.mp3";
+    }
+  }
+
   List<String> _getSurahUrls(int surahNumber, Reciter reciter) {
     final numPadded = surahNumber.toString().padLeft(3, '0');
-    final numUnpadded = surahNumber.toString();
 
     final List<String> urls = [
       if (reciter.urlPrefix.isNotEmpty) "${reciter.urlPrefix}$numPadded.mp3",
-      "https://server8.mp3quran.net/afs/$numPadded.mp3",
-      "https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/$numUnpadded.mp3",
+      if (reciter.name.contains('Sudais')) ...[
+        "https://server11.mp3quran.net/sds/$numPadded.mp3",
+        "https://download.quranicaudio.com/quran/abdurrahmaan_as-sudais/$numPadded.mp3",
+        "https://quran.mp3quran.net/sds/$numPadded.mp3",
+      ] else ...[
+        "https://server8.mp3quran.net/afs/$numPadded.mp3",
+        "https://download.quranicaudio.com/quran/mishary_rashid_alafasy/$numPadded.mp3",
+        "https://quran.mp3quran.net/afs/$numPadded.mp3",
+      ],
     ];
 
     return urls;
@@ -371,8 +386,12 @@ class QuranAudioPlayerController extends Notifier<AudioState>
   }
 
   Future<void> playVerseAudio(String url, int verseId) async {
-    debugPrint('Attempting to play verse audio: $url');
-    final String secureUrl = url.replaceFirst('http://', 'https://');
+    final int surahNumber = verseId ~/ 1000;
+    final int verseNumber = verseId % 1000;
+    final correctedUrl = getVerseAudioUrl(surahNumber, verseNumber, state.currentReciter);
+
+    debugPrint('Attempting to play verse audio for ${state.currentReciter.name}: $correctedUrl');
+    final String secureUrl = correctedUrl.replaceFirst('http://', 'https://');
     _lastRequestedVerse = verseId;
     _lastRequestedSurah = null;
 
@@ -513,10 +532,13 @@ class QuranAudioPlayerController extends Notifier<AudioState>
   }
 
   Future<void> downloadSurah(int surahNumber) async {
-    if (state.downloadedSurahs.contains(surahNumber)) return;
-    if (state.downloadInfoMap[surahNumber]?.status ==
-        DownloadStatus.downloading)
+    if (state.downloadedSurahs.contains(surahNumber)) {
       return;
+    }
+    if (state.downloadInfoMap[surahNumber]?.status ==
+        DownloadStatus.downloading) {
+      return;
+    }
 
     final urls = _getSurahUrls(surahNumber, state.currentReciter);
     final dir = await getApplicationDocumentsDirectory();
@@ -563,10 +585,26 @@ class QuranAudioPlayerController extends Notifier<AudioState>
         );
 
         final downloadedFile = File(savePath);
-        if (await downloadedFile.exists() &&
-            await downloadedFile.length() > 10240) {
-          downloadSuccess = true;
-          break;
+        if (await downloadedFile.exists()) {
+          final length = await downloadedFile.length();
+          if (length > 200 * 1024) {
+            final raf = await downloadedFile.open(mode: FileMode.read);
+            final headerBytes = await raf.read(20);
+            await raf.close();
+
+            final headerString = String.fromCharCodes(headerBytes);
+            if (!headerString.toLowerCase().contains('<!doctype') &&
+                !headerString.toLowerCase().contains('<html')) {
+              downloadSuccess = true;
+              break;
+            } else {
+              debugPrint('Downloaded file is HTML error page, deleting.');
+              await downloadedFile.delete();
+            }
+          } else {
+            debugPrint('Downloaded file too small ($length bytes), deleting.');
+            await downloadedFile.delete();
+          }
         }
       } catch (e) {
         downloadError = e;
@@ -677,6 +715,14 @@ class QuranAudioPlayerController extends Notifier<AudioState>
     }
   }
 
+  bool isAdProtectedSurah(int surahNumber) {
+    if (surahNumber <= 10) return false;
+    const Set<int> adProtectedSurahs = {
+      11, 12, 14, 16, 18, 20, 21, 22, 23, 24, 26, 27, 28, 31, 36, 38, 40, 43, 44, 55, 78, 82, 87, 93, 112,
+    };
+    return adProtectedSurahs.contains(surahNumber);
+  }
+
   List<int> getDownloadedSurahsList() {
     return state.downloadedSurahs.toList()..sort();
   }
@@ -684,8 +730,9 @@ class QuranAudioPlayerController extends Notifier<AudioState>
   String formatBytes(int bytes) {
     if (bytes < 1024) return '$bytes B';
     if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-    if (bytes < 1024 * 1024 * 1024)
+    if (bytes < 1024 * 1024 * 1024) {
       return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+    }
     return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(1)} GB';
   }
 

@@ -1,4 +1,5 @@
 import 'package:mubin/core/app_colors.dart';
+import 'package:mubin/core/widgets/ad_banner_widget.dart';
 import 'package:mubin/core/services/settings_controller.dart';
 import 'package:mubin/core/services/tafseer_service.dart';
 import 'package:flutter/material.dart';
@@ -223,6 +224,10 @@ class VerseBottomSheet extends ConsumerWidget {
                       ),
               ),
               const SizedBox(height: 24),
+              if (verse.verseNumber % 3 == 0) ...[
+                const Center(child: AdBannerWidget()),
+                const SizedBox(height: 24),
+              ],
               if (settings.enableTafseer && tafseerAsync != null) ...[
                 const Divider(),
                 const SizedBox(height: 12),
@@ -322,8 +327,6 @@ class VerseBottomSheet extends ConsumerWidget {
   ) {
     final settings = ref.read(settingsControllerProvider);
     final isUrdu = settings.language == 'ur';
-    final isPashto = settings.language == 'ps';
-    final isRtl = isUrdu || isPashto;
     final controller = TextEditingController();
     showDialog(
       context: context,

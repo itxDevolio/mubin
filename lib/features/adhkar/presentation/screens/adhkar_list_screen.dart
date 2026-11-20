@@ -1,4 +1,5 @@
 import 'package:mubin/core/app_colors.dart';
+import 'package:mubin/core/services/ad_helper.dart';
 import 'package:mubin/core/services/haptic_feedback.dart';
 import 'package:mubin/core/services/settings_controller.dart';
 import 'package:flutter/material.dart';
@@ -70,10 +71,10 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
             widget.title.contains('سونے') ||
             widget.title.contains('خوب');
 
-        // 1-based positions as requested: 10, 12, 14, 16, 20 for Morning/Evening; 5 for Sleeping
+        // 1-based positions: 5, 10, 15, 17 for Morning/Evening; 5, 10 for Sleeping
         final bool shouldShowAd =
-            (isMorningEvening && [10, 12, 14, 16, 20].contains(index + 1)) ||
-            (isSleeping && index + 1 == 5);
+            (isMorningEvening && [5, 10, 15, 17].contains(index + 1)) ||
+            (isSleeping && [5, 10].contains(index + 1));
 
         final fazilatText = isUrdu
             ? dhikr.fazilatUrdu
@@ -130,7 +131,9 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
                 hapticFeedBack();
                 ref.read(adhkarCountProvider(dhikr.id).notifier).increment();
                 if (remaining == 1) {
-                  if (_currentIndex < widget.dhikrList.length - 1) {
+                  if (_currentIndex == widget.dhikrList.length - 1) {
+                    AdHelper.showInterstitialWithLoading(context, onContinue: () {}, onSkip: () {});
+                  } else if (_currentIndex < widget.dhikrList.length - 1) {
                     Future.delayed(const Duration(milliseconds: 350), () {
                       if (mounted) {
                         _pageController.nextPage(

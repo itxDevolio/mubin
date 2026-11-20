@@ -5,12 +5,12 @@ import 'package:mubin/features/quran/domain/entities/reciter.dart';
 import 'package:mubin/features/quran/presentation/controllers/quran_audio_player_controller.dart';
 import 'package:mubin/features/settings/presentation/notification_settings_screen.dart';
 import 'package:mubin/features/settings/presentation/calculation_method_screen.dart';
+import 'package:mubin/features/settings/presentation/contact_us_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../../core/widgets/ad_banner_widget.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -78,7 +78,9 @@ class SettingsScreen extends ConsumerWidget {
                 title: 'App Language',
                 subtitle: settings.language == 'en'
                     ? 'English'
-                    : (settings.language == 'ur' ? 'Urdu (اردو)' : 'Pashto (پښتو)'),
+                    : (settings.language == 'ur'
+                          ? 'Urdu (اردو)'
+                          : 'Pashto (پشتو)'),
                 isDark: isDark,
                 onTap: () =>
                     _showLanguageDialog(context, ref, settings.language),
@@ -120,10 +122,7 @@ class SettingsScreen extends ConsumerWidget {
                   );
                 },
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 8.0),
-                child: AdBannerWidget(),
-              ),
+
               _buildDivider(isDark),
               _buildSettingsTile(
                 icon: Icons.brightness_high_rounded,
@@ -190,6 +189,25 @@ class SettingsScreen extends ConsumerWidget {
           _buildSettingsCard(
             isDark,
             children: [
+              _buildSettingsTile(
+                icon: Icons.support_agent_rounded,
+                title: settings.language == 'ur'
+                    ? 'رابطہ کریں'
+                    : (settings.language == 'ps' ? 'موږ سره اړیکه ونیسئ' : 'Contact Us'),
+                subtitle: settings.language == 'ur'
+                    ? 'سپورٹ، بگز اور ڈیولپمنٹ کی مدد'
+                    : (settings.language == 'ps' ? 'ملاتړ، بګونه او پراختیا مرسته' : 'Support, bugs & development help'),
+                isDark: isDark,
+                onTap: () {
+                  hapticFeedBack();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ContactUsScreen(),
+                    ),
+                  );
+                },
+              ),
               _buildDivider(isDark),
               _buildSettingsTile(
                 icon: Icons.ios_share_rounded,
@@ -365,53 +383,23 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSupportOption({
-    required IconData icon,
-    required String title,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withOpacity(0.2)),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: color, size: 20),
-            const SizedBox(width: 12),
-            Text(
-              title,
-              style: _getStyle(color: color, fontWeight: FontWeight.bold),
-            ),
-            const Spacer(),
-            Icon(Icons.arrow_forward_ios_rounded, color: color, size: 14),
-          ],
-        ),
-      ),
-    );
-  }
+
 
   void _launchWhatsApp() async {
     final Uri url = Uri.parse(
-      "https://wa.me/923499383654?text=Salam! I want to support Mubin development.",
+      "https://wa.me/923003209427?text=Salam! I want to contact Mubin support / development.",
     );
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-      throw Exception('Could not launch WhatsApp');
+      debugPrint('Could not launch WhatsApp');
     }
   }
 
   void _launchEmail() async {
     final Uri url = Uri.parse(
-      "mailto:ajmalkhan.dev@gmail.com?subject=Supporting Mubin App&body=Salam! I would like to help with Mubin development.",
+      "mailto:devolio.office@gmail.com?subject=Mubin App Support / Inquiry&body=Salam!",
     );
     if (!await launchUrl(url)) {
-      throw Exception('Could not launch Email');
+      debugPrint('Could not launch Email');
     }
   }
 
@@ -854,11 +842,13 @@ class SettingsScreen extends ConsumerWidget {
       'https://sites.google.com/view/privacy-policy-mubin/home',
     );
 
-    if (!await launchUrl(privacyPolicyUrl, mode: LaunchMode.externalApplication)) {
+    if (!await launchUrl(
+      privacyPolicyUrl,
+      mode: LaunchMode.externalApplication,
+    )) {
       debugPrint('Could not launch Privacy Policy');
     }
   }
-
 
   Future<void> _shareApp() async {
     const String packageName = 'com.devolio.app.mubin';
@@ -866,6 +856,9 @@ class SettingsScreen extends ConsumerWidget {
         'Check out Mubin — your companion for prayer times, adhan alerts, adhkar reminders, and qibla direction. Download now:\n\n'
         'https://play.google.com/store/apps/details?id=$packageName';
 
-    await Share.share(shareText, subject: 'Mubin - Islamic Prayer Companion App');
+    await Share.share(
+      shareText,
+      subject: 'Mubin - Islamic Prayer Companion App',
+    );
   }
 }
