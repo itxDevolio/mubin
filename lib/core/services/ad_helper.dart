@@ -14,14 +14,14 @@ class AdHelper {
           ? _admobInterstitialIos
           : _admobInterstitialAndroid;
 
-  // Show Interstitial ad with a 10-second full-screen loading counter dialog
+  // Show Interstitial ad with a 7-second loading dialog (auto-continue if not loaded)
   static void showInterstitialWithLoading(
     BuildContext context, {
     required VoidCallback onContinue,
     required VoidCallback onSkip,
   }) {
     bool adHandled = false;
-    int secondsRemaining = 10;
+    int secondsRemaining = 7;
     Timer? countdownTimer;
     BuildContext? dialogContext;
     InterstitialAd? interstitialAd;
@@ -93,22 +93,6 @@ class AdHelper {
                   ],
                 ),
               ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    countdownTimer?.cancel();
-                    if (!adHandled) {
-                      adHandled = true;
-                      if (dialogContext != null && Navigator.canPop(dialogContext!)) {
-                        Navigator.pop(dialogContext!);
-                      }
-                      interstitialAd?.dispose();
-                      onSkip();
-                    }
-                  },
-                  child: const Text("Skip", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
-                ),
-              ],
             );
           },
         );

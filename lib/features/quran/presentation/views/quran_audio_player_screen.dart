@@ -498,6 +498,9 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
   }
 
   void _loadAndShowAd(VoidCallback onRewarded) {
+    bool adHandled = false;
+    Timer? timeoutTimer;
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -508,6 +511,16 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
       ),
     );
 
+    timeoutTimer = Timer(const Duration(seconds: 7), () {
+      if (!adHandled) {
+        adHandled = true;
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context); // Dismiss loading overlay
+        }
+        onRewarded();
+      }
+    });
+
     final String rewardedAdUnitId = Platform.isAndroid
         ? 'ca-app-pub-5751989678728366/3969215228'
         : 'ca-app-pub-5751989678728366/3969215228';
@@ -517,6 +530,12 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) {
+          if (adHandled) {
+            ad.dispose();
+            return;
+          }
+          adHandled = true;
+          timeoutTimer?.cancel();
           if (Navigator.canPop(context)) {
             Navigator.pop(context); // Dismiss loading overlay
           }
@@ -537,6 +556,9 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
           );
         },
         onAdFailedToLoad: (LoadAdError error) {
+          if (adHandled) return;
+          adHandled = true;
+          timeoutTimer?.cancel();
           debugPrint('RewardedAd failed to load: $error');
           if (Navigator.canPop(context)) {
             Navigator.pop(context); // Dismiss loading overlay
