@@ -100,22 +100,15 @@ class HadithRepositoryImpl implements HadithRepository {
     }
 
     try {
-      final response = await dio.get(
-        'https://hadithapi.com/api/hadiths',
-        queryParameters: {
-          'apiKey': apiKey,
-          'book': bookSlug,
-          'chapter': chapterNumber,
-          'paginate': 1000,
-        },
-      );
+      final rawList = await _fetchAllHadithsPages({
+        'apiKey': apiKey,
+        'book': bookSlug,
+        'chapter': chapterNumber,
+      });
 
-      if (response.statusCode == 200) {
-        final List? data = response.data['hadiths']['data'];
-        if (data != null) {
-          await localDataSource.cacheHadiths(cacheKey, data);
-          return data.map((e) => HadithModel.fromJson(e)).toList();
-        }
+      if (rawList.isNotEmpty) {
+        await localDataSource.cacheHadiths(cacheKey, rawList);
+        return rawList.map((e) => HadithModel.fromJson(e)).toList();
       }
       throw Exception('Failed to load hadiths');
     } catch (e) {
@@ -139,57 +132,19 @@ class HadithRepositoryImpl implements HadithRepository {
       return cachedData.map((e) => HadithModel.fromJson(Map<String, dynamic>.from(e))).toList();
     }
 
-    // 2. Online Dynamic Search across all books via API with higher pagination & relevance
+    // 2. Online Dynamic Search across all books via API with pagination & relevance
     try {
-      Response response;
-      if (isUrdu) {
-        response = await dio.get(
-          'https://hadithapi.com/api/hadiths',
-          queryParameters: {
-            'apiKey': apiKey,
-            'hadithUrdu': trimmedQuery,
-            'paginate': 1000,
-          },
-        );
-      } else {
-        response = await dio.get(
-          'https://hadithapi.com/api/hadiths',
-          queryParameters: {
-            'apiKey': apiKey,
-            'hadithEnglish': trimmedQuery,
-            'paginate': 1000,
-          },
-        );
-      }
-
-      List rawList = [];
-      if (response.statusCode == 200 && response.data != null) {
-        final rawHadiths = response.data['hadiths'];
-        if (rawHadiths is Map && rawHadiths['data'] is List) {
-          rawList = rawHadiths['data'];
-        } else if (rawHadiths is List) {
-          rawList = rawHadiths;
-        }
-      }
+      List rawList = await _fetchAllHadithsPages({
+        'apiKey': apiKey,
+        isUrdu ? 'hadithUrdu' : 'hadithEnglish': trimmedQuery,
+      });
 
       // Fallback: If no results, try opposite parameter
       if (rawList.isEmpty) {
-        final fallbackResponse = await dio.get(
-          'https://hadithapi.com/api/hadiths',
-          queryParameters: {
-            'apiKey': apiKey,
-            isUrdu ? 'hadithEnglish' : 'hadithUrdu': trimmedQuery,
-            'paginate': 1000,
-          },
-        );
-        if (fallbackResponse.statusCode == 200 && fallbackResponse.data != null) {
-          final rawHadiths = fallbackResponse.data['hadiths'];
-          if (rawHadiths is Map && rawHadiths['data'] is List) {
-            rawList = rawHadiths['data'];
-          } else if (rawHadiths is List) {
-            rawList = rawHadiths;
-          }
-        }
+        rawList = await _fetchAllHadithsPages({
+          'apiKey': apiKey,
+          isUrdu ? 'hadithEnglish' : 'hadithUrdu': trimmedQuery,
+        });
       }
 
       if (rawList.isNotEmpty) {
@@ -229,64 +184,26 @@ class HadithRepositoryImpl implements HadithRepository {
     }
 
     try {
-      final response = await dio.get(
-        'https://hadithapi.com/api/hadiths',
-        queryParameters: {
+      List rawList = await _fetchAllHadithsPages({
+        'apiKey': apiKey,
+        'book': bookSlug,
+        'hadithNumber': trimmedQuery,
+      });
+
+      if (rawList.isEmpty) {
+        rawList = await _fetchAllHadithsPages({
           'apiKey': apiKey,
           'book': bookSlug,
-          'hadithNumber': trimmedQuery,
-          'paginate': 1000,
-        },
-      );
-
-      List rawList = [];
-      if (response.statusCode == 200 && response.data != null) {
-        final rawHadiths = response.data['hadiths'];
-        if (rawHadiths is Map && rawHadiths['data'] is List) {
-          rawList = rawHadiths['data'];
-        } else if (rawHadiths is List) {
-          rawList = rawHadiths;
-        }
+          isUrdu ? 'hadithUrdu' : 'hadithEnglish': trimmedQuery,
+        });
       }
 
       if (rawList.isEmpty) {
-        final textResponse = await dio.get(
-          'https://hadithapi.com/api/hadiths',
-          queryParameters: {
-            'apiKey': apiKey,
-            'book': bookSlug,
-            isUrdu ? 'hadithUrdu' : 'hadithEnglish': trimmedQuery,
-            'paginate': 1000,
-          },
-        );
-        if (textResponse.statusCode == 200 && textResponse.data != null) {
-          final rawHadiths = textResponse.data['hadiths'];
-          if (rawHadiths is Map && rawHadiths['data'] is List) {
-            rawList = rawHadiths['data'];
-          } else if (rawHadiths is List) {
-            rawList = rawHadiths;
-          }
-        }
-      }
-
-      if (rawList.isEmpty) {
-        final fallbackResponse = await dio.get(
-          'https://hadithapi.com/api/hadiths',
-          queryParameters: {
-            'apiKey': apiKey,
-            'book': bookSlug,
-            isUrdu ? 'hadithEnglish' : 'hadithUrdu': trimmedQuery,
-            'paginate': 1000,
-          },
-        );
-        if (fallbackResponse.statusCode == 200 && fallbackResponse.data != null) {
-          final rawHadiths = fallbackResponse.data['hadiths'];
-          if (rawHadiths is Map && rawHadiths['data'] is List) {
-            rawList = rawHadiths['data'];
-          } else if (rawHadiths is List) {
-            rawList = rawHadiths;
-          }
-        }
+        rawList = await _fetchAllHadithsPages({
+          'apiKey': apiKey,
+          'book': bookSlug,
+          isUrdu ? 'hadithEnglish' : 'hadithUrdu': trimmedQuery,
+        });
       }
 
       if (rawList.isNotEmpty) {
@@ -310,6 +227,53 @@ class HadithRepositoryImpl implements HadithRepository {
       }
       return [];
     }
+  }
+
+  Future<List<dynamic>> _fetchAllHadithsPages(Map<String, dynamic> baseQueryParams) async {
+    List<dynamic> allItems = [];
+    int currentPage = 1;
+    int lastPage = 1;
+
+    do {
+      final queryParams = Map<String, dynamic>.from(baseQueryParams);
+      queryParams['page'] = currentPage;
+      queryParams['paginate'] = 50;
+
+      final response = await dio.get(
+        'https://hadithapi.com/api/hadiths',
+        queryParameters: queryParams,
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final hadithsObj = response.data['hadiths'];
+        if (hadithsObj is Map) {
+          final List? data = hadithsObj['data'];
+          if (data != null && data.isNotEmpty) {
+            allItems.addAll(data);
+          }
+          if (hadithsObj['last_page'] != null) {
+            lastPage = int.tryParse(hadithsObj['last_page'].toString()) ?? 1;
+          } else if (hadithsObj['meta'] != null && hadithsObj['meta']['last_page'] != null) {
+            lastPage = int.tryParse(hadithsObj['meta']['last_page'].toString()) ?? 1;
+          } else {
+            if (hadithsObj['next_page_url'] == null || (data == null || data.isEmpty)) {
+              break;
+            }
+          }
+        } else if (hadithsObj is List) {
+          allItems.addAll(hadithsObj);
+          break;
+        } else {
+          break;
+        }
+      } else {
+        break;
+      }
+
+      currentPage++;
+    } while (currentPage <= lastPage && currentPage <= 50);
+
+    return allItems;
   }
 
   int _calculateRelevance(HadithEntity hadith, List<String> queryTokens, bool isUrdu) {

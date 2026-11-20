@@ -195,7 +195,7 @@ class VerseBottomSheet extends ConsumerWidget {
               Align(
                 alignment: isRtl ? Alignment.centerRight : Alignment.centerLeft,
                 child: Text(
-                  isUrdu ? 'ترجمہ:' : (isPashto ? 'ژباړه:' : 'Translation:'),
+                  isUrdu ? 'ترجمہ' : (isPashto ? 'ترجمہ' : 'Translation:'),
                   style: TextStyle(
                     fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
                     fontWeight: FontWeight.bold,
@@ -232,7 +232,7 @@ class VerseBottomSheet extends ConsumerWidget {
                     isUrdu
                         ? 'تفسیر (تذکیر القرآن):'
                         : (isPashto
-                            ? 'تفسیر (تذکیر القرآن):'
+                            ? 'تفسیر (پشتو مختصر):'
                             : 'Tafseer (Tazkirul Quran):'),
                     style: TextStyle(
                       fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',

@@ -216,6 +216,9 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
                                 startingSurah,
                                 startingVerse,
                               );
+                              if (juzNumber == 7) {
+                                calculatedPage = 122;
+                              }
 
                               Navigator.push(
                                 context,
