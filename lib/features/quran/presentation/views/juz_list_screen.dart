@@ -218,6 +218,12 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
                               );
                               if (juzNumber == 7) {
                                 calculatedPage = 122;
+                              } else if (juzNumber == 11) {
+                                calculatedPage = 202;
+                              } else if (juzNumber == 20) {
+                                calculatedPage = 383;
+                              } else if (juzNumber == 23) {
+                                calculatedPage = 443;
                               }
 
                               Navigator.push(

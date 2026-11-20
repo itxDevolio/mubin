@@ -336,7 +336,7 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
   // --- Helper Methods ---
   bool _isJuzStartPage(int page) {
     const juzPages = [
-      1, 22, 42, 62, 82, 102, 122, 142, 162, 182, 202, 222, 242, 262, 282, 302, 322, 342, 362, 382, 402, 422, 442, 462, 482, 502, 522, 542, 562, 582,
+      1, 22, 42, 62, 82, 102, 122, 142, 162, 182, 202, 222, 242, 262, 282, 302, 322, 342, 362, 383, 402, 422, 443, 462, 482, 502, 522, 542, 562, 582,
     ];
     return juzPages.contains(page);
   }
@@ -406,7 +406,7 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
   }
 
   int _getJuz(int page) {
-    const juzStartPages = [1, 22, 42, 62, 82, 102, 122, 142, 162, 182, 202, 222, 242, 262, 282, 302, 322, 342, 362, 382, 402, 422, 442, 462, 482, 502, 522, 542, 562, 582];
+    const juzStartPages = [1, 22, 42, 62, 82, 102, 122, 142, 162, 182, 202, 222, 242, 262, 282, 302, 322, 342, 362, 383, 402, 422, 443, 462, 482, 502, 522, 542, 562, 582];
     for (int i = juzStartPages.length - 1; i >= 0; i--) {
       if (page >= juzStartPages[i]) return i + 1;
     }

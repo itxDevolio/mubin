@@ -227,13 +227,15 @@ class VerseBottomSheet extends ConsumerWidget {
                 const Divider(),
                 const SizedBox(height: 12),
                 Align(
-                  alignment: isRtl ? Alignment.centerRight : Alignment.centerLeft,
+                  alignment: isRtl
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
                   child: Text(
                     isUrdu
                         ? 'تفسیر (تذکیر القرآن):'
                         : (isPashto
-                            ? 'تفسیر (پشتو مختصر):'
-                            : 'Tafseer (Tazkirul Quran):'),
+                              ? 'تفسیر (پشتو مختصر):'
+                              : 'Tafseer (Tazkirul Quran):'),
                     style: TextStyle(
                       fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
                       fontWeight: FontWeight.bold,
@@ -250,8 +252,8 @@ class VerseBottomSheet extends ConsumerWidget {
                         isUrdu
                             ? 'اس آیت کے لیے تفسیر دستیاب نہیں ہے۔'
                             : (isPashto
-                                ? 'د دې آیت لپاره تفسیر نشته.'
-                                : 'No Tafseer available for this verse.'),
+                                  ? 'د دې آیت لپاره تفسیر نشته.'
+                                  : 'No Tafseer available for this verse.'),
                         style: TextStyle(
                           fontSize: 13,
                           color: isDark ? Colors.white54 : Colors.black54,
@@ -296,8 +298,8 @@ class VerseBottomSheet extends ConsumerWidget {
                     isUrdu
                         ? 'تفسیر لوڈ کرنے میں مسئلہ پیش آیا۔'
                         : (isPashto
-                            ? 'تفسیر په پورته کولو کې ستونزه رامنځته شوه.'
-                            : 'Error loading Tafseer.'),
+                              ? 'تفسیر په پورته کولو کې ستونزه رامنځته شوه.'
+                              : 'Error loading Tafseer.'),
                     style: const TextStyle(
                       fontSize: 12,
                       color: Colors.redAccent,
