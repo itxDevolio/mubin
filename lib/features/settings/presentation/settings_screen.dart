@@ -191,12 +191,8 @@ class SettingsScreen extends ConsumerWidget {
             children: [
               _buildSettingsTile(
                 icon: Icons.support_agent_rounded,
-                title: settings.language == 'ur'
-                    ? 'رابطہ کریں'
-                    : (settings.language == 'ps' ? 'موږ سره اړیکه ونیسئ' : 'Contact Us'),
-                subtitle: settings.language == 'ur'
-                    ? 'سپورٹ، بگز اور ڈیولپمنٹ کی مدد'
-                    : (settings.language == 'ps' ? 'ملاتړ، بګونه او پراختیا مرسته' : 'Support, bugs & development help'),
+                title: 'Contact Us',
+                subtitle: 'Support, bugs & development help',
                 isDark: isDark,
                 onTap: () {
                   hapticFeedBack();
@@ -384,24 +380,6 @@ class SettingsScreen extends ConsumerWidget {
   }
 
 
-
-  void _launchWhatsApp() async {
-    final Uri url = Uri.parse(
-      "https://wa.me/923003209427?text=Salam! I want to contact Mubin support / development.",
-    );
-    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-      debugPrint('Could not launch WhatsApp');
-    }
-  }
-
-  void _launchEmail() async {
-    final Uri url = Uri.parse(
-      "mailto:devolio.office@gmail.com?subject=Mubin App Support / Inquiry&body=Salam!",
-    );
-    if (!await launchUrl(url)) {
-      debugPrint('Could not launch Email');
-    }
-  }
 
   void _showAboutDialog(BuildContext context, bool isDark) {
     showDialog(

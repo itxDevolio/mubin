@@ -17,19 +17,15 @@ class ContactUsScreen extends ConsumerWidget {
     final bool isPashto = lang == 'ps';
     final bool isRtl = isUrdu || isPashto;
 
-    final String appBarTitle = isUrdu
-        ? 'رابطہ اور سپورٹ'
-        : (isPashto ? 'موږ سره اړیکه او ملاتړ' : 'Contact Us & Support');
+    final String appBarTitle = 'Contact Us & Support';
 
-    final String headerTitle = isUrdu
-        ? 'ہم سے رابطہ کریں'
-        : (isPashto ? 'موږ سره اړیکه ونیسئ' : 'Get in Touch With Us');
+    final String headerTitle = 'Get in Touch With Us';
 
     final String description = isUrdu
-        ? 'ہم نے پوری کوشش کی ہے کہ مبین (Mubin) ایپ کو بگ فری اور بہترین رکھا جائے تاکہ آپ کی عبادت میں کوئی خلل نہ آئے۔ لیکن اگر آپ کو کوئی بھی مسئلہ، بگ یا خامی نظر آئے تو  بلا جھجھک رابطہ کریں!'
+        ? 'ہم نے پوری کوشش کی ہے کہ         MUBIN       ایپ کو بگ فری اور بہترین رکھا جائے تاکہ آپ کی عبادت میں کوئی خلل نہ آئے۔ لیکن اگر آپ کو کوئی بھی مسئلہ، بگ یا خامی نظر آئے تو  بلا جھجھک رابطہ کریں!'
         : (isPashto
-              ? 'موږ خپله پوره هڅه کړې چې مبین اپلیکیشن له بګونو پاک او ستاسو د عبادت لپاره غوره وساتو. که څه هم، که تاسو کومه ستونزه، بګ یا نیمګړتیا ووینئ، مهرباني وکړئ موږ خبر کړئ. '
-              : 'We have tried our best to keep Mubin bug-free and optimized for your daily spiritual needs. However, if you notice any issues, bugs feel free to contact us anytime!');
+              ? 'موږ خپله پوره هڅه کړې چې         MUBIN       اپلیکیشن له بګونو پاک او ستاسو د عبادت لپاره غوره وساتو. که څه هم، که تاسو کومه ستونزه، بګ یا نیمګړتیا ووینئ، مهرباني وکړئ موږ خبر کړئ. '
+              : 'We have tried our best to keep         MUBIN       bug-free and optimized for your daily spiritual needs. However, if you notice any issues, bugs feel free to contact us anytime!');
 
     final String whatsappTitle = isUrdu
         ? 'واٹس ایپ '
@@ -47,11 +43,8 @@ class ContactUsScreen extends ConsumerWidget {
         ? 'devolio.office@gmail.com '
         : (isPashto ? 'devolio.office@gmail.com' : 'devolio.office@gmail.com ');
 
-    final String footerText = isUrdu
-        ? 'ڈیویلیو سافٹ ویئر سൊلوشنز — جدید ایپس اور ویب سسٹمز کی تیاری'
-        : (isPashto
-              ? 'ډیویلیو سافټویر حلونه — د عصري اپلیکیشنونو او ویب پاڼو جوړول'
-              : 'Devolio Software Solutions — Building Modern Apps & Web Platforms');
+    final String footerText =
+        'Devolio Software Solutions — Building Modern Apps & Web Platforms';
 
     return Directionality(
       textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,

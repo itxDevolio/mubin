@@ -15,8 +15,8 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
 
   // Google AdMob Test Ad Unit IDs
   final String adUnitId = Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/6300978111' // Android Test Banner ID
-      : 'ca-app-pub-3940256099942544/2934735716'; // iOS Test Banner ID
+      ? 'ca-app-pub-5751989678728366/8507363719'
+      : 'ca-app-pub-5751989678728366/8507363719';
 
   @override
   void initState() {

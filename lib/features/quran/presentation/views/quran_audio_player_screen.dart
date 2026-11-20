@@ -509,8 +509,8 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
     );
 
     final String rewardedAdUnitId = Platform.isAndroid
-        ? 'ca-app-pub-3940256099942544/5224354917'
-        : 'ca-app-pub-3940256099942544/1712485313';
+        ? 'ca-app-pub-5751989678728366/3969215228'
+        : 'ca-app-pub-5751989678728366/3969215228';
 
     RewardedAd.load(
       adUnitId: rewardedAdUnitId,

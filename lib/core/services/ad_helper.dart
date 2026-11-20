@@ -6,8 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../app_colors.dart';
 
 class AdHelper {
-  static const String _admobInterstitialAndroid = 'ca-app-pub-3940256099942544/1033173712';
-  static const String _admobInterstitialIos = 'ca-app-pub-3940256099942544/4411468910';
+  static const String _admobInterstitialAndroid = 'ca-app-pub-5751989678728366/1280518889';
+  static const String _admobInterstitialIos = 'ca-app-pub-5751989678728366/1280518889';
 
   static String get interstitialAdUnitId =>
       defaultTargetPlatform == TargetPlatform.iOS
