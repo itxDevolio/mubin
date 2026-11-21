@@ -31,6 +31,7 @@ class QuranDbService {
 
   Database? _pagesDb;
   Database? _wordsDb;
+  final Map<int, List<QuranLine>> _pageLinesCache = {};
 
   Future<void> initDatabases() async {
     if (_pagesDb != null && _wordsDb != null) return;
@@ -225,6 +226,10 @@ class QuranDbService {
   }
 
   Future<List<QuranLine>> getPageLines(int pageNumber) async {
+    if (_pageLinesCache.containsKey(pageNumber)) {
+      return _pageLinesCache[pageNumber]!;
+    }
+
     await initDatabases();
     if (_pagesDb == null || _wordsDb == null) {
       throw Exception('Databases not initialized');
@@ -285,6 +290,7 @@ class QuranDbService {
       ));
     }
 
+    _pageLinesCache[pageNumber] = lines;
     return lines;
   }
 

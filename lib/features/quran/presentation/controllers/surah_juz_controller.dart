@@ -51,10 +51,12 @@ class SurahJuzController extends Notifier<SurahJuzState> {
       if (query.isEmpty) {
         state = state.copyWith(filteredSurahs: list);
       } else {
+        final queryLower = query.toLowerCase();
         final filtered = list
             .where(
               (s) =>
-                  s.nameEnglish.toLowerCase().contains(query.toLowerCase()) ||
+                  s.nameEnglish.toLowerCase().contains(queryLower) ||
+                  s.nameArabic.contains(query) ||
                   s.number.toString() == query,
             )
             .toList();

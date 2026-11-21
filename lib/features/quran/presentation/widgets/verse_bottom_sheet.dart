@@ -30,7 +30,9 @@ class VerseBottomSheet extends ConsumerWidget {
     );
 
     final isPlayingThis =
-        audioState.isPlaying && (audioState.currentAudioUrl == verse.audioUrl || audioState.playingVerseId == verse.id);
+        audioState.isPlaying &&
+        (audioState.currentAudioUrl == verse.audioUrl ||
+            audioState.playingVerseId == verse.id);
     final isLoadingThis =
         audioState.isLoading && audioState.playingVerseId == verse.id;
 
@@ -75,35 +77,9 @@ class VerseBottomSheet extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          isUrdu
-                              ? 'سورہ ${quran.getSurahNameArabic(verse.surahNumber)}'
-                              : 'Surah ${quran.getSurahName(verse.surahNumber)}',
-                          style: TextStyle(
-                            fontFamily: isUrdu ? 'Amiri' : 'Poppins',
-                            fontWeight: FontWeight.bold,
-                            fontSize: isUrdu ? 20 : 18,
-                            color: Theme.of(
-                              context,
-                            ).textTheme.titleLarge?.color,
-                          ),
-                        ),
-                        Text(
-                          isUrdu
-                              ? 'آیت ${verse.verseNumber}'
-                              : 'Verse ${verse.verseNumber}',
-                          style: TextStyle(
-                            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
-                            fontSize: 14,
-                            color: isDark ? Colors.white60 : Colors.black54,
-                          ),
-                        ),
-                      ],
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [],
                   ),
                   Row(
                     children: [
@@ -198,7 +174,9 @@ class VerseBottomSheet extends ConsumerWidget {
                 child: Text(
                   isUrdu ? 'ترجمہ' : (isPashto ? 'ترجمہ' : 'Translation:'),
                   style: TextStyle(
-                    fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                    fontFamily: isPashto
+                        ? 'Amiri'
+                        : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins'),
                     fontWeight: FontWeight.bold,
                     fontSize: 13,
                     color: AppColors.primaryTeal,
@@ -211,7 +189,7 @@ class VerseBottomSheet extends ConsumerWidget {
                 textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
                 style: isRtl
                     ? TextStyle(
-                        fontFamily: 'NotoNastaliqUrdu',
+                        fontFamily: isPashto ? 'Amiri' : 'NotoNastaliqUrdu',
                         fontSize: 14,
                         height: 2.2,
                         color: Theme.of(context).textTheme.bodyLarge?.color,
@@ -236,13 +214,11 @@ class VerseBottomSheet extends ConsumerWidget {
                       ? Alignment.centerRight
                       : Alignment.centerLeft,
                   child: Text(
-                    isUrdu
-                        ? 'تفسیر (تذکیر القرآن):'
-                        : (isPashto
-                              ? 'تفسیر (پشتو مختصر):'
-                              : 'Tafseer (Tazkirul Quran):'),
+                    isUrdu || isPashto ? 'تفسیر:' : 'Tafseer:',
                     style: TextStyle(
-                      fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                      fontFamily: isPashto
+                          ? 'Amiri'
+                          : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins'),
                       fontWeight: FontWeight.bold,
                       fontSize: 13,
                       color: AppColors.primaryTeal,
@@ -273,7 +249,9 @@ class VerseBottomSheet extends ConsumerWidget {
                           : TextDirection.ltr,
                       style: isRtl
                           ? TextStyle(
-                              fontFamily: 'NotoNastaliqUrdu',
+                              fontFamily: isPashto
+                                  ? 'Amiri'
+                                  : 'NotoNastaliqUrdu',
                               fontSize: 13,
                               height: 2.2,
                               color: Theme.of(

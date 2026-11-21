@@ -81,3 +81,6 @@ flutter:
     - family: IndoPakFont
       fonts:
         - asset: assets/fonts/arbi.ttf
+    - family: SurahHeaderFont
+      fonts:
+        - asset: assets/fonts/surah_header.ttf

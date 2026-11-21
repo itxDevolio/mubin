@@ -5,6 +5,7 @@ import 'package:mubin/core/app_colors.dart';
 import 'package:mubin/core/services/ad_helper.dart';
 import 'package:quran/quran.dart' as quran;
 import '../../../../core/services/settings_controller.dart';
+import '../../../../core/utils/quran_utils.dart';
 import '../controllers/quran_progress_controller.dart';
 import '../../../../services/translation_service.dart';
 import '../../../../services/quran_db_service.dart';
@@ -41,7 +42,17 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
     _currentPage = widget.initialPage.clamp(1, _totalPages);
     _pageController = PageController(initialPage: _currentPage - 1);
 
+    _prefetchAdjacentPages(_currentPage);
     _initScreen();
+  }
+
+  void _prefetchAdjacentPages(int pageNum) {
+    if (pageNum < _totalPages) {
+      QuranDbService().getPageLines(pageNum + 1);
+    }
+    if (pageNum > 1) {
+      QuranDbService().getPageLines(pageNum - 1);
+    }
   }
 
   Future<void> _initScreen() async {
@@ -143,7 +154,9 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
           translation ??
           (isUrdu
               ? 'ترجمہ دستیاب نہیں'
-              : (isPashto ? 'ترجمه و نه موندل شوه' : 'Translation not available')),
+              : (isPashto
+                    ? 'ترجمه و نه موندل شوه'
+                    : 'Translation not available')),
       audioUrl: audioUrl,
     );
 
@@ -212,6 +225,7 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
               _selectedSurah = null;
               _selectedAyah = null;
             });
+            _prefetchAdjacentPages(newPage);
             if (widget.shouldUpdateProgress) {
               ref
                   .read(quranProgressControllerProvider.notifier)
@@ -225,8 +239,13 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.primaryTeal,
+                    child: SizedBox(
+                      width: 28,
+                      height: 28,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppColors.primaryTeal,
+                      ),
                     ),
                   );
                 }
@@ -242,6 +261,20 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
                 if (lines.isEmpty) {
                   return const Center(child: Text('Page not found'));
                 }
+
+                final surahNameLine = lines.firstWhere(
+                  (l) => l.lineType == 'surah_name',
+                  orElse: () => QuranLine(
+                    pageNumber: pageNumber,
+                    lineNumber: 0,
+                    lineType: '',
+                    isCentered: false,
+                    text: '',
+                    words: [],
+                  ),
+                );
+                final bool hasNewSurah = surahNameLine.lineType == 'surah_name';
+                final int? startingSurahNum = surahNameLine.surahNumber;
 
                 final juzNum = QuranMetadataService().getJuzForIndoPakPage(
                   pageNumber,
@@ -263,6 +296,8 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
                           pageNumber,
                           juzNum,
                           isDark,
+                          hasNewSurah: hasNewSurah,
+                          startingSurah: startingSurahNum,
                         ),
                       ),
                       const SizedBox(height: 6),
@@ -273,7 +308,7 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
                       ),
                       const SizedBox(height: 12),
 
-                      // 2. Lines Body (Centered for page 1 & 2, spaceBetween for others)
+                      // 2. Lines Body (Centered and compact for page 1 & 2, spaceBetween for others)
                       Expanded(
                         child: Column(
                           mainAxisAlignment:
@@ -281,32 +316,32 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
                               ? MainAxisAlignment.center
                               : MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: lines.map((line) {
+                          children: lines.asMap().entries.map((entry) {
+                            final idx = entry.key;
+                            final line = entry.value;
+                            final prevLine = idx > 0 ? lines[idx - 1] : null;
+                            final isBasmallahAfterSurahName =
+                                line.lineType == 'basmallah' &&
+                                prevLine?.lineType == 'surah_name';
+
+                            if (isBasmallahAfterSurahName) {
+                              return const SizedBox.shrink();
+                            }
+
                             return Container(
                               padding: EdgeInsets.symmetric(
                                 vertical: (pageNumber == 1 || pageNumber == 2)
-                                    ? 12.0
-                                    : 1.0,
+                                    ? 2.0
+                                    : 0.5,
                                 horizontal: 4.0,
                               ),
-                              child: _buildLineWidget(line, isDark),
+                              child: _buildLineWidget(line, isDark, pageNumber),
                             );
                           }).toList(),
                         ),
                       ),
 
-                      // 3. Real Mushaf Bottom Footer
-                      const SizedBox(height: 6),
-                      const Divider(
-                        height: 2,
-                        thickness: 0.6,
-                        color: AppColors.primaryTeal,
-                      ),
-                      const SizedBox(height: 6),
-                      Opacity(
-                        opacity: 0.6,
-                        child: _buildRealMushafBottomFooter(pageNumber, isDark),
-                      ),
+                      // 3. Real Mushaf Bottom Footer (Removed)
                     ],
                   ),
                 );
@@ -318,22 +353,32 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
     );
   }
 
-  Widget _buildRealMushafTopHeader(int pageNumber, int juzNum, bool isDark) {
+  Widget _buildRealMushafTopHeader(
+    int pageNumber,
+    int juzNum,
+    bool isDark, {
+    bool hasNewSurah = false,
+    int? startingSurah,
+  }) {
     String surahTitle = '';
     try {
       final pageData = quran.getPageData(pageNumber);
       if (pageData.isNotEmpty) {
-        final sNum = pageData.first['surah'] as int;
+        final sNum = startingSurah ?? (pageData.first['surah'] as int);
         surahTitle = quran.getSurahNameArabic(sNum);
       }
     } catch (_) {}
 
+    final juzName = (juzNum >= 1 && juzNum <= 30)
+        ? QuranUtils.juzNamesArabic[juzNum - 1]
+        : 'الجزء $juzNum';
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // Left: Para / Juz Name from exact IndoPak page mapping
+        // Left: Juz Name (not number)
         Text(
-          'الجزء $juzNum',
+          juzName,
           style: TextStyle(
             fontFamily: 'Amiri',
             fontSize: 12,
@@ -352,7 +397,7 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
             color: isDark ? Colors.white70 : AppColors.primaryTeal,
           ),
         ),
-        // Right: Surah Name in Arabic
+        // Right: Surah Name in Arabic (only name, no ayat or maki/madani)
         Text(
           surahTitle,
           style: TextStyle(
@@ -367,63 +412,105 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
     );
   }
 
-  Widget _buildRealMushafBottomFooter(int pageNumber, bool isDark) {
-    final manzilNum = ((pageNumber - 1) * 7 ~/ 548) + 1;
+  Widget _buildLineWidget(QuranLine line, bool isDark, int pageNumber) {
+    final bool isPage1Or2 = pageNumber == 1 || pageNumber == 2;
+    final double textFontSize = isPage1Or2 ? 36.0 : 54.0;
+    final double basmallahFontSize = isPage1Or2 ? 18.0 : 24.0;
 
-    return Center(
-      child: Text(
-        'منزل $manzilNum',
-        style: TextStyle(
-          fontFamily: 'Amiri',
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-          color: AppColors.primaryTeal,
-        ),
-        textDirection: TextDirection.rtl,
-      ),
-    );
-  }
-
-  Widget _buildLineWidget(QuranLine line, bool isDark) {
     if (line.lineType == 'surah_name') {
-      return Container(
-        margin: const EdgeInsets.symmetric(vertical: 2),
-        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-        decoration: BoxDecoration(
-          color: AppColors.primaryTeal.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              fixLamAlif(line.text),
-              style: TextStyle(
-                fontFamily: 'IndoPakFont',
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : AppColors.primaryTeal,
+      final sNum = line.surahNumber ?? 1;
+      final surahName = quran.getSurahNameArabic(sNum);
+      final verseCount = quran.getVerseCount(sNum);
+      final place = quran.getPlaceOfRevelation(sNum) == 'Makkah' ? 'مكية' : 'مدنية';
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF1E1E1E) : const Color(0xFFF7F2EC),
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(
+                color: AppColors.primaryTeal.withValues(alpha: 0.3),
+                width: 1.0,
               ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               textDirection: TextDirection.rtl,
+              children: [
+                Text(
+                  'سُورَةُ $surahName',
+                  style: TextStyle(
+                    fontFamily: 'Amiri',
+                    fontSize: isPage1Or2 ? 12 : 14,
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? Colors.white : AppColors.primaryTeal,
+                  ),
+                  textDirection: TextDirection.rtl,
+                ),
+                Text(
+                  '$verseCount آيات',
+                  style: TextStyle(
+                    fontFamily: 'Amiri',
+                    fontSize: isPage1Or2 ? 10 : 12,
+                    color: isDark ? Colors.white70 : Colors.black87,
+                  ),
+                  textDirection: TextDirection.rtl,
+                ),
+                Text(
+                  place,
+                  style: TextStyle(
+                    fontFamily: 'Amiri',
+                    fontSize: isPage1Or2 ? 10 : 12,
+                    color: isDark ? Colors.white70 : Colors.black87,
+                  ),
+                  textDirection: TextDirection.rtl,
+                ),
+              ],
+            ),
+          ),
+          if (sNum != 9) ...[
+            const SizedBox(height: 2),
+            Container(
+              alignment: Alignment.center,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  'بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِیْمِ',
+                  style: TextStyle(
+                    fontFamily: 'IndoPakFont',
+                    fontSize: basmallahFontSize,
+                    height: 1.0,
+                    color: isDark ? Colors.white70 : Colors.black87,
+                  ),
+                  textDirection: TextDirection.rtl,
+                ),
+              ),
             ),
           ],
-        ),
+        ],
       );
     }
 
     if (line.lineType == 'basmallah') {
       return Container(
-        margin: const EdgeInsets.symmetric(vertical: 1),
         alignment: Alignment.center,
-        child: Text(
-          fixLamAlif(line.text),
-          style: TextStyle(
-            fontFamily: 'IndoPakFont',
-            fontSize: 26,
-            fontWeight: FontWeight.bold,
-            color: isDark ? Colors.white70 : Colors.black87,
+        padding: const EdgeInsets.symmetric(vertical: 2),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            fixLamAlif(line.text),
+            style: TextStyle(
+              fontFamily: 'IndoPakFont',
+              fontSize: basmallahFontSize,
+              height: 1.0,
+              color: isDark ? Colors.white70 : Colors.black87,
+            ),
+            textDirection: TextDirection.rtl,
           ),
-          textDirection: TextDirection.rtl,
         ),
       );
     }
@@ -445,7 +532,7 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
 
               final wordStyle = TextStyle(
                 fontFamily: 'IndoPakFont',
-                fontSize: 54,
+                fontSize: textFontSize,
                 height: 1.02,
                 color: isDark ? Colors.white : Colors.black87,
                 backgroundColor: isHighlighted
