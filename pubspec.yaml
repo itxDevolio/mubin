@@ -33,6 +33,8 @@ dependencies:
   timezone: ^0.11.1
   url_launcher: ^6.3.2
   workmanager: ^0.9.0+3
+  sqflite: ^2.4.1
+  path: ^1.9.0
   share_plus: ^13.3.0
   google_mobile_ads: ^9.1.0
 
@@ -43,6 +45,7 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^6.0.0
   flutter_launcher_icons: ^0.13.1
+  sqflite_common_ffi: ^2.3.3
 
 flutter_launcher_icons:
   android: "launcher_icon"
@@ -60,17 +63,24 @@ flutter:
   assets:
     - assets/app_logos/
     - assets/tafseer/
+    - assets/quran/
 
   fonts:
     - family: Poppins
       fonts:
-        - asset: assets/fonts/Poppins-Bold.ttf
-          weight: 100
-        - asset: assets/fonts/Poppins-Regular.ttf
-          weight: 300
+        - asset: assets/fonts/english_bold.ttf
+          weight: 700
+        - asset: assets/fonts/english.ttf
+          weight: 400
     - family: Amiri
       fonts:
-        - asset: assets/fonts/AmiriQuran-Regular.ttf
+        - asset: assets/fonts/pashto.ttf
     - family: NotoNastaliqUrdu
       fonts:
-        - asset: assets/fonts/NotoNastaliqUrdu-VariableFont_wght.ttf
+        - asset: assets/fonts/urdo.ttf
+    - family: IndoPakFont
+      fonts:
+        - asset: assets/fonts/arbi.ttf
+    - family: IndoPakFont
+      fonts:
+        - asset: assets/fonts/arbi.ttf

@@ -17,7 +17,7 @@ class KhatamProgressCard extends StatelessWidget {
     this.isPashto = false,
   });
 
-  static const int _totalPages = 604;
+  static const int _totalPages = 548;
 
   @override
   Widget build(BuildContext context) {
