@@ -15,10 +15,10 @@ class TranslationService {
     }
 
     final String assetPath = language == 'ur'
-        ? 'assets/tafseer/tazkiru-quran-ur.json'
+        ? 'assets/tafseer/urdo_tarjma.json'
         : (language == 'ps'
             ? 'assets/tafseer/pashto_tarjama.json'
-            : 'assets/tafseer/tazkirul-quran-en.json');
+            : 'assets/tafseer/english_translation.json');
 
     try {
       final jsonString = await rootBundle.loadString(assetPath);
@@ -47,26 +47,63 @@ class TranslationService {
     for (var k in keysToTry) {
       if (map.containsKey(k)) {
         final entry = map[k];
-        if (entry is String) return entry;
+        String? rawText;
+        if (entry is String) rawText = entry;
         if (entry is Map) {
-          if (entry.containsKey('t')) return entry['t']?.toString();
-          if (entry.containsKey('text')) return entry['text']?.toString();
-          if (entry.containsKey('translation')) return entry['translation']?.toString();
+          if (entry.containsKey('t')) {
+            rawText = entry['t']?.toString();
+          } else if (entry.containsKey('text')) {
+            rawText = entry['text']?.toString();
+          } else if (entry.containsKey('translation')) {
+            rawText = entry['translation']?.toString();
+          }
+        }
+        if (rawText != null) {
+          return _cleanHtmlText(rawText);
         }
       }
     }
 
     // Fallback to quran package if not found in json
     try {
-      return quran.getVerseTranslation(
+      final res = quran.getVerseTranslation(
         surah,
         ayah,
         translation: language == 'ur'
             ? quran.Translation.urdu
             : quran.Translation.enSaheeh,
       );
+      return _cleanHtmlText(res);
     } catch (_) {
       return 'Translation not available ($surah:$ayah)';
     }
+  }
+
+  String _cleanHtmlText(String html) {
+    String text = html
+        .replaceAll('&lt;p&gt;', '\n\n')
+        .replaceAll('&lt;/p&gt;', '\n\n')
+        .replaceAll('&lt;br&gt;', '\n')
+        .replaceAll('&lt;br/&gt;', '\n')
+        .replaceAll('&lt;br /&gt;', '\n')
+        .replaceAll(RegExp(r'<p[^>]*>', caseSensitive: false), '\n\n')
+        .replaceAll(RegExp(r'</p\s*>', caseSensitive: false), '\n\n')
+        .replaceAll(RegExp(r'<div[^>]*>', caseSensitive: false), '\n')
+        .replaceAll(RegExp(r'</div\s*>', caseSensitive: false), '\n')
+        .replaceAll(RegExp(r'<h[1-6][^>]*>', caseSensitive: false), '\n\n')
+        .replaceAll(RegExp(r'</h[1-6]\s*>', caseSensitive: false), '\n\n')
+        .replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '\n');
+
+    text = text.replaceAll(RegExp(r'<[^>]*>'), '');
+
+    text = text
+        .replaceAll('&amp;', '&')
+        .replaceAll('&lt;', '<')
+        .replaceAll('&gt;', '>')
+        .replaceAll('&quot;', '"')
+        .replaceAll('&#39;', "'")
+        .replaceAll('&nbsp;', ' ');
+
+    return text.replaceAll(RegExp(r'\n{3,}'), '\n\n').trim();
   }
 }

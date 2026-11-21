@@ -81,6 +81,3 @@ flutter:
     - family: IndoPakFont
       fonts:
         - asset: assets/fonts/arbi.ttf
-    - family: IndoPakFont
-      fonts:
-        - asset: assets/fonts/arbi.ttf

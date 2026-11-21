@@ -48,8 +48,18 @@ class TafseerService {
 
   String _cleanHtmlText(String html) {
     String text = html
+        // First handle escaped HTML tags if any (&lt;p&gt; etc.)
+        .replaceAll('&lt;p&gt;', '\n\n')
+        .replaceAll('&lt;/p&gt;', '\n\n')
+        .replaceAll('&lt;br&gt;', '\n')
+        .replaceAll('&lt;br/&gt;', '\n')
+        .replaceAll('&lt;br /&gt;', '\n')
+        // Handle actual HTML tags
+        .replaceAll(RegExp(r'<p[^>]*>', caseSensitive: false), '\n\n')
         .replaceAll(RegExp(r'</p\s*>', caseSensitive: false), '\n\n')
+        .replaceAll(RegExp(r'<div[^>]*>', caseSensitive: false), '\n')
         .replaceAll(RegExp(r'</div\s*>', caseSensitive: false), '\n')
+        .replaceAll(RegExp(r'<h[1-6][^>]*>', caseSensitive: false), '\n\n')
         .replaceAll(RegExp(r'</h[1-6]\s*>', caseSensitive: false), '\n\n')
         .replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '\n');
 

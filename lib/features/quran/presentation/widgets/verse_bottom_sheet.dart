@@ -30,7 +30,7 @@ class VerseBottomSheet extends ConsumerWidget {
     );
 
     final isPlayingThis =
-        audioState.isPlaying && audioState.currentAudioUrl == verse.audioUrl;
+        audioState.isPlaying && (audioState.currentAudioUrl == verse.audioUrl || audioState.playingVerseId == verse.id);
     final isLoadingThis =
         audioState.isLoading && audioState.playingVerseId == verse.id;
 
@@ -182,8 +182,8 @@ class VerseBottomSheet extends ConsumerWidget {
                 verse.textArabic,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontFamily: 'Amiri',
-                  fontSize: 20,
+                  fontFamily: 'IndoPakFont',
+                  fontSize: 22,
                   height: 1.8,
                   color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
