@@ -22,6 +22,7 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
     final isUrdu = lang == 'ur';
     final isPashto = lang == 'ps';
     final isRtl = isUrdu || isPashto;
+    final String textFont = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final filteredJuz = List.generate(30, (i) => i + 1).where((j) {
@@ -42,7 +43,7 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
               ? 'پاروں کی فہرست'
               : (isPashto ? 'پارې' : 'Juz / Para List'),
           style: TextStyle(
-            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontFamily: textFont,
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
             color: isDark
@@ -78,7 +79,7 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
               textAlign: isRtl ? TextAlign.right : TextAlign.left,
               cursorColor: AppColors.primaryTeal,
               style: TextStyle(
-                fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                fontFamily: textFont,
                 color: isDark
                     ? AppColors.textPrimaryDark
                     : AppColors.textPrimaryLight,
@@ -89,7 +90,7 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
                     ? 'پارہ تلاش کریں'
                     : (isPashto ? 'پاره لټول' : 'Search Juz'),
                 hintStyle: TextStyle(
-                  fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                  fontFamily: textFont,
                   color: isDark
                       ? AppColors.textSecondaryDark
                       : AppColors.textSecondaryLight,
@@ -151,7 +152,7 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
                                   ? "د '$_searchQuery' په نوم هیڅ پاره ونه موندل شوه"
                                   : 'No Juz found for "$_searchQuery"'),
                           style: TextStyle(
-                            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                            fontFamily: textFont,
                             color: isDark
                                 ? AppColors.textSecondaryDark
                                 : AppColors.textSecondaryLight,
@@ -175,7 +176,7 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
                                   ? 'لوڈنگ...'
                                   : (isPashto ? 'باریږي...' : 'Loading...'),
                               style: TextStyle(
-                                fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                                fontFamily: textFont,
                                 fontSize: 14,
                               ),
                             ),
@@ -292,9 +293,7 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
                                                   ? "پاره $juzNumber"
                                                   : "Juz $juzNumber"),
                                           style: TextStyle(
-                                            fontFamily: isRtl
-                                                ? 'NotoNastaliqUrdu'
-                                                : 'Poppins',
+                                            fontFamily: textFont,
                                             fontSize: isRtl ? 11 : 12,
                                             color: isDark
                                                 ? AppColors.textSecondaryDark

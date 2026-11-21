@@ -28,6 +28,7 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
     final isUrdu = settings.language == 'ur';
     final isPashto = settings.language == 'ps';
     final isRtl = isUrdu || isPashto;
+    final String textFont = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -40,7 +41,7 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
               ? 'سورتوں کی فہرست'
               : (isPashto ? 'سورتونه' : 'Surah List'),
           style: TextStyle(
-            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontFamily: textFont,
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
             color: isDark
@@ -78,7 +79,7 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
               textAlign: isRtl ? TextAlign.right : TextAlign.left,
               cursorColor: AppColors.primaryTeal,
               style: TextStyle(
-                fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                fontFamily: textFont,
                 color: isDark
                     ? AppColors.textPrimaryDark
                     : AppColors.textPrimaryLight,
@@ -89,7 +90,7 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
                     ? 'سورت تلاش کریں'
                     : (isPashto ? 'سورت لټول' : 'Search Surah'),
                 hintStyle: TextStyle(
-                  fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                  fontFamily: textFont,
                   color: isDark
                       ? AppColors.textSecondaryDark
                       : AppColors.textSecondaryLight,
@@ -143,7 +144,7 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
                               ? 'هیڅ سورت ونه موندل شو'
                               : 'No Surah found'),
                       style: TextStyle(
-                        fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                        fontFamily: textFont,
                         color: isDark
                             ? AppColors.textSecondaryDark
                             : AppColors.textSecondaryLight,
@@ -328,7 +329,7 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
                               ? 'سورتونه باریږي...'
                               : 'Loading Surahs...'),
                       style: TextStyle(
-                        fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                        fontFamily: textFont,
                         fontSize: 14,
                       ),
                     ),
@@ -352,7 +353,7 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
                               ? 'د سورتونو په پورته کولو کې تېروتنه وشوه'
                               : 'Error loading Surahs'),
                       style: TextStyle(
-                        fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                        fontFamily: textFont,
                         color: AppColors.error,
                         fontWeight: FontWeight.w500,
                       ),
