@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'mushaf_view_screen.dart';
 import '../controllers/bookmark_controller.dart';
+import '../../../../services/quran_db_service.dart';
 
 class BookmarkListScreen extends ConsumerWidget {
   const BookmarkListScreen({super.key});
@@ -107,12 +108,14 @@ class BookmarkListScreen extends ConsumerWidget {
               final bool hasCustomName = verse.bookmarkName != null;
 
               return InkWell(
-                onTap: () {
+                onTap: () async {
+                  final correctPage = await QuranDbService().getPageForVerse(verse.surahNumber, verse.verseNumber);
+                  if (!context.mounted) return;
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => MushafViewScreen(
-                        initialPage: verse.pageNumber,
+                        initialPage: correctPage,
                         highlightVerseId: verse.id,
                         shouldUpdateProgress: false,
                       ),

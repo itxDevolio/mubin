@@ -287,4 +287,110 @@ class QuranDbService {
 
     return lines;
   }
+
+  Future<int> getStartingPageForSurah(int surahNumber) async {
+    await initDatabases();
+    if (_pagesDb == null) return 1;
+    try {
+      final result = await _pagesDb!.query(
+        'pages',
+        columns: ['page_number'],
+        where: 'surah_number = ? AND line_type = ?',
+        whereArgs: [surahNumber, 'surah_name'],
+        orderBy: 'page_number ASC',
+        limit: 1,
+      );
+      if (result.isNotEmpty) {
+        return int.parse(result.first['page_number'].toString());
+      }
+
+      if (_wordsDb != null) {
+        final wordRes = await _wordsDb!.query(
+          'words',
+          columns: ['id'],
+          where: 'surah = ? AND ayah = 1',
+          whereArgs: [surahNumber],
+          limit: 1,
+        );
+        if (wordRes.isNotEmpty) {
+          final wordId = wordRes.first['id'];
+          final pageRes = await _pagesDb!.rawQuery(
+            'SELECT page_number FROM pages WHERE first_word_id <= ? AND last_word_id >= ? ORDER BY page_number ASC LIMIT 1',
+            [wordId, wordId],
+          );
+          if (pageRes.isNotEmpty) {
+            return int.parse(pageRes.first['page_number'].toString());
+          }
+        }
+      }
+    } catch (_) {}
+    return 1;
+  }
+
+  Future<int> getStartingPageForJuz(int juzNumber) async {
+    await initDatabases();
+    if (_pagesDb == null || _wordsDb == null) return 1;
+    try {
+      final Map<int, List<int>> juzData = Map<int, List<int>>.from(
+        quran.getSurahAndVersesFromJuz(juzNumber),
+      );
+      if (juzData.isNotEmpty) {
+        int startingSurah = juzData.keys.first;
+        int startingVerse = juzData[startingSurah]!.first;
+
+        final wordRes = await _wordsDb!.query(
+          'words',
+          columns: ['id'],
+          where: 'surah = ? AND ayah = ?',
+          whereArgs: [startingSurah, startingVerse],
+          limit: 1,
+        );
+        if (wordRes.isNotEmpty) {
+          final wordId = wordRes.first['id'];
+          final pageRes = await _pagesDb!.rawQuery(
+            'SELECT page_number FROM pages WHERE first_word_id <= ? AND last_word_id >= ? ORDER BY page_number ASC LIMIT 1',
+            [wordId, wordId],
+          );
+          if (pageRes.isNotEmpty) {
+            return int.parse(pageRes.first['page_number'].toString());
+          }
+        }
+      }
+    } catch (_) {}
+
+    const juzPages = [
+      1, 20, 38, 56, 74, 92, 110, 128, 146, 164,
+      182, 200, 218, 236, 254, 272, 290, 308, 326, 344,
+      362, 380, 398, 416, 434, 452, 470, 488, 506, 524
+    ];
+    if (juzNumber >= 1 && juzNumber <= 30) {
+      return juzPages[juzNumber - 1];
+    }
+    return 1;
+  }
+
+  Future<int> getPageForVerse(int surah, int ayah) async {
+    await initDatabases();
+    if (_pagesDb == null || _wordsDb == null) return 1;
+    try {
+      final wordRes = await _wordsDb!.query(
+        'words',
+        columns: ['id'],
+        where: 'surah = ? AND ayah = ?',
+        whereArgs: [surah, ayah],
+        limit: 1,
+      );
+      if (wordRes.isNotEmpty) {
+        final wordId = wordRes.first['id'];
+        final pageRes = await _pagesDb!.rawQuery(
+          'SELECT page_number FROM pages WHERE first_word_id <= ? AND last_word_id >= ? ORDER BY page_number ASC LIMIT 1',
+          [wordId, wordId],
+        );
+        if (pageRes.isNotEmpty) {
+          return int.parse(pageRes.first['page_number'].toString());
+        }
+      }
+    } catch (_) {}
+    return 1;
+  }
 }

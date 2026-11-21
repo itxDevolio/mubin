@@ -1,9 +1,9 @@
 import 'package:mubin/core/app_colors.dart';
 import 'package:mubin/core/utils/quran_utils.dart';
 import 'package:mubin/core/services/settings_controller.dart';
+import '../../../../services/quran_db_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quran/quran.dart' as quran;
 import 'mushaf_view_screen.dart';
 
 class JuzListScreen extends ConsumerStatefulWidget {
@@ -205,27 +205,9 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
                               QuranUtils.juzNamesArabic[juzNumber - 1];
 
                           return InkWell(
-                            onTap: () {
-                              final Map<int, List<int>> juzData =
-                                  Map<int, List<int>>.from(
-                                quran.getSurahAndVersesFromJuz(juzNumber),
-                              );
-                              int startingSurah = juzData.keys.first;
-                              int startingVerse = juzData[startingSurah]!.first;
-                              int calculatedPage = quran.getPageNumber(
-                                startingSurah,
-                                startingVerse,
-                              );
-                              if (juzNumber == 7) {
-                                calculatedPage = 122;
-                              } else if (juzNumber == 11) {
-                                calculatedPage = 202;
-                              } else if (juzNumber == 20) {
-                                calculatedPage = 383;
-                              } else if (juzNumber == 23) {
-                                calculatedPage = 443;
-                              }
-
+                            onTap: () async {
+                              final calculatedPage = await QuranDbService().getStartingPageForJuz(juzNumber);
+                              if (!context.mounted) return;
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

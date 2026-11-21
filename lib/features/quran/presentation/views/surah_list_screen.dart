@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quran/quran.dart' as quran;
 import '../../../../core/services/settings_controller.dart';
+import '../../../../services/quran_db_service.dart';
 import '../controllers/surah_juz_controller.dart';
 import 'mushaf_view_screen.dart';
 
@@ -180,10 +181,9 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
                             : rawRevelation);
 
                     return InkWell(
-                      onTap: () {
-                        int startingPage = quran
-                            .getSurahPages(surah.number)
-                            .first;
+                      onTap: () async {
+                        final startingPage = await QuranDbService().getStartingPageForSurah(surah.number);
+                        if (!context.mounted) return;
                         Navigator.push(
                           context,
                           MaterialPageRoute(
