@@ -32,7 +32,7 @@ class QuranHomeScreen extends ConsumerWidget {
         title: Text(
           isUrdu ? 'القرآن الکریم' : (isPashto ? 'القرآن الكريم' : 'Al-Quran'),
           style: TextStyle(
-            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontFamily: isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins'),
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
             fontSize: isRtl ? 18 : 20,
@@ -120,7 +120,8 @@ class QuranHomeScreen extends ConsumerWidget {
                         title: isUrdu ? 'سورتیں' : (isPashto ? 'سورتونه' : 'Surah'),
                         icon: FlutterIslamicIcons.solidQuran,
                         baseColor: AppColors.lightTeal,
-                        isUrdu: isRtl,
+                        isPashto: isPashto,
+                        isUrdu: isUrdu,
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -133,7 +134,8 @@ class QuranHomeScreen extends ConsumerWidget {
                         title: isUrdu ? 'پارے' : (isPashto ? 'پارې' : 'Juz'),
                         icon: FlutterIslamicIcons.solidQuran2,
                         baseColor: AppColors.lightTeal,
-                        isUrdu: isRtl,
+                        isPashto: isPashto,
+                        isUrdu: isUrdu,
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -146,7 +148,8 @@ class QuranHomeScreen extends ConsumerWidget {
                         title: isUrdu ? 'بک مارک' : (isPashto ? 'نښانې' : 'Bookmarks'),
                         icon: Icons.bookmark_rounded,
                         baseColor: AppColors.lightTeal,
-                        isUrdu: isRtl,
+                        isPashto: isPashto,
+                        isUrdu: isUrdu,
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -159,7 +162,8 @@ class QuranHomeScreen extends ConsumerWidget {
                         title: isUrdu ? 'تلاوت آڈیو' : (isPashto ? 'تلاوت آډیو' : 'Audio'),
                         icon: Icons.audiotrack_rounded,
                         baseColor: AppColors.lightTeal,
-                        isUrdu: isRtl,
+                        isPashto: isPashto,
+                        isUrdu: isUrdu,
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -188,6 +192,7 @@ class QuranHomeScreen extends ConsumerWidget {
     required IconData icon,
     required Color baseColor,
     required VoidCallback onTap,
+    bool isPashto = false,
     bool isUrdu = false,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -220,9 +225,9 @@ class QuranHomeScreen extends ConsumerWidget {
             Text(
               title,
               style: TextStyle(
-                fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                fontFamily: isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins'),
                 fontWeight: FontWeight.bold,
-                fontSize: isUrdu ? 14 : 16,
+                fontSize: isPashto || isUrdu ? 14 : 16,
                 letterSpacing: 0.3,
                 color: isDark
                     ? AppColors.textPrimaryDark

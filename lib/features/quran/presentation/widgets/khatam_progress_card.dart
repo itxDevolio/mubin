@@ -102,7 +102,7 @@ class KhatamProgressCard extends StatelessWidget {
                         : (isPashto ? "د قرآن ختم" : "QURAN COMPLETION"),
                     textAlign: isRtl ? TextAlign.right : TextAlign.left,
                     style: TextStyle(
-                      fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                      fontFamily: isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins'),
                       color: isDark
                           ? AppColors.textPrimaryDark
                           : AppColors.textPrimaryLight,
@@ -185,7 +185,7 @@ class KhatamProgressCard extends StatelessWidget {
                               ? "د قرآن تلاوت ته دوام ورکړئ"
                               : "Continue Reading")),
                   style: TextStyle(
-                    fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                    fontFamily: isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins'),
                     color: isDark
                         ? AppColors.textPrimaryDark
                         : AppColors.primaryTeal,
