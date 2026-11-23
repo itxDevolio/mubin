@@ -15,13 +15,16 @@ class HadithDetailScreen extends ConsumerWidget {
     final hadithLang = ref.watch(hadithLanguageProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bool isUrdu = hadithLang == 'ur';
+    final bool isPashto = hadithLang == 'ps';
+    final bool isRtl = isUrdu || isPashto;
+    final String fontFamily = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
 
     final String bookName = BookModel.getBookNameFromSlug(
       hadith.bookSlug,
-      isUrdu,
+      isRtl,
     );
 
-    final String heading = isUrdu
+    final String heading = isRtl
         ? (hadith.headingUrdu.isNotEmpty
             ? hadith.headingUrdu
             : hadith.headingEnglish)
@@ -35,11 +38,11 @@ class HadithDetailScreen extends ConsumerWidget {
           : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-          isUrdu ? "حدیث ${hadith.hadithNumber}" : "Hadith ${hadith.hadithNumber}",
+          isRtl ? "حدیث ${hadith.hadithNumber}" : "Hadith ${hadith.hadithNumber}",
           style: TextStyle(
-            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontFamily: fontFamily,
             letterSpacing: 0.5,
-            fontSize: isUrdu ? 16 : 18,
+            fontSize: isRtl ? 16 : 18,
             fontWeight: FontWeight.bold,
             color: isDark
                 ? AppColors.textPrimaryDark
@@ -102,7 +105,7 @@ class HadithDetailScreen extends ConsumerWidget {
                       runSpacing: 6,
                       alignment: WrapAlignment.spaceBetween,
                       textDirection:
-                          isUrdu ? TextDirection.rtl : TextDirection.ltr,
+                          isRtl ? TextDirection.rtl : TextDirection.ltr,
                       children: [
                         if (bookName.isNotEmpty)
                           Container(
@@ -117,8 +120,7 @@ class HadithDetailScreen extends ConsumerWidget {
                             child: Text(
                               bookName,
                               style: TextStyle(
-                                fontFamily:
-                                    isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                                fontFamily: fontFamily,
                                 color: Colors.white,
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
@@ -152,7 +154,7 @@ class HadithDetailScreen extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.all(24.0),
                     child: Column(
-                      crossAxisAlignment: isUrdu
+                      crossAxisAlignment: isRtl
                           ? CrossAxisAlignment.end
                           : CrossAxisAlignment.start,
                       children: [
@@ -161,17 +163,16 @@ class HadithDetailScreen extends ConsumerWidget {
                           Text(
                             heading,
                             style: TextStyle(
-                              fontFamily:
-                                  isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
-                              fontSize: isUrdu ? 16 : 16,
+                              fontFamily: fontFamily,
+                              fontSize: isRtl ? 16 : 16,
                               fontWeight: FontWeight.bold,
-                              height: isUrdu ? 1.6 : 1.4,
+                              height: isRtl ? 1.6 : 1.4,
                               color: isDark
                                   ? Colors.white
                                   : AppColors.textPrimaryLight,
                             ),
                             textAlign:
-                                isUrdu ? TextAlign.right : TextAlign.left,
+                                isRtl ? TextAlign.right : TextAlign.left,
                           ),
                           const SizedBox(height: 24),
                         ],
@@ -194,11 +195,12 @@ class HadithDetailScreen extends ConsumerWidget {
                         ],
 
                         // Translation Section
-                        if (isUrdu && hadith.urduText.isNotEmpty)
+                        if (isRtl && hadith.urduText.isNotEmpty)
                           _buildTranslationSection(
-                            title: "ترجمہ",
+                            title: isPashto ? "ژباړه" : "ترجمہ",
                             content: hadith.urduText,
-                            isUrdu: true,
+                            fontFamily: fontFamily,
+                            isRtl: true,
                             isDark: isDark,
                             isMain: true,
                           )
@@ -206,7 +208,8 @@ class HadithDetailScreen extends ConsumerWidget {
                           _buildTranslationSection(
                             title: "English Translation",
                             content: hadith.englishText,
-                            isUrdu: false,
+                            fontFamily: fontFamily,
+                            isRtl: false,
                             isDark: isDark,
                             isMain: true,
                           ),
@@ -226,36 +229,37 @@ class HadithDetailScreen extends ConsumerWidget {
   Widget _buildTranslationSection({
     required String title,
     required String content,
-    required bool isUrdu,
+    required String fontFamily,
+    required bool isRtl,
     required bool isDark,
     required bool isMain,
   }) {
     return Column(
       crossAxisAlignment:
-          isUrdu ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          isRtl ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
         Row(
           mainAxisAlignment:
-              isUrdu ? MainAxisAlignment.end : MainAxisAlignment.start,
+              isRtl ? MainAxisAlignment.end : MainAxisAlignment.start,
           children: [
-            if (!isUrdu)
+            if (!isRtl)
               Container(
                 width: 24,
                 height: 2,
                 color: AppColors.primaryTeal.withValues(alpha: 0.4),
               ),
-            if (!isUrdu) const SizedBox(width: 8),
+            if (!isRtl) const SizedBox(width: 8),
             Text(
               title,
               style: TextStyle(
-                fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                fontFamily: fontFamily,
                 color: AppColors.primaryTeal,
                 fontSize: isMain ? 15 : 13,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            if (isUrdu) const SizedBox(width: 8),
-            if (isUrdu)
+            if (isRtl) const SizedBox(width: 8),
+            if (isRtl)
               Container(
                 width: 24,
                 height: 2,
@@ -266,24 +270,15 @@ class HadithDetailScreen extends ConsumerWidget {
         const SizedBox(height: 12),
         Text(
           content,
-          style: isUrdu
-              ? TextStyle(
-                  fontFamily: 'NotoNastaliqUrdu',
-                  fontSize: 15,
-                  height: 2.0,
-                  color: isDark
-                      ? (isMain ? Colors.white : Colors.white70)
-                      : AppColors.textPrimaryLight,
-                )
-              : TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: isMain ? 15 : 14,
-                  height: 1.5,
-                  color: isDark
-                      ? (isMain ? Colors.white : Colors.white70)
-                      : AppColors.textPrimaryLight,
-                ),
-          textAlign: isUrdu ? TextAlign.right : TextAlign.left,
+          style: TextStyle(
+            fontFamily: fontFamily,
+            fontSize: isMain ? 15 : 14,
+            height: isRtl ? (fontFamily == 'Amiri' ? 1.8 : 2.0) : 1.5,
+            color: isDark
+                ? (isMain ? Colors.white : Colors.white70)
+                : AppColors.textPrimaryLight,
+          ),
+          textAlign: isRtl ? TextAlign.right : TextAlign.left,
         ),
       ],
     );

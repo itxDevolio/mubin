@@ -17,6 +17,7 @@ class DuaListScreen extends ConsumerWidget {
     final isUrdu = settings.language == 'ur';
     final isPashto = settings.language == 'ps';
     final isRtl = isUrdu || isPashto;
+    final String fontFamily = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -28,7 +29,7 @@ class DuaListScreen extends ConsumerWidget {
               ? 'دعائیں'
               : (isPashto ? 'دعاګانې' : 'All Duas'),
           style: TextStyle(
-            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontFamily: fontFamily,
             fontWeight: FontWeight.bold,
             fontSize: isRtl ? 16 : 18,
           ),
@@ -45,7 +46,7 @@ class DuaListScreen extends ConsumerWidget {
                     ? 'دعائیں تلاش کریں'
                     : (isPashto ? 'دعاګانې لټول' : 'Search Duas'),
                 hintStyle: TextStyle(
-                  fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                  fontFamily: fontFamily,
                   color: Colors.grey.shade500,
                   fontSize: 14,
                 ),
@@ -103,6 +104,7 @@ class DuaListScreen extends ConsumerWidget {
             isRtl: isRtl,
             isUrdu: isUrdu,
             isPashto: isPashto,
+            fontFamily: fontFamily,
           ),
         },
       ),
@@ -115,12 +117,14 @@ class _DuaListView extends StatelessWidget {
   final bool isRtl;
   final bool isUrdu;
   final bool isPashto;
+  final String fontFamily;
 
   const _DuaListView({
     required this.duas,
     required this.isRtl,
     required this.isUrdu,
     required this.isPashto,
+    required this.fontFamily,
   });
 
   @override
@@ -143,7 +147,7 @@ class _DuaListView extends StatelessWidget {
                       ? 'هیڅ دعا ونه موندل شوه.'
                       : 'No duas found.'),
               style: TextStyle(
-                fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                fontFamily: fontFamily,
                 color: Colors.grey,
               ),
             ),
@@ -171,6 +175,7 @@ class _DuaListView extends StatelessWidget {
           isRtl: isRtl,
           isUrdu: isUrdu,
           isPashto: isPashto,
+          fontFamily: fontFamily,
         );
       },
     );
@@ -184,6 +189,7 @@ class DuaTile extends StatelessWidget {
   final bool isRtl;
   final bool isUrdu;
   final bool isPashto;
+  final String fontFamily;
 
   const DuaTile({
     super.key,
@@ -193,6 +199,7 @@ class DuaTile extends StatelessWidget {
     required this.isRtl,
     required this.isUrdu,
     required this.isPashto,
+    required this.fontFamily,
   });
 
   @override
@@ -231,8 +238,8 @@ class DuaTile extends StatelessWidget {
         title: Text(
           title,
           style: isRtl
-              ? const TextStyle(
-                  fontFamily: 'NotoNastaliqUrdu',
+              ? TextStyle(
+                  fontFamily: fontFamily,
                   fontWeight: FontWeight.w600,
                   fontSize: 16,
                   height: 1.8,

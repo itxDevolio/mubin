@@ -38,6 +38,7 @@ class _JanazaGuideScreenState extends ConsumerState<JanazaGuideScreen> {
     final isUrdu = settings.language == 'ur';
     final isPashto = settings.language == 'ps';
     final isRtl = isUrdu || isPashto;
+    final String fontFamily = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
     final textDirection = isRtl ? TextDirection.rtl : TextDirection.ltr;
 
     return Scaffold(
@@ -49,7 +50,7 @@ class _JanazaGuideScreenState extends ConsumerState<JanazaGuideScreen> {
               ? "نمازِ جنازہ"
               : (isPashto ? "د جنازې لمونځ" : "Funeral Prayer (Janaza)"),
           style: TextStyle(
-            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontFamily: fontFamily,
             fontWeight: FontWeight.bold,
             fontSize: isRtl ? 16 : 18,
           ),
@@ -73,6 +74,7 @@ class _JanazaGuideScreenState extends ConsumerState<JanazaGuideScreen> {
                           ? "د نارینه وو او ښځو د جنازې لمانځه طريقه"
                           : "Janaza prayer for men and women"),
                 isRtl: isRtl,
+                fontFamily: fontFamily,
                 icons: const [
                   FlutterIslamicIcons.muslim,
                   FlutterIslamicIcons.muslimah,
@@ -96,6 +98,7 @@ class _JanazaGuideScreenState extends ConsumerState<JanazaGuideScreen> {
                           ? "د هلکانو او نجونو د جنازې لمانځه طريقه"
                           : "Janaza prayer for boys and girls"),
                 isRtl: isRtl,
+                fontFamily: fontFamily,
                 icons: const [
                   FlutterIslamicIcons.muslim2,
                   FlutterIslamicIcons.muslimah2,
@@ -123,6 +126,7 @@ class _SelectionCard extends StatelessWidget {
   final String title;
   final String subtitle;
   final bool isRtl;
+  final String fontFamily;
   final List<IconData> icons;
   final VoidCallback onTap;
 
@@ -130,6 +134,7 @@ class _SelectionCard extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.isRtl,
+    required this.fontFamily,
     required this.icons,
     required this.onTap,
   });
@@ -194,7 +199,7 @@ class _SelectionCard extends StatelessWidget {
                         title,
                         textAlign: TextAlign.start,
                         style: TextStyle(
-                          fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                          fontFamily: fontFamily,
                           fontWeight: FontWeight.bold,
                           fontSize: isRtl ? 15 : 16,
                         ),
@@ -204,7 +209,7 @@ class _SelectionCard extends StatelessWidget {
                         subtitle,
                         textAlign: TextAlign.start,
                         style: TextStyle(
-                          fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                          fontFamily: fontFamily,
                           fontSize: isRtl ? 11 : 12,
                           color: Colors.grey.shade600,
                         ),

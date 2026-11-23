@@ -8,6 +8,7 @@ class FeatureCard extends StatelessWidget {
   final IconData icon;
   final VoidCallback? onTap;
   final bool isRtl;
+  final bool isPashto;
 
   const FeatureCard({
     super.key,
@@ -15,6 +16,7 @@ class FeatureCard extends StatelessWidget {
     required this.icon,
     this.onTap,
     this.isRtl = false,
+    this.isPashto = false,
   });
 
   @override
@@ -56,7 +58,7 @@ class FeatureCard extends StatelessWidget {
                 title,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                  fontFamily: isPashto ? 'Amiri' : (isRtl ? 'NotoNastaliqUrdu' : 'Poppins'),
                   fontSize: isRtl ? 13.5 : 15,
                   fontWeight: FontWeight.w500,
                   height: isRtl ? 1.5 : 1.2,

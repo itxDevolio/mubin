@@ -144,6 +144,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                       : (isPashto ? "قرآن کریم" : "Quran"),
                                   icon: FlutterIslamicIcons.quran,
                                   isRtl: isRtl,
+                                  isPashto: isPashto,
                                   onTap: () {
                                     hapticFeedBack();
                                     Navigator.push(
@@ -162,6 +163,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                       : (isPashto ? "حدیث" : "Hadith"),
                                   icon: FlutterIslamicIcons.quran2,
                                   isRtl: isRtl,
+                                  isPashto: isPashto,
                                   onTap: () {
                                     Navigator.push(
                                       context,
@@ -178,6 +180,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                       : (isPashto ? "اذکار" : "Adhkar"),
                                   icon: FlutterIslamicIcons.tasbihHand,
                                   isRtl: isRtl,
+                                  isPashto: isPashto,
                                   onTap: () {
                                     Navigator.push(
                                       context,
@@ -203,6 +206,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                       : (isPashto ? "شفا" : "Shifa"),
                                   icon: FlutterIslamicIcons.prayingPerson,
                                   isRtl: isRtl,
+                                  isPashto: isPashto,
                                   onTap: () {
                                     hapticFeedBack();
                                     Navigator.push(
@@ -221,6 +225,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                       : (isPashto ? "قبله" : "Qibla"),
                                   icon: FlutterIslamicIcons.qibla2,
                                   isRtl: isRtl,
+                                  isPashto: isPashto,
                                   onTap: () {
                                     Navigator.push(
                                       context,
@@ -237,6 +242,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                       : (isPashto ? "دعاء ګانې" : "Duas"),
                                   icon: FlutterIslamicIcons.prayer,
                                   isRtl: isRtl,
+                                  isPashto: isPashto,
                                   onTap: () {
                                     hapticFeedBack();
                                     Navigator.push(
@@ -276,6 +282,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                                 : "Step-by-step authentic method and supplications."),
                                       imageUrl: "assets/app_logos/funeral.png",
                                       isRtl: isRtl,
+                                  isPashto: isPashto,
                                       onTap: () {
                                         Navigator.push(
                                           context,
@@ -300,6 +307,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                       imageUrl:
                                           "assets/app_logos/istikhara.png",
                                       isRtl: isRtl,
+                                  isPashto: isPashto,
                                       onTap: () {
                                         Navigator.push(
                                           context,

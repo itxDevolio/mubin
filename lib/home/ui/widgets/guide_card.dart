@@ -7,6 +7,7 @@ class InfoGuideCard extends StatelessWidget {
   final String imageUrl;
   final VoidCallback onTap;
   final bool isRtl;
+  final bool isPashto;
 
   const InfoGuideCard({
     super.key,
@@ -15,6 +16,7 @@ class InfoGuideCard extends StatelessWidget {
     required this.imageUrl,
     required this.onTap,
     this.isRtl = false,
+    this.isPashto = false,
   });
 
   @override
@@ -124,7 +126,7 @@ class InfoGuideCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,
                         style: TextStyle(
-                          fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                          fontFamily: isPashto ? 'Amiri' : (isRtl ? 'NotoNastaliqUrdu' : 'Poppins'),
                           fontSize: isRtl ? 13 : 13.5,
                           fontWeight: FontWeight.bold,
                           color: getThemeColor(
@@ -144,7 +146,7 @@ class InfoGuideCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,
                         style: TextStyle(
-                          fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                          fontFamily: isPashto ? 'Amiri' : (isRtl ? 'NotoNastaliqUrdu' : 'Poppins'),
                           fontSize: isRtl ? 10.5 : 10.5,
                           fontWeight: FontWeight.w400,
                           color: getThemeColor(

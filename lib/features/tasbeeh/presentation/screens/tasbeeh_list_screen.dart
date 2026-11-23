@@ -132,6 +132,7 @@ class TasbeehListScreen extends ConsumerWidget {
     final isUrdu = settings.language == 'ur';
     final isPashto = settings.language == 'ps';
     final isRtl = isUrdu || isPashto;
+    final String fontFamily = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -142,7 +143,7 @@ class TasbeehListScreen extends ConsumerWidget {
         title: Text(
           isUrdu ? "تسبیح" : (isPashto ? "تسبیح" : "Tasbeeh"),
           style: TextStyle(
-            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontFamily: fontFamily,
             fontWeight: FontWeight.bold,
             fontSize: isRtl ? 16 : 18,
             color: isDark
@@ -223,8 +224,8 @@ class TasbeehListScreen extends ConsumerWidget {
                               ? (item['meaningPs'] ?? item['meaningUr']!)
                               : item['meaningEn']!),
                       style: isRtl
-                          ? const TextStyle(
-                              fontFamily: 'NotoNastaliqUrdu',
+                          ? TextStyle(
+                              fontFamily: fontFamily,
                               fontSize: 14,
                               height: 1.8,
                             )
@@ -241,10 +242,10 @@ class TasbeehListScreen extends ConsumerWidget {
                               ? (item['fazilatPs'] ?? item['fazilatUr']!)
                               : item['fazilatEn']!),
                       style: isRtl
-                          ? const TextStyle(
-                              fontFamily: 'NotoNastaliqUrdu',
+                          ? TextStyle(
+                              fontFamily: fontFamily,
                               fontSize: 13,
-                              color: Color(0xFF616161),
+                              color: const Color(0xFF616161),
                             )
                           : const TextStyle(
                               fontSize: 12,

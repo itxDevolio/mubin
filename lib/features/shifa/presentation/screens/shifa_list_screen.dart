@@ -16,6 +16,7 @@ class ShifaListScreen extends ConsumerWidget {
     final isUrdu = settings.language == 'ur';
     final isPashto = settings.language == 'ps';
     final isRtl = isUrdu || isPashto;
+    final String fontFamily = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -27,7 +28,7 @@ class ShifaListScreen extends ConsumerWidget {
               ? 'شفا اور علاج'
               : (isPashto ? 'شفا او درملنه' : 'Shifa & Healing'),
           style: TextStyle(
-            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontFamily: fontFamily,
             fontWeight: FontWeight.bold,
             fontSize: isRtl ? 16 : 18,
           ),
@@ -44,7 +45,7 @@ class ShifaListScreen extends ConsumerWidget {
                     ? 'شفا تلاش کریں'
                     : (isPashto ? 'شفا لټول' : 'Search Shifa'),
                 hintStyle: TextStyle(
-                  fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                  fontFamily: fontFamily,
                   fontWeight: FontWeight.normal,
                   fontSize: 12,
                 ),
@@ -102,6 +103,7 @@ class ShifaListScreen extends ConsumerWidget {
             isRtl: isRtl,
             isUrdu: isUrdu,
             isPashto: isPashto,
+            fontFamily: fontFamily,
           ),
         },
       ),
@@ -114,12 +116,14 @@ class _ShifaListView extends StatelessWidget {
   final bool isRtl;
   final bool isUrdu;
   final bool isPashto;
+  final String fontFamily;
 
   const _ShifaListView({
     required this.duas,
     required this.isRtl,
     required this.isUrdu,
     required this.isPashto,
+    required this.fontFamily,
   });
 
   @override
@@ -142,7 +146,7 @@ class _ShifaListView extends StatelessWidget {
                       ? 'هیڅ پایله ونه موندل شوه.'
                       : 'No results found.'),
               style: TextStyle(
-                fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                fontFamily: fontFamily,
               ),
             ),
           ],
@@ -163,6 +167,7 @@ class _ShifaListView extends StatelessWidget {
           isRtl: isRtl,
           isUrdu: isUrdu,
           isPashto: isPashto,
+          fontFamily: fontFamily,
         );
       },
     );
@@ -176,6 +181,7 @@ class ShifaTile extends StatelessWidget {
   final bool isRtl;
   final bool isUrdu;
   final bool isPashto;
+  final String fontFamily;
 
   const ShifaTile({
     super.key,
@@ -185,6 +191,7 @@ class ShifaTile extends StatelessWidget {
     required this.isRtl,
     required this.isUrdu,
     required this.isPashto,
+    required this.fontFamily,
   });
 
   @override
@@ -223,8 +230,8 @@ class ShifaTile extends StatelessWidget {
         title: Text(
           title,
           style: isRtl
-              ? const TextStyle(
-                  fontFamily: 'NotoNastaliqUrdu',
+              ? TextStyle(
+                  fontFamily: fontFamily,
                   fontWeight: FontWeight.w600,
                   fontSize: 14,
                   height: 1.8,

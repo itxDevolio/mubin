@@ -39,6 +39,7 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
     final bool isUrdu = settings.language == 'ur';
     final bool isPashto = settings.language == 'ps';
     final bool isRtl = isUrdu || isPashto;
+    final String fontFamily = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
 
     return Directionality(
       textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
@@ -90,7 +91,7 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
               style: TextStyle(
                 fontSize: isRtl ? 14 : 16,
                 fontWeight: FontWeight.w600,
-                fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                fontFamily: fontFamily,
                 color: isDark
                     ? AppColors.textPrimaryDark
                     : AppColors.textPrimaryLight,
@@ -161,7 +162,7 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
                       const SizedBox(height: 20),
                     ],
                     if (fazilatText != null)
-                      _buildTag(fazilatText, isRtl),
+                      _buildTag(fazilatText, isRtl, fontFamily),
 
                     const SizedBox(height: 40),
 
@@ -186,7 +187,7 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
                         translationText,
                         style: isRtl
                             ? TextStyle(
-                                fontFamily: 'NotoNastaliqUrdu',
+                                fontFamily: fontFamily,
                                 fontSize: 13.5,
                                 color: isDark
                                     ? Colors.white70
@@ -262,7 +263,7 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
     );
   }
 
-  Widget _buildTag(String text, bool isRtl) {
+  Widget _buildTag(String text, bool isRtl, String fontFamily) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -274,8 +275,8 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
         textAlign: isRtl ? TextAlign.right : TextAlign.center,
         textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
         style: isRtl
-            ? const TextStyle(
-                fontFamily: 'NotoNastaliqUrdu',
+            ? TextStyle(
+                fontFamily: fontFamily,
                 fontSize: 11,
                 color: AppColors.primaryTeal,
                 height: 1.6,

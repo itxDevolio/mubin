@@ -18,6 +18,7 @@ class JanazaDetailScreen extends ConsumerWidget {
     final isUrdu = settings.language == 'ur';
     final isPashto = settings.language == 'ps';
     final isRtl = isUrdu || isPashto;
+    final String fontFamily = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
 
     final appTitle = isUrdu
         ? (isAdult ? "نمازِ جنازہ (بالغ)" : "نمازِ جنازہ (نابالغ)")
@@ -47,7 +48,7 @@ class JanazaDetailScreen extends ConsumerWidget {
           title: Text(
             appTitle,
             style: TextStyle(
-              fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+              fontFamily: fontFamily,
               fontWeight: FontWeight.bold,
               fontSize: isRtl ? 16 : 18,
             ),
@@ -62,7 +63,7 @@ class JanazaDetailScreen extends ConsumerWidget {
                 labelColor: AppColors.primaryTeal,
                 unselectedLabelColor: Colors.grey.withValues(alpha: 0.6),
                 labelStyle: TextStyle(
-                  fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                  fontFamily: fontFamily,
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
                 ),

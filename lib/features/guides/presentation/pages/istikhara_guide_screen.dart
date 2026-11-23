@@ -37,6 +37,7 @@ class _IstikharaGuideScreenState extends ConsumerState<IstikharaGuideScreen> {
     final isUrdu = settings.language == 'ur';
     final isPashto = settings.language == 'ps';
     final isRtl = isUrdu || isPashto;
+    final String fontFamily = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
     final textDirection = isRtl ? TextDirection.rtl : TextDirection.ltr;
 
     return Scaffold(
@@ -48,7 +49,7 @@ class _IstikharaGuideScreenState extends ConsumerState<IstikharaGuideScreen> {
               ? "استخارہ کا طریقہ"
               : (isPashto ? "د استخارې لمانځه طريقه" : "Istikhara Prayer Guide"),
           style: TextStyle(
-            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontFamily: fontFamily,
             fontWeight: FontWeight.bold,
             fontSize: isRtl ? 16 : 18,
           ),

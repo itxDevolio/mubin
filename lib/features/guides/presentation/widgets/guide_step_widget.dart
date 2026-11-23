@@ -22,6 +22,7 @@ class GuideStepWidget extends ConsumerWidget {
     final isUrduLang = settings.language == 'ur';
     final isPashtoLang = settings.language == 'ps';
     final isRtl = isUrdu || isUrduLang || isPashtoLang;
+    final String fontFamily = isPashtoLang ? 'Amiri' : (isRtl ? 'NotoNastaliqUrdu' : 'Poppins');
 
     final title = isPashtoLang && step.titlePs.isNotEmpty
         ? step.titlePs
@@ -51,8 +52,8 @@ class GuideStepWidget extends ConsumerWidget {
                   title,
                   textAlign: isRtl ? TextAlign.right : TextAlign.left,
                   style: isRtl
-                      ? const TextStyle(
-                          fontFamily: 'NotoNastaliqUrdu',
+                      ? TextStyle(
+                          fontFamily: fontFamily,
                           fontSize: 19,
                           fontWeight: FontWeight.bold,
                           height: 1.6,
@@ -98,7 +99,7 @@ class GuideStepWidget extends ConsumerWidget {
                   textAlign: isRtl ? TextAlign.right : TextAlign.left,
                   style: isRtl
                       ? TextStyle(
-                          fontFamily: 'NotoNastaliqUrdu',
+                          fontFamily: fontFamily,
                           fontSize: 15,
                           color: isDark ? Colors.white70 : Colors.black87,
                           height: 2.3,
@@ -173,7 +174,7 @@ class GuideStepWidget extends ConsumerWidget {
                       textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
                       style: isRtl
                           ? TextStyle(
-                              fontFamily: 'NotoNastaliqUrdu',
+                              fontFamily: fontFamily,
                               fontSize: 15,
                               color: isDark ? Colors.white70 : Colors.black87,
                               height: 2.2,
@@ -204,7 +205,7 @@ class GuideStepWidget extends ConsumerWidget {
                           step.reference,
                           textAlign: isRtl ? TextAlign.right : TextAlign.left,
                           style: TextStyle(
-                            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                            fontFamily: fontFamily,
                             fontSize: 12,
                             color: Colors.grey,
                           ),

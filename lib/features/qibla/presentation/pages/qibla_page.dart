@@ -41,6 +41,7 @@ class _QiblaPageState extends ConsumerState<QiblaPage> {
     final isUrdu = settings.language == 'ur';
     final isPashto = settings.language == 'ps';
     final isRtl = isUrdu || isPashto;
+    final String fontFamily = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
 
     final double offset = qiblaState.offset;
     final bool turnRight = offset <= 180;
@@ -61,7 +62,7 @@ class _QiblaPageState extends ConsumerState<QiblaPage> {
               : (isPashto ? 'د قبله موندونکی' : 'Qibla Finder'),
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontFamily: fontFamily,
             fontSize: isRtl ? 16 : 18,
             color: textColor,
           ),
@@ -72,7 +73,7 @@ class _QiblaPageState extends ConsumerState<QiblaPage> {
         iconTheme: IconThemeData(color: textColor),
         actions: [
           IconButton(
-            onPressed: () => _showCalibrationDialog(context, isDarkMode, isUrdu, isPashto, isRtl),
+            onPressed: () => _showCalibrationDialog(context, isDarkMode, isUrdu, isPashto, isRtl, fontFamily),
             icon: Icon(Icons.info_outline, color: AppColors.accentGold),
             tooltip: isUrdu
                 ? 'کیलिब्रেশন گائیڈ'
@@ -86,7 +87,7 @@ class _QiblaPageState extends ConsumerState<QiblaPage> {
         child: SafeArea(
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 400),
-            child: qdataLoadingCheck(qiblaState, isDarkMode, textColor, textSecondaryColor, primaryColor, displayDegrees, turnRight, isUrdu, isPashto, isRtl),
+            child: qdataLoadingCheck(qiblaState, isDarkMode, textColor, textSecondaryColor, primaryColor, displayDegrees, turnRight, isUrdu, isPashto, isRtl, fontFamily),
           ),
         ),
       ),
@@ -104,6 +105,7 @@ class _QiblaPageState extends ConsumerState<QiblaPage> {
     bool isUrdu,
     bool isPashto,
     bool isRtl,
+    String fontFamily,
   ) {
     if (qiblaState.isLoading) {
       return Center(
@@ -121,7 +123,7 @@ class _QiblaPageState extends ConsumerState<QiblaPage> {
               style: TextStyle(
                 color: textSecondaryColor,
                 fontSize: isRtl ? 12 : 14,
-                fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                fontFamily: fontFamily,
                 letterSpacing: 1.2,
               ),
             ),
@@ -176,7 +178,7 @@ class _QiblaPageState extends ConsumerState<QiblaPage> {
                     style: TextStyle(
                       fontSize: isRtl ? 12 : 12,
                       fontWeight: FontWeight.w500,
-                      fontFamily: isRtl ? 'NotoNastaliqUrdu' : "Poppins",
+                      fontFamily: fontFamily,
                       color: AppColors.primaryTeal,
                     ),
                   ),
@@ -200,7 +202,7 @@ class _QiblaPageState extends ConsumerState<QiblaPage> {
                     letterSpacing: 2,
                     fontSize: isRtl ? 9 : 8,
                     fontWeight: FontWeight.w900,
-                    fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                    fontFamily: fontFamily,
                     color: AppColors.accentGold,
                   ),
                 ),
@@ -224,7 +226,7 @@ class _QiblaPageState extends ConsumerState<QiblaPage> {
     );
   }
 
-  void _showCalibrationDialog(BuildContext context, bool isDarkMode, bool isUrdu, bool isPashto, bool isRtl) {
+  void _showCalibrationDialog(BuildContext context, bool isDarkMode, bool isUrdu, bool isPashto, bool isRtl, String fontFamily) {
     final surfaceColor = isDarkMode ? AppColors.surfaceDark : AppColors.surfaceLight;
     final textColor = isDarkMode ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
     final textSecondaryColor = isDarkMode ? AppColors.textSecondaryDark : AppColors.textSecondaryLight;
@@ -251,7 +253,7 @@ class _QiblaPageState extends ConsumerState<QiblaPage> {
                   style: TextStyle(
                     fontSize: isRtl ? 16 : 20,
                     fontWeight: FontWeight.bold,
-                    fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                    fontFamily: fontFamily,
                     color: textColor,
                   ),
                 ),
@@ -266,7 +268,7 @@ class _QiblaPageState extends ConsumerState<QiblaPage> {
                   style: TextStyle(
                     fontSize: isRtl ? 13 : 14,
                     height: 1.5,
-                    fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                    fontFamily: fontFamily,
                     color: textSecondaryColor,
                   ),
                 ),
@@ -295,7 +297,7 @@ class _QiblaPageState extends ConsumerState<QiblaPage> {
                     child: Text(
                       isUrdu ? "سمجھ گئے" : (isPashto ? "پوه شوم" : "Got it"),
                       style: TextStyle(
-                        fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                        fontFamily: fontFamily,
                       ),
                     ),
                   ),

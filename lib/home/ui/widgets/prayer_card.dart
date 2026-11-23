@@ -38,7 +38,7 @@ class PrayerCard extends ConsumerWidget {
                         ? "مهرباني وکئ د موقعیت (Location) اجازه ورکړئ."
                         : "Please enable location settings."),
                 style: TextStyle(
-                  fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                  fontFamily: isPashto ? 'Amiri' : (isRtl ? 'NotoNastaliqUrdu' : 'Poppins'),
                 ),
               ),
             ),
@@ -164,6 +164,7 @@ class PrayerCard extends ConsumerWidget {
                     activePrayer: active,
                     currentCardPrayer: Prayer.fajr,
                     isRtl: isRtl,
+                    isPashto: isPashto,
                   ),
                   PrayerTimeCard(
                     prayerName: isUrdu ? "ظہر" : (isPashto ? "ماسپښین" : "Dhuhr"),
@@ -171,6 +172,7 @@ class PrayerCard extends ConsumerWidget {
                     activePrayer: active,
                     currentCardPrayer: Prayer.dhuhr,
                     isRtl: isRtl,
+                    isPashto: isPashto,
                   ),
                   PrayerTimeCard(
                     prayerName: isUrdu ? "عصر" : (isPashto ? "مازدیګر" : "Asr"),
@@ -178,6 +180,7 @@ class PrayerCard extends ConsumerWidget {
                     activePrayer: active,
                     currentCardPrayer: Prayer.asr,
                     isRtl: isRtl,
+                    isPashto: isPashto,
                   ),
                   PrayerTimeCard(
                     prayerName: isUrdu ? "مغرب" : (isPashto ? "ماښام" : "Maghrib"),
@@ -186,6 +189,7 @@ class PrayerCard extends ConsumerWidget {
                     currentCardPrayer: Prayer.maghrib,
                     flexValue: 13,
                     isRtl: isRtl,
+                    isPashto: isPashto,
                   ),
                   PrayerTimeCard(
                     prayerName: isUrdu ? "عشاء" : (isPashto ? "ماخوستن" : "Isha"),
@@ -193,6 +197,7 @@ class PrayerCard extends ConsumerWidget {
                     activePrayer: active,
                     currentCardPrayer: Prayer.isha,
                     isRtl: isRtl,
+                    isPashto: isPashto,
                   ),
                 ],
               ),

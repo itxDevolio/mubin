@@ -42,9 +42,13 @@ class _HadithListScreenState extends ConsumerState<HadithListScreen> {
         .of(context)
         .brightness == Brightness.dark;
     final bool isUrdu = hadithLang == 'ur';
+    final bool isPashto = hadithLang == 'ps';
+    final bool isRtl = isUrdu || isPashto;
+    final String fontFamily = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
+
     final String bookName = BookModel.getBookNameFromSlug(
       widget.bookSlug,
-      isUrdu,
+      isRtl,
     );
 
     return Scaffold(
@@ -55,9 +59,9 @@ class _HadithListScreenState extends ConsumerState<HadithListScreen> {
         title: Text(
           widget.chapterName,
           style: TextStyle(
-            fontSize: isUrdu ? 15 : 16,
+            fontSize: isRtl ? 15 : 16,
             fontWeight: FontWeight.bold,
-            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontFamily: fontFamily,
             color: isDark
                 ? AppColors.textPrimaryDark
                 : AppColors.textPrimaryLight,
@@ -91,7 +95,7 @@ class _HadithListScreenState extends ConsumerState<HadithListScreen> {
         itemBuilder: (context, index) {
           final hadith = state.hadiths[index];
 
-          final String heading = isUrdu
+          final String heading = isRtl
               ? (hadith.headingUrdu.isNotEmpty
               ? hadith.headingUrdu
               : hadith.headingEnglish)
@@ -131,7 +135,7 @@ class _HadithListScreenState extends ConsumerState<HadithListScreen> {
                 ],
               ),
               child: Column(
-                crossAxisAlignment: isUrdu
+                crossAxisAlignment: isRtl
                     ? CrossAxisAlignment.end
                     : CrossAxisAlignment.start,
                 children: [
@@ -139,7 +143,7 @@ class _HadithListScreenState extends ConsumerState<HadithListScreen> {
                   Wrap(
                     spacing: 8,
                     runSpacing: 4,
-                    textDirection: isUrdu
+                    textDirection: isRtl
                         ? TextDirection.rtl
                         : TextDirection.ltr,
                     children: [
@@ -158,9 +162,7 @@ class _HadithListScreenState extends ConsumerState<HadithListScreen> {
                           child: Text(
                             bookName,
                             style: TextStyle(
-                              fontFamily: isUrdu
-                                  ? 'NotoNastaliqUrdu'
-                                  : 'Poppins',
+                              fontFamily: fontFamily,
                               color: AppColors.primaryTeal,
                               fontWeight: FontWeight.bold,
                               fontSize: 11,
@@ -179,13 +181,11 @@ class _HadithListScreenState extends ConsumerState<HadithListScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          isUrdu
+                          isRtl
                               ? "حدیث ${hadith.hadithNumber}"
                               : "Hadith ${hadith.hadithNumber}",
                           style: TextStyle(
-                            fontFamily: isUrdu
-                                ? 'NotoNastaliqUrdu'
-                                : 'Poppins',
+                            fontFamily: fontFamily,
                             color: isDark
                                 ? Colors.white70
                                 : Colors.black87,
@@ -221,7 +221,7 @@ class _HadithListScreenState extends ConsumerState<HadithListScreen> {
                   // Compact Title Row with Arrow Indicator
                   const SizedBox(height: 10),
                   Row(
-                    textDirection: isUrdu
+                    textDirection: isRtl
                         ? TextDirection.rtl
                         : TextDirection.ltr,
                     children: [
@@ -229,19 +229,17 @@ class _HadithListScreenState extends ConsumerState<HadithListScreen> {
                         child: Text(
                           heading.isNotEmpty
                               ? heading
-                              : (isUrdu
+                              : (isRtl
                               ? "حدیث نمبر ${hadith.hadithNumber}"
                               : "Hadith Number ${hadith.hadithNumber}"),
-                          textAlign: isUrdu
+                          textAlign: isRtl
                               ? TextAlign.right
                               : TextAlign.left,
                           style: TextStyle(
-                            fontFamily: isUrdu
-                                ? 'NotoNastaliqUrdu'
-                                : 'Poppins',
-                            fontSize: isUrdu ? 14 : 14.5,
+                            fontFamily: fontFamily,
+                            fontSize: isRtl ? 14 : 14.5,
                             fontWeight: FontWeight.bold,
-                            height: isUrdu ? 1.5 : 1.3,
+                            height: isRtl ? 1.5 : 1.3,
                             color: isDark
                                 ? Colors.white
                                 : AppColors.textPrimaryLight,
@@ -250,7 +248,7 @@ class _HadithListScreenState extends ConsumerState<HadithListScreen> {
                       ),
                       const SizedBox(width: 8),
                       Icon(
-                        isUrdu
+                        isRtl
                             ? Icons.arrow_back_ios_rounded
                             : Icons.arrow_forward_ios_rounded,
                         size: 12,

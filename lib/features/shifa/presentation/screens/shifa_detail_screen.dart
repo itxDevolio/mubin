@@ -41,6 +41,7 @@ class _ShifaDetailScreenState extends ConsumerState<ShifaDetailScreen> {
     final isUrdu = settings.language == 'ur';
     final isPashto = settings.language == 'ps';
     final isRtl = isUrdu || isPashto;
+    final String fontFamily = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -51,7 +52,7 @@ class _ShifaDetailScreenState extends ConsumerState<ShifaDetailScreen> {
               ? 'شفا اور علاج'
               : (isPashto ? 'شفا او درملنه' : 'Shifa & Healing'),
           style: TextStyle(
-            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontFamily: fontFamily,
             fontWeight: FontWeight.bold,
             fontSize: isRtl ? 16 : 18,
           ),
@@ -125,6 +126,7 @@ class _ShifaPageContentState extends State<_ShifaPageContent>
         final isUrdu = settings.language == 'ur';
         final isPashto = settings.language == 'ps';
         final isRtl = isUrdu || isPashto;
+        final String fontFamily = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
         final isDark = Theme.of(context).brightness == Brightness.dark;
 
         final title = isUrdu
@@ -153,7 +155,7 @@ class _ShifaPageContentState extends State<_ShifaPageContent>
 
         TextStyle bodyStyle = isRtl
             ? TextStyle(
-                fontFamily: 'NotoNastaliqUrdu',
+                fontFamily: fontFamily,
                 fontSize: 14,
                 height: 2.0,
                 color: isDark ? Colors.white70 : Colors.black87,
@@ -175,7 +177,7 @@ class _ShifaPageContentState extends State<_ShifaPageContent>
                 child: Text(
                   title,
                   style: TextStyle(
-                    fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                    fontFamily: fontFamily,
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                     color: AppColors.primaryTeal,
@@ -223,6 +225,7 @@ class _ShifaPageContentState extends State<_ShifaPageContent>
                 _InstructionSection(
                   text: instruction,
                   isRtl: isRtl,
+                  fontFamily: fontFamily,
                 ),
                 const SizedBox(height: 30),
               ],
@@ -318,10 +321,12 @@ class _TranslationSection extends StatelessWidget {
 class _InstructionSection extends StatelessWidget {
   final String text;
   final bool isRtl;
+  final String fontFamily;
 
   const _InstructionSection({
     required this.text,
     required this.isRtl,
+    required this.fontFamily,
   });
 
   @override
@@ -331,8 +336,8 @@ class _InstructionSection extends StatelessWidget {
       textAlign: TextAlign.center,
       textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
       style: isRtl
-          ? const TextStyle(
-              fontFamily: 'NotoNastaliqUrdu',
+          ? TextStyle(
+              fontFamily: fontFamily,
               fontSize: 13,
               height: 1.9,
               color: AppColors.accentGold,

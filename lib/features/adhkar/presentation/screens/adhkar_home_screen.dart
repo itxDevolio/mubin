@@ -19,6 +19,7 @@ class AdhkarHomeScreen extends ConsumerWidget {
     final bool isUrdu = settings.language == 'ur';
     final bool isPashto = settings.language == 'ps';
     final bool isRtl = isUrdu || isPashto;
+    final String fontFamily = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
 
     return Scaffold(
       backgroundColor: isDark
@@ -32,7 +33,7 @@ class AdhkarHomeScreen extends ConsumerWidget {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
-            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontFamily: fontFamily,
             fontSize: isRtl ? 16 : 18,
             color: isDark ? Colors.white : Colors.black87,
           ),
@@ -61,7 +62,7 @@ class AdhkarHomeScreen extends ConsumerWidget {
               const SizedBox(height: 10),
 
               // Featured Card - Minimal & Clean
-              _buildFeaturedCard(context, isUrdu, isPashto, isRtl, isDark),
+              _buildFeaturedCard(context, isUrdu, isPashto, isRtl, isDark, fontFamily),
 
               const SizedBox(height: 28),
 
@@ -84,6 +85,7 @@ class AdhkarHomeScreen extends ConsumerWidget {
                     isUrdu,
                     isPashto,
                     isDark,
+                    fontFamily,
                   );
                 },
               ),
@@ -103,6 +105,7 @@ class AdhkarHomeScreen extends ConsumerWidget {
     bool isPashto,
     bool isRtl,
     bool isDark,
+    String fontFamily,
   ) {
     return InkWell(
       onTap: () {
@@ -164,7 +167,7 @@ class AdhkarHomeScreen extends ConsumerWidget {
                       color: isDark ? Colors.white : AppColors.textPrimaryLight,
                       fontSize: isRtl ? 15 : 16,
                       fontWeight: FontWeight.w600,
-                      fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                      fontFamily: fontFamily,
                     ),
                   ),
                 ],
@@ -191,6 +194,7 @@ class AdhkarHomeScreen extends ConsumerWidget {
     bool isUrdu,
     bool isPashto,
     bool isDark,
+    String fontFamily,
   ) {
     IconData icon;
     Color color;
@@ -262,7 +266,7 @@ class AdhkarHomeScreen extends ConsumerWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: isRtl ? 13 : 13.5,
-                  fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                  fontFamily: fontFamily,
                   color: isDark ? Colors.white : AppColors.textPrimaryLight,
                 ),
               ),

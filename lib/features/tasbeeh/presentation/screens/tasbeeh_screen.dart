@@ -25,8 +25,9 @@ class TasbeehScreen extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final settings = ref.watch(settingsControllerProvider);
     final isUrdu = settings.language == 'ur';
-    final isPashto = settings.language == 'ps';
-    final isRtl = isUrdu || isPashto;
+    final bool isPashto = settings.language == 'ps';
+    final bool isRtl = isUrdu || isPashto;
+    final String fontFamily = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
 
     return Scaffold(
       backgroundColor: isDark
@@ -38,7 +39,7 @@ class TasbeehScreen extends ConsumerWidget {
               ? "تسبیح کاؤنٹر"
               : (isPashto ? "د تسبیح شمیرونکی" : "Tasbeeh Counter"),
           style: TextStyle(
-            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontFamily: fontFamily,
             fontWeight: FontWeight.bold,
             fontSize: isRtl ? 16 : 18,
             color: isDark ? Colors.white : Colors.black87,
@@ -154,7 +155,7 @@ class TasbeehScreen extends ConsumerWidget {
                   const Spacer(flex: 2),
 
                   // Animated Instruction
-                  _buildInstruction(isDark, isUrdu, isPashto, isRtl),
+                  _buildInstruction(isDark, isUrdu, isPashto, isRtl, fontFamily),
 
                   const SizedBox(height: 40),
                 ],
@@ -171,6 +172,7 @@ class TasbeehScreen extends ConsumerWidget {
     bool isUrdu,
     bool isPashto,
     bool isRtl,
+    String fontFamily,
   ) {
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -192,7 +194,7 @@ class TasbeehScreen extends ConsumerWidget {
             letterSpacing: isRtl ? 0 : 1.5,
             fontWeight: FontWeight.bold,
             fontSize: isRtl ? 12 : 11,
-            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontFamily: fontFamily,
           ),
         ),
       ],

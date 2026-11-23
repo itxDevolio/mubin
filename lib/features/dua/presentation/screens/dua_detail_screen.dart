@@ -41,6 +41,7 @@ class _DuaDetailScreenState extends ConsumerState<DuaDetailScreen> {
     final isUrdu = settings.language == 'ur';
     final isPashto = settings.language == 'ps';
     final isRtl = isUrdu || isPashto;
+    final String fontFamily = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -49,7 +50,7 @@ class _DuaDetailScreenState extends ConsumerState<DuaDetailScreen> {
         title: Text(
           isUrdu ? 'دعائیں' : (isPashto ? 'دعاګانې' : 'All Duas'),
           style: TextStyle(
-            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontFamily: fontFamily,
             fontWeight: FontWeight.bold,
             fontSize: isRtl ? 16 : 18,
           ),
@@ -122,6 +123,7 @@ class _DuaPageContentState extends State<_DuaPageContent>
         final isUrdu = settings.language == 'ur';
         final isPashto = settings.language == 'ps';
         final isRtl = isUrdu || isPashto;
+        final String fontFamily = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
         final isDark = Theme.of(context).brightness == Brightness.dark;
 
         final title = isUrdu
@@ -142,7 +144,7 @@ class _DuaPageContentState extends State<_DuaPageContent>
 
         TextStyle bodyStyle = isRtl
             ? TextStyle(
-                fontFamily: 'NotoNastaliqUrdu',
+                fontFamily: fontFamily,
                 fontSize: 14,
                 height: 2.0,
                 color: isDark ? Colors.white70 : Colors.black87,
@@ -164,7 +166,7 @@ class _DuaPageContentState extends State<_DuaPageContent>
                 child: Text(
                   title,
                   style: TextStyle(
-                    fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                    fontFamily: fontFamily,
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                     color: AppColors.primaryTeal,
@@ -249,7 +251,7 @@ class _DuaPageContentState extends State<_DuaPageContent>
                             style: TextStyle(
                               fontSize: 11,
                               color: Colors.grey.shade600,
-                              fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                              fontFamily: fontFamily,
                             ),
                           ),
                         ),

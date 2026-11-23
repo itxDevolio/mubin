@@ -33,6 +33,9 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
     final hadithLang = ref.watch(hadithLanguageProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bool isUrdu = hadithLang == 'ur';
+    final bool isPashto = hadithLang == 'ps';
+    final bool isRtl = isUrdu || isPashto;
+    final String fontFamily = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
     final bool isSearching = _searchQuery.trim().isNotEmpty;
 
     return Scaffold(
@@ -41,12 +44,12 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
           : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-          isUrdu ? 'ابواب' : 'Chapters',
+          isRtl ? 'ابواب' : 'Chapters',
           style: TextStyle(
             letterSpacing: 0.5,
             fontWeight: FontWeight.bold,
-            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
-            fontSize: isUrdu ? 16 : 18,
+            fontFamily: fontFamily,
+            fontSize: isRtl ? 16 : 18,
             color: isDark
                 ? AppColors.textPrimaryDark
                 : AppColors.textPrimaryLight,
@@ -81,10 +84,10 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
                   _searchQuery = val.toLowerCase();
                 });
               },
-              textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
-              textAlign: isUrdu ? TextAlign.right : TextAlign.left,
+              textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+              textAlign: isRtl ? TextAlign.right : TextAlign.left,
               style: TextStyle(
-                fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                fontFamily: fontFamily,
                 fontStyle: FontStyle.normal,
                 color: isDark
                     ? AppColors.textPrimaryDark
@@ -92,16 +95,16 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
                 fontSize: 14,
               ),
               decoration: InputDecoration(
-                hintText: isUrdu
+                hintText: isRtl
                     ? 'حدیث نمبر سے تلاش کریں (مثلاً 1140)'
                     : 'Search Hadith by number (e.g. 1140)',
                 hintStyle: TextStyle(
-                  fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                  fontFamily: fontFamily,
                   fontStyle: FontStyle.normal,
                   color: isDark
                       ? AppColors.textSecondaryDark
                       : AppColors.textSecondaryLight,
-                  fontSize: isUrdu ? 12 : 12.5,
+                  fontSize: isRtl ? 12 : 12.5,
                 ),
                 prefixIcon: const Icon(
                   Icons.search_rounded,
@@ -156,7 +159,7 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
                         BookSearchParam(
                           bookSlug: widget.bookSlug,
                           query: _searchQuery,
-                          isUrdu: isUrdu,
+                          isUrdu: isRtl,
                         ),
                       ),
                     )
@@ -175,14 +178,12 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
                                   ),
                                   const SizedBox(height: 12),
                                   Text(
-                                    isUrdu
+                                    isRtl
                                         ? "'$_searchQuery' سے متعلق اس کتاب میں کوئی حدیث نہیں ملی"
                                         : "No Hadiths found in this book for '$_searchQuery'",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontFamily: isUrdu
-                                          ? 'NotoNastaliqUrdu'
-                                          : 'Poppins',
+                                      fontFamily: fontFamily,
                                       color: Colors.grey.shade600,
                                       fontSize: 14,
                                     ),
@@ -206,16 +207,16 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
                             final hadith = bookHadiths[index];
                             final String bookName = BookModel.getBookNameFromSlug(
                               hadith.bookSlug,
-                              isUrdu,
+                              isRtl,
                             );
-                            final String heading = isUrdu
+                            final String heading = isRtl
                                 ? (hadith.headingUrdu.isNotEmpty
                                     ? hadith.headingUrdu
                                     : hadith.headingEnglish)
                                 : (hadith.headingEnglish.isNotEmpty
                                     ? hadith.headingEnglish
                                     : hadith.headingUrdu);
-                            final String previewText = isUrdu
+                            final String previewText = isRtl
                                 ? hadith.urduText
                                 : hadith.englishText;
 
@@ -254,12 +255,12 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
                                   ],
                                 ),
                                 child: Column(
-                                  crossAxisAlignment: isUrdu
+                                  crossAxisAlignment: isRtl
                                       ? CrossAxisAlignment.end
                                       : CrossAxisAlignment.start,
                                   children: [
                                     Row(
-                                      textDirection: isUrdu
+                                      textDirection: isRtl
                                           ? TextDirection.rtl
                                           : TextDirection.ltr,
                                       children: [
@@ -278,9 +279,7 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
                                             child: Text(
                                               bookName,
                                               style: TextStyle(
-                                                fontFamily: isUrdu
-                                                    ? 'NotoNastaliqUrdu'
-                                                    : 'Poppins',
+                                                fontFamily: fontFamily,
                                                 fontSize: 11,
                                                 fontWeight: FontWeight.bold,
                                                 color: AppColors.primaryTeal,
@@ -301,7 +300,7 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
                                                 BorderRadius.circular(8),
                                           ),
                                           child: Text(
-                                            isUrdu
+                                            isRtl
                                                 ? "حدیث # ${hadith.hadithNumber}"
                                                 : "Hadith #${hadith.hadithNumber}",
                                             style: const TextStyle(
@@ -318,16 +317,14 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
                                       Text(
                                         heading,
                                         style: TextStyle(
-                                          fontFamily: isUrdu
-                                              ? 'NotoNastaliqUrdu'
-                                              : 'Poppins',
+                                          fontFamily: fontFamily,
                                           fontWeight: FontWeight.bold,
                                           fontSize: 14,
                                           color: isDark
                                               ? AppColors.textPrimaryDark
                                               : AppColors.textPrimaryLight,
                                         ),
-                                        textAlign: isUrdu
+                                        textAlign: isRtl
                                             ? TextAlign.right
                                             : TextAlign.left,
                                       ),
@@ -338,16 +335,14 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                        fontFamily: isUrdu
-                                            ? 'NotoNastaliqUrdu'
-                                            : 'Poppins',
+                                        fontFamily: fontFamily,
                                         fontSize: 13,
                                         color: isDark
                                             ? AppColors.textSecondaryDark
                                             : AppColors.textSecondaryLight,
                                         height: 1.4,
                                       ),
-                                      textAlign: isUrdu
+                                      textAlign: isRtl
                                           ? TextAlign.right
                                           : TextAlign.left,
                                     ),
@@ -365,7 +360,7 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
                       ),
                       error: (err, _) => Center(
                         child: Text(
-                          isUrdu
+                          isRtl
                               ? "حدیث تلاش کرنے میں خرابی: $err"
                               : "Error searching hadiths: $err",
                           style: const TextStyle(color: AppColors.error),
@@ -377,11 +372,9 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
                       if (chapters.isEmpty) {
                         return Center(
                           child: Text(
-                            isUrdu ? 'کوئی باب نہیں ملا' : 'No Chapter found',
+                            isRtl ? 'کوئی باب نہیں ملا' : 'No Chapter found',
                             style: TextStyle(
-                              fontFamily: isUrdu
-                                  ? 'NotoNastaliqUrdu'
-                                  : 'Poppins',
+                              fontFamily: fontFamily,
                               color: isDark
                                   ? AppColors.textSecondaryDark
                                   : AppColors.textSecondaryLight,
@@ -402,7 +395,7 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
                             const SizedBox(height: 12),
                         itemBuilder: (context, index) {
                           final chapter = chapters[index];
-                          final String displayTitle = isUrdu
+                          final String displayTitle = isRtl
                               ? chapter.chapterUrdu
                               : chapter.chapterEnglish;
 
@@ -445,7 +438,7 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
                               ),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
-                                textDirection: isUrdu
+                                textDirection: isRtl
                                     ? TextDirection.rtl
                                     : TextDirection.ltr,
                                 children: [
@@ -458,19 +451,17 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
                                         color: isDark
                                             ? Colors.white
                                             : AppColors.textPrimaryLight,
-                                        fontFamily: isUrdu
-                                            ? 'NotoNastaliqUrdu'
-                                            : null,
+                                        fontFamily: fontFamily,
                                         height: 1.5,
                                       ),
-                                      textAlign: isUrdu
+                                      textAlign: isRtl
                                           ? TextAlign.right
                                           : TextAlign.left,
                                     ),
                                   ),
                                   const SizedBox(width: 16),
                                   Icon(
-                                    isUrdu
+                                    isRtl
                                         ? Icons.arrow_back_ios_new_rounded
                                         : Icons.arrow_forward_ios_rounded,
                                     size: 14,
@@ -499,7 +490,7 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            isUrdu
+                            isRtl
                                 ? "ابواب لوڈ کرنے میں خرابی"
                                 : "Error loading chapters",
                           ),
@@ -508,7 +499,7 @@ class _ChaptersScreenState extends ConsumerState<ChaptersScreen> {
                               chaptersProvider(widget.bookSlug),
                             ),
                             child: Text(
-                              isUrdu ? "دوبارہ کوشش کریں" : "Retry",
+                              isRtl ? "دوبارہ کوشش کریں" : "Retry",
                               style: const TextStyle(
                                 color: AppColors.primaryTeal,
                               ),

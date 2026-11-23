@@ -54,6 +54,8 @@ class HadithLanguageNotifier extends Notifier<String> {
       return 'en';
     } else if (settings.language == 'ur') {
       return 'ur';
+    } else if (settings.language == 'ps') {
+      return 'ps';
     } else {
       return _userSelectedLang ?? 'ur';
     }
