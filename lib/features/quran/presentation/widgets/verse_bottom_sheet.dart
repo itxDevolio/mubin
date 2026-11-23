@@ -9,13 +9,25 @@ import '../../domain/entities/verse.dart';
 import 'package:mubin/features/quran/presentation/controllers/bookmark_controller.dart';
 import 'package:mubin/features/quran/presentation/controllers/quran_audio_player_controller.dart';
 
-class VerseBottomSheet extends ConsumerWidget {
+class VerseBottomSheet extends ConsumerStatefulWidget {
   final Verse verse;
 
   const VerseBottomSheet({super.key, required this.verse});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<VerseBottomSheet> createState() => _VerseBottomSheetState();
+}
+
+class _VerseBottomSheetState extends ConsumerState<VerseBottomSheet> {
+  @override
+  void dispose() {
+    ref.read(quranAudioPlayerControllerProvider.notifier).stopAudio();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final verse = widget.verse;
     final bookmarksState = ref.watch(bookmarkControllerProvider);
     final audioState = ref.watch(quranAudioPlayerControllerProvider);
     final settings = ref.watch(settingsControllerProvider);
@@ -30,9 +42,7 @@ class VerseBottomSheet extends ConsumerWidget {
     );
 
     final isPlayingThis =
-        audioState.isPlaying &&
-        (audioState.currentAudioUrl == verse.audioUrl ||
-            audioState.playingVerseId == verse.id);
+        audioState.isPlaying && (audioState.currentAudioUrl == verse.audioUrl || audioState.playingVerseId == verse.id);
     final isLoadingThis =
         audioState.isLoading && audioState.playingVerseId == verse.id;
 
@@ -75,12 +85,8 @@ class VerseBottomSheet extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [],
-                  ),
                   Row(
                     children: [
                       IconButton(
@@ -174,9 +180,7 @@ class VerseBottomSheet extends ConsumerWidget {
                 child: Text(
                   isUrdu ? 'ترجمہ' : (isPashto ? 'ترجمہ' : 'Translation:'),
                   style: TextStyle(
-                    fontFamily: isPashto
-                        ? 'Amiri'
-                        : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins'),
+                    fontFamily: isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins'),
                     fontWeight: FontWeight.bold,
                     fontSize: 13,
                     color: AppColors.primaryTeal,
@@ -216,9 +220,7 @@ class VerseBottomSheet extends ConsumerWidget {
                   child: Text(
                     isUrdu || isPashto ? 'تفسیر:' : 'Tafseer:',
                     style: TextStyle(
-                      fontFamily: isPashto
-                          ? 'Amiri'
-                          : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins'),
+                      fontFamily: isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins'),
                       fontWeight: FontWeight.bold,
                       fontSize: 13,
                       color: AppColors.primaryTeal,
@@ -249,9 +251,7 @@ class VerseBottomSheet extends ConsumerWidget {
                           : TextDirection.ltr,
                       style: isRtl
                           ? TextStyle(
-                              fontFamily: isPashto
-                                  ? 'Amiri'
-                                  : 'NotoNastaliqUrdu',
+                              fontFamily: isPashto ? 'Amiri' : 'NotoNastaliqUrdu',
                               fontSize: 13,
                               height: 2.2,
                               color: Theme.of(
@@ -305,43 +305,85 @@ class VerseBottomSheet extends ConsumerWidget {
   ) {
     final settings = ref.read(settingsControllerProvider);
     final isUrdu = settings.language == 'ur';
+    final isPashto = settings.language == 'ps';
+    final isRtl = isUrdu || isPashto;
+    final String textFont = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final controller = TextEditingController();
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        backgroundColor: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text(
-          isUrdu ? 'بک مارک محفوظ کریں' : 'Save Bookmark',
+          isUrdu
+              ? 'بک مارک محفوظ کریں'
+              : (isPashto ? 'نښه خوندي کړئ' : 'Save Bookmark'),
+          textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+          textAlign: isRtl ? TextAlign.right : TextAlign.left,
           style: TextStyle(
-            fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontFamily: textFont,
             fontWeight: FontWeight.bold,
+            fontSize: 18,
+            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
           ),
         ),
         content: TextField(
           controller: controller,
-          textDirection: isUrdu ? TextDirection.rtl : TextDirection.ltr,
-          style: TextStyle(fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins'),
+          textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+          textAlign: isRtl ? TextAlign.right : TextAlign.left,
+          cursorColor: AppColors.primaryTeal,
+          style: TextStyle(
+            fontFamily: textFont,
+            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+            fontSize: 14,
+          ),
           decoration: InputDecoration(
-            hintText: isUrdu ? 'عنوان درج کریں' : 'Enter title',
+            hintText: isUrdu
+                ? 'عنوان درج کریں'
+                : (isPashto ? 'عنوان ولیکئ' : 'Enter title'),
             hintStyle: TextStyle(
-              fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+              fontFamily: textFont,
+              color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+              fontSize: 14,
             ),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            filled: true,
+            fillColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(14),
+              borderSide: BorderSide.none,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(14),
+              borderSide: BorderSide(
+                color: isDark ? AppColors.borderDark : AppColors.borderLight,
+                width: 1,
+              ),
+            ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.primaryTeal),
+              borderRadius: BorderRadius.circular(14),
+              borderSide: const BorderSide(
+                color: AppColors.primaryTeal,
+                width: 1.2,
+              ),
             ),
           ),
           autofocus: true,
         ),
+        actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              isUrdu ? 'منسوخ کریں' : 'Cancel',
+              isUrdu
+                  ? ' کینسل'
+                  : (isPashto ? 'کینسل' : 'Cancel'),
               style: TextStyle(
-                fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
-                color: Colors.grey,
+                fontFamily: textFont,
+                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
@@ -360,14 +402,19 @@ class VerseBottomSheet extends ConsumerWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryTeal,
               foregroundColor: Colors.white,
+              elevation: 0,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(12),
               ),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             ),
             child: Text(
-              isUrdu ? 'محفوظ کریں' : 'Save',
+              isUrdu
+                  ? 'محفوظ کریں'
+                  : (isPashto ? 'خوندي کړئ' : 'Save'),
               style: TextStyle(
-                fontFamily: isUrdu ? 'NotoNastaliqUrdu' : 'Poppins',
+                fontFamily: textFont,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),

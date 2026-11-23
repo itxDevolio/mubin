@@ -12,17 +12,24 @@ import '../../../../services/quran_db_service.dart';
 import '../../../../services/quran_metadata_service.dart';
 import '../../domain/entities/verse.dart';
 import '../widgets/verse_bottom_sheet.dart';
+import '../controllers/quran_audio_player_controller.dart';
 
 class MushafViewScreen extends ConsumerStatefulWidget {
-  final int initialPage;
+  final int? initialPage;
+  final int? surahNumber;
+  final int? verseNumber;
   final bool shouldUpdateProgress;
   final int? highlightVerseId;
+  final bool isBookmarkHighlight;
 
   const MushafViewScreen({
     super.key,
-    required this.initialPage,
+    this.initialPage,
+    this.surahNumber,
+    this.verseNumber,
     this.shouldUpdateProgress = true,
     this.highlightVerseId,
+    this.isBookmarkHighlight = false,
   });
 
   @override
@@ -35,23 +42,75 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
   final int _totalPages = 548; // 16-line IndoPak Mushaf total pages
   int? _selectedSurah;
   int? _selectedAyah;
+  bool _isLoadingPage = false;
+
+  final Map<int, List<QuranLine>> _pageLinesCache = {};
+
+  void _loadPage(int pageNumber) async {
+    if (_pageLinesCache.containsKey(pageNumber)) return;
+    final lines = await QuranDbService().getPageLines(pageNumber);
+    if (mounted) {
+      _pageLinesCache[pageNumber] = lines;
+      if (pageNumber == _currentPage) {
+        setState(() {});
+      }
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    _currentPage = widget.initialPage.clamp(1, _totalPages);
-    _pageController = PageController(initialPage: _currentPage - 1);
+    if (widget.initialPage != null) {
+      _currentPage = widget.initialPage!.clamp(1, _totalPages);
+      _pageController = PageController(initialPage: _currentPage - 1);
+      _loadPage(_currentPage);
+      _prefetchAdjacentPages(_currentPage);
+      _initScreen();
+    } else {
+      _currentPage = 1;
+      _pageController = PageController(initialPage: 0);
+      _isLoadingPage = true;
+      _resolveInitialPage();
+    }
+    _preloadAllPagesInBackground();
+  }
 
-    _prefetchAdjacentPages(_currentPage);
-    _initScreen();
+  Future<void> _resolveInitialPage() async {
+    int page = 1;
+    if (widget.highlightVerseId != null) {
+      int sNum = widget.highlightVerseId! ~/ 1000;
+      int vNum = widget.highlightVerseId! % 1000;
+      page = await QuranDbService().getPageForVerse(sNum, vNum);
+    } else if (widget.surahNumber != null) {
+      page = await QuranDbService().getStartingPageForSurah(widget.surahNumber!);
+    }
+
+    if (mounted) {
+      setState(() {
+        _currentPage = page.clamp(1, _totalPages);
+        _pageController.jumpToPage(_currentPage - 1);
+        _isLoadingPage = false;
+      });
+      _loadPage(_currentPage);
+      _prefetchAdjacentPages(_currentPage);
+      _initScreen();
+    }
   }
 
   void _prefetchAdjacentPages(int pageNum) {
-    if (pageNum < _totalPages) {
-      QuranDbService().getPageLines(pageNum + 1);
+    for (int p = pageNum - 2; p <= pageNum + 2; p++) {
+      if (p >= 1 && p <= _totalPages && !_pageLinesCache.containsKey(p)) {
+        _loadPage(p);
+      }
     }
-    if (pageNum > 1) {
-      QuranDbService().getPageLines(pageNum - 1);
+  }
+
+  Future<void> _preloadAllPagesInBackground() async {
+    for (int p = 1; p <= _totalPages; p++) {
+      if (!_pageLinesCache.containsKey(p)) {
+        final lines = await QuranDbService().getPageLines(p);
+        _pageLinesCache[p] = lines;
+      }
     }
   }
 
@@ -106,15 +165,40 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
     String rawText,
     TextStyle baseStyle,
     VoidCallback onTap,
+    VoidCallback onLongPress,
   ) {
     final cleaned = fixLamAlif(rawText);
     return [
-      TextSpan(
-        text: '$cleaned ',
-        style: baseStyle,
-        recognizer: TapGestureRecognizer()..onTap = onTap,
+      WidgetSpan(
+        alignment: PlaceholderAlignment.middle,
+        child: GestureDetector(
+          onTap: onTap,
+          onLongPress: onLongPress,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 1.0),
+            child: Text(
+              cleaned,
+              style: baseStyle,
+            ),
+          ),
+        ),
       ),
     ];
+  }
+
+  Future<void> _onWordLongPressed(
+    int surah,
+    int ayah,
+    Map<String, dynamic> word,
+  ) async {
+    final verseId = surah * 1000 + ayah;
+    setState(() {
+      _selectedSurah = surah;
+      _selectedAyah = ayah;
+    });
+    await ref
+        .read(quranProgressControllerProvider.notifier)
+        .updateProgress(_currentPage, verseId: verseId);
   }
 
   Future<void> _onWordTapped(
@@ -173,6 +257,7 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
     );
 
     if (mounted) {
+      ref.read(quranAudioPlayerControllerProvider.notifier).stopAudio();
       setState(() {
         _selectedSurah = null;
         _selectedAyah = null;
@@ -183,6 +268,17 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    if (_isLoadingPage) {
+      return Scaffold(
+        backgroundColor: isDark
+            ? const Color(0xFF121212)
+            : const Color(0xFFFAF6EE),
+        body: const Center(
+          child: CircularProgressIndicator(color: AppColors.primaryTeal),
+        ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: isDark
@@ -234,118 +330,106 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
           },
           itemBuilder: (context, index) {
             final pageNumber = index + 1;
-            return FutureBuilder<List<QuranLine>>(
-              future: QuranDbService().getPageLines(pageNumber),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: SizedBox(
-                      width: 28,
-                      height: 28,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: AppColors.primaryTeal,
-                      ),
+            final lines = _pageLinesCache[pageNumber];
+            if (lines == null) {
+              _loadPage(pageNumber);
+              return const Center(
+                child: SizedBox(
+                  width: 28,
+                  height: 28,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: AppColors.primaryTeal,
+                  ),
+                ),
+              );
+            }
+            if (lines.isEmpty) {
+              return const Center(child: Text('Page not found'));
+            }
+
+            final surahNameLine = lines.firstWhere(
+              (l) => l.lineType == 'surah_name',
+              orElse: () => QuranLine(
+                pageNumber: pageNumber,
+                lineNumber: 0,
+                lineType: '',
+                isCentered: false,
+                text: '',
+                words: [],
+              ),
+            );
+            final bool hasNewSurah = surahNameLine.lineType == 'surah_name';
+            final int? startingSurahNum = surahNameLine.surahNumber;
+
+            final juzNum = QuranMetadataService().getJuzForIndoPakPage(
+              pageNumber,
+            );
+
+            return Container(
+              margin: const EdgeInsets.symmetric(
+                horizontal: 4,
+                vertical: 2,
+              ),
+              padding: const EdgeInsets.all(4),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // 1. Real Mushaf Top Header with reduced opacity and increased spacing
+                  Opacity(
+                    opacity: 0.6,
+                    child: _buildRealMushafTopHeader(
+                      pageNumber,
+                      juzNum,
+                      isDark,
+                      hasNewSurah: hasNewSurah,
+                      startingSurah: startingSurahNum,
                     ),
-                  );
-                }
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Text(
-                      'Error loading page: ${snapshot.error}',
-                      style: const TextStyle(color: Colors.red),
+                  ),
+                  const SizedBox(height: 6),
+                  const Divider(
+                    height: 2,
+                    thickness: 0.6,
+                    color: AppColors.primaryTeal,
+                  ),
+                  const SizedBox(height: 12),
+
+                  // 2. Lines Body (Centered and compact for page 1 & 2, spaceBetween for others)
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment:
+                          (pageNumber == 1 || pageNumber == 2)
+                          ? MainAxisAlignment.center
+                          : MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: lines.asMap().entries.map((entry) {
+                        final idx = entry.key;
+                        final line = entry.value;
+                        final prevLine = idx > 0 ? lines[idx - 1] : null;
+                        final isBasmallahAfterSurahName =
+                            line.lineType == 'basmallah' &&
+                            prevLine?.lineType == 'surah_name';
+
+                        if (isBasmallahAfterSurahName) {
+                          return const SizedBox.shrink();
+                        }
+
+                        return Container(
+                          padding: EdgeInsets.symmetric(
+                            vertical: (pageNumber == 1 || pageNumber == 2)
+                                ? 2.0
+                                : 0.5,
+                            horizontal: 4.0,
+                          ),
+                          child: _buildLineWidget(line, isDark, pageNumber),
+                        );
+                      }).toList(),
                     ),
-                  );
-                }
-                final lines = snapshot.data ?? [];
-                if (lines.isEmpty) {
-                  return const Center(child: Text('Page not found'));
-                }
-
-                final surahNameLine = lines.firstWhere(
-                  (l) => l.lineType == 'surah_name',
-                  orElse: () => QuranLine(
-                    pageNumber: pageNumber,
-                    lineNumber: 0,
-                    lineType: '',
-                    isCentered: false,
-                    text: '',
-                    words: [],
                   ),
-                );
-                final bool hasNewSurah = surahNameLine.lineType == 'surah_name';
-                final int? startingSurahNum = surahNameLine.surahNumber;
 
-                final juzNum = QuranMetadataService().getJuzForIndoPakPage(
-                  pageNumber,
-                );
-
-                return Container(
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 4,
-                    vertical: 2,
-                  ),
-                  padding: const EdgeInsets.all(4),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // 1. Real Mushaf Top Header with reduced opacity and increased spacing
-                      Opacity(
-                        opacity: 0.6,
-                        child: _buildRealMushafTopHeader(
-                          pageNumber,
-                          juzNum,
-                          isDark,
-                          hasNewSurah: hasNewSurah,
-                          startingSurah: startingSurahNum,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      const Divider(
-                        height: 2,
-                        thickness: 0.6,
-                        color: AppColors.primaryTeal,
-                      ),
-                      const SizedBox(height: 12),
-
-                      // 2. Lines Body (Centered and compact for page 1 & 2, spaceBetween for others)
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment:
-                              (pageNumber == 1 || pageNumber == 2)
-                              ? MainAxisAlignment.center
-                              : MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: lines.asMap().entries.map((entry) {
-                            final idx = entry.key;
-                            final line = entry.value;
-                            final prevLine = idx > 0 ? lines[idx - 1] : null;
-                            final isBasmallahAfterSurahName =
-                                line.lineType == 'basmallah' &&
-                                prevLine?.lineType == 'surah_name';
-
-                            if (isBasmallahAfterSurahName) {
-                              return const SizedBox.shrink();
-                            }
-
-                            return Container(
-                              padding: EdgeInsets.symmetric(
-                                vertical: (pageNumber == 1 || pageNumber == 2)
-                                    ? 2.0
-                                    : 0.5,
-                                horizontal: 4.0,
-                              ),
-                              child: _buildLineWidget(line, isDark, pageNumber),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-
-                      // 3. Real Mushaf Bottom Footer (Removed)
-                    ],
-                  ),
-                );
-              },
+                  // 3. Real Mushaf Bottom Footer (Removed)
+                ],
+              ),
             );
           },
         ),
@@ -521,29 +605,40 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
         fit: BoxFit.scaleDown,
         child: Text.rich(
           TextSpan(
-            children: line.words.expand((word) {
+            children: line.words.reversed.expand((word) {
               final wordSurah =
                   int.tryParse((word['surah'] ?? 1).toString()) ?? 1;
               final wordAyah =
                   int.tryParse((word['ayah'] ?? 1).toString()) ?? 1;
+              final wordVerseId = wordSurah * 1000 + wordAyah;
 
-              final isHighlighted =
+              final isSelected =
                   _selectedSurah == wordSurah && _selectedAyah == wordAyah;
+              final isHighlighted =
+                  widget.highlightVerseId != null && widget.highlightVerseId == wordVerseId;
+
+              Color textColor;
+              if (isSelected || (isHighlighted && !widget.isBookmarkHighlight)) {
+                textColor = AppColors.accentGold;
+              } else if (isHighlighted && widget.isBookmarkHighlight) {
+                textColor = AppColors.primaryTeal;
+              } else {
+                textColor = isDark ? Colors.white : Colors.black87;
+              }
 
               final wordStyle = TextStyle(
                 fontFamily: 'IndoPakFont',
                 fontSize: textFontSize,
                 height: 1.02,
-                color: isDark ? Colors.white : Colors.black87,
-                backgroundColor: isHighlighted
-                    ? AppColors.primaryTeal.withValues(alpha: 0.25)
-                    : Colors.transparent,
+                color: textColor,
+                backgroundColor: Colors.transparent,
               );
 
               return _buildWordSpans(
                 word['text']?.toString() ?? '',
                 wordStyle,
                 () => _onWordTapped(wordSurah, wordAyah, word),
+                () => _onWordLongPressed(wordSurah, wordAyah, word),
               );
             }).toList(),
           ),

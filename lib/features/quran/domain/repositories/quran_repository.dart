@@ -9,13 +9,13 @@ abstract class QuranRepository {
   Future<List<Juz>> getJuzList({String lang = 'en'});
 
   // Progress tracking
-  Future<void> saveReadingProgress(int pageNumber);
+  Future<void> saveReadingProgress(int pageNumber, {int? verseId});
   Future<ReadingProgress> getReadingProgress();
 
   // Bookmarks
   Future<void> toggleBookmark(
     Verse verse,
-  ); // Updated: name is now part of entity if provided
+  );
   Future<List<Verse>> getBookmarkedVerses();
   Future<List<Verse>> getVerses(int page, {String lang = 'en'});
 }

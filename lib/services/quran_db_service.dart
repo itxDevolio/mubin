@@ -32,6 +32,11 @@ class QuranDbService {
   Database? _pagesDb;
   Database? _wordsDb;
   final Map<int, List<QuranLine>> _pageLinesCache = {};
+  static final Map<int, int> _surahPageCache = {};
+
+  static int getStartingPageForSurahSync(int surahNumber) {
+    return _surahPageCache[surahNumber] ?? 1;
+  }
 
   Future<void> initDatabases() async {
     if (_pagesDb != null && _wordsDb != null) return;
@@ -57,6 +62,19 @@ class QuranDbService {
 
     _pagesDb = await openDatabase(pagesPath);
     _wordsDb = await openDatabase(wordsPath);
+
+    try {
+      final surahPages = await _pagesDb!.rawQuery(
+        'SELECT surah_number, MIN(page_number) as start_page FROM pages WHERE surah_number > 0 GROUP BY surah_number'
+      );
+      for (var row in surahPages) {
+        final sNum = int.tryParse(row['surah_number'].toString()) ?? 0;
+        final pNum = int.tryParse(row['start_page'].toString()) ?? 1;
+        if (sNum > 0) {
+          _surahPageCache[sNum] = pNum;
+        }
+      }
+    } catch (_) {}
   }
 
   Future<Map<String, dynamic>?> getWordInfo(int wordId) async {
@@ -295,6 +313,9 @@ class QuranDbService {
   }
 
   Future<int> getStartingPageForSurah(int surahNumber) async {
+    if (_surahPageCache.containsKey(surahNumber)) {
+      return _surahPageCache[surahNumber]!;
+    }
     await initDatabases();
     if (_pagesDb == null) return 1;
     try {

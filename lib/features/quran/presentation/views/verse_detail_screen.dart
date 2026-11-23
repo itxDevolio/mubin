@@ -67,7 +67,13 @@ class VerseDetailScreen extends ConsumerWidget {
                             ),
                           ),
                           builder: (context) => VerseBottomSheet(verse: verse),
-                        );
+                        ).then((_) {
+                          if (context.mounted) {
+                            ref
+                                .read(quranAudioPlayerControllerProvider.notifier)
+                                .stopAudio();
+                          }
+                        });
                       },
                   );
                 }).toList(),

@@ -87,6 +87,8 @@ class QuranHomeScreen extends ConsumerWidget {
                       MaterialPageRoute(
                         builder: (context) => MushafViewScreen(
                           initialPage: progress.lastReadPage,
+                          highlightVerseId: progress.lastReadVerseId,
+                          isBookmarkHighlight: false,
                         ),
                       ),
                     );

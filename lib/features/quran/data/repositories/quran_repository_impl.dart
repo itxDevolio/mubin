@@ -120,9 +120,11 @@ class QuranRepositoryImpl implements QuranRepository {
   }
 
   @override
-  Future<void> saveReadingProgress(int pageNumber) async {
+  Future<void> saveReadingProgress(int pageNumber, {int? verseId}) async {
+    final existing = await getReadingProgress();
     final progressModel = ReadingProgressModel(
       lastReadPage: pageNumber,
+      lastReadVerseId: verseId ?? existing.lastReadVerseId,
       updatedAt: DateTime.now(),
     );
     await localDataSource.cacheReadingProgress(progressModel);

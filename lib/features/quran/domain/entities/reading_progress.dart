@@ -1,12 +1,19 @@
 class ReadingProgress {
-  final int lastReadPage; // 1 se 604 tak konsa page aakhri dafa parha tha
-  final DateTime
-  updatedAt; // Kis waqt update hua (helpful for future Firebase sync logic)
+  final int lastReadPage;
+  final int? lastReadVerseId;
+  final DateTime updatedAt;
 
-  const ReadingProgress({required this.lastReadPage, required this.updatedAt});
+  const ReadingProgress({
+    required this.lastReadPage,
+    this.lastReadVerseId,
+    required this.updatedAt,
+  });
 
-  // Initial state ke liye ek helper constructor (jab user ne abhi tak parhna shuru na kiya ho)
   factory ReadingProgress.initial() {
-    return ReadingProgress(lastReadPage: 1, updatedAt: DateTime.now());
+    return ReadingProgress(
+      lastReadPage: 1,
+      lastReadVerseId: null,
+      updatedAt: DateTime.now(),
+    );
   }
 }

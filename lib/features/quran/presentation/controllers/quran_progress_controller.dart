@@ -20,13 +20,14 @@ class QuranProgressController
     }
   }
 
-  Future<void> updateProgress(int pageNumber) async {
+  Future<void> updateProgress(int pageNumber, {int? verseId}) async {
     try {
       final repo = ref.read(quranRepositoryProvider);
-      await repo.saveReadingProgress(pageNumber);
+      await repo.saveReadingProgress(pageNumber, verseId: verseId);
 
       final updatedProgress = ReadingProgress(
         lastReadPage: pageNumber,
+        lastReadVerseId: verseId ?? state.value?.lastReadVerseId,
         updatedAt: DateTime.now(),
       );
       state = AsyncValue.data(updatedProgress);

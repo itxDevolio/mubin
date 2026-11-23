@@ -182,9 +182,8 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
                             : rawRevelation);
 
                     return InkWell(
-                      onTap: () async {
-                        final startingPage = await QuranDbService().getStartingPageForSurah(surah.number);
-                        if (!context.mounted) return;
+                      onTap: () {
+                        final startingPage = QuranDbService.getStartingPageForSurahSync(surah.number);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -270,8 +269,7 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
                                         ? TextAlign.right
                                         : TextAlign.left,
                                     style: TextStyle(
-                                      fontFamily:
-                                          isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                                      fontFamily: textFont,
                                       fontSize: isRtl ? 11 : 12,
                                       color: isDark
                                           ? AppColors.textSecondaryDark

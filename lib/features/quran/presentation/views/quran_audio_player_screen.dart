@@ -36,6 +36,7 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
     final isUrdu = settings.language == 'ur';
     final isPashto = settings.language == 'ps';
     final isRtl = isUrdu || isPashto;
+    final String textFont = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -46,7 +47,7 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
         title: Text(
           isUrdu ? 'تلاوت آڈیو' : (isPashto ? 'د قرآن تلاوت آډیو' : 'Quran Audio'),
           style: TextStyle(
-            fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+            fontFamily: textFont,
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
             color: isDark
@@ -84,7 +85,7 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
               textAlign: isRtl ? TextAlign.right : TextAlign.left,
               cursorColor: AppColors.primaryTeal,
               style: TextStyle(
-                fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                fontFamily: textFont,
                 color: isDark
                     ? AppColors.textPrimaryDark
                     : AppColors.textPrimaryLight,
@@ -95,7 +96,7 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
                     ? 'سورت تلاش کریں'
                     : (isPashto ? 'سورت لټول' : 'Search Surah'),
                 hintStyle: TextStyle(
-                  fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                  fontFamily: textFont,
                   color: isDark
                       ? AppColors.textSecondaryDark
                       : AppColors.textSecondaryLight,
@@ -147,7 +148,7 @@ class _QuranAudioPlayerScreenState extends ConsumerState<QuranAudioPlayerScreen>
                           ? 'کوئی سورت نہیں ملی'
                           : (isPashto ? 'هیڅ سورت ونه موندل شو' : 'No Surah found'),
                       style: TextStyle(
-                        fontFamily: isRtl ? 'NotoNastaliqUrdu' : 'Poppins',
+                        fontFamily: textFont,
                         color: isDark
                             ? AppColors.textSecondaryDark
                             : AppColors.textSecondaryLight,

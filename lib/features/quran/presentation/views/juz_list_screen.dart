@@ -206,9 +206,14 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
                               QuranUtils.juzNamesArabic[juzNumber - 1];
 
                           return InkWell(
-                            onTap: () async {
-                              final calculatedPage = await QuranDbService().getStartingPageForJuz(juzNumber);
-                              if (!context.mounted) return;
+                            onTap: () {
+                              const juzPages = [
+                                1, 20, 38, 56, 74, 92, 110, 128, 146, 164,
+                                182, 200, 218, 236, 254, 272, 290, 308,
+                                326, 344, 362, 380, 398, 416, 434, 452,
+                                470, 488, 506, 524
+                              ];
+                              final calculatedPage = juzPages[juzNumber - 1];
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -264,44 +269,22 @@ class _JuzListScreenState extends ConsumerState<JuzListScreen> {
 
                                   // Text Content Area
                                   Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: isRtl
-                                          ? CrossAxisAlignment.end
-                                          : CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          isRtl
-                                              ? juzArabicName
-                                              : juzEnglishName,
-                                          style: TextStyle(
-                                            fontFamily: isRtl
-                                                ? 'Amiri'
-                                                : 'Poppins',
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: isRtl ? 20 : 16,
-                                            color: isDark
-                                                ? AppColors.textPrimaryDark
-                                                : AppColors.textPrimaryLight,
-                                            letterSpacing: isRtl ? 0 : 0.2,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          isUrdu
-                                              ? "پارہ $juzNumber"
-                                              : (isPashto
-                                                  ? "پاره $juzNumber"
-                                                  : "Juz $juzNumber"),
-                                          style: TextStyle(
-                                            fontFamily: textFont,
-                                            fontSize: isRtl ? 11 : 12,
-                                            color: isDark
-                                                ? AppColors.textSecondaryDark
-                                                : AppColors.textSecondaryLight,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
+                                    child: Text(
+                                      isRtl
+                                          ? juzArabicName
+                                          : juzEnglishName,
+                                      textAlign: isRtl ? TextAlign.right : TextAlign.left,
+                                      style: TextStyle(
+                                        fontFamily: isRtl
+                                            ? 'Amiri'
+                                            : 'Poppins',
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: isRtl ? 18 : 16,
+                                        color: isDark
+                                            ? AppColors.textPrimaryDark
+                                            : AppColors.textPrimaryLight,
+                                        letterSpacing: isRtl ? 0 : 0.2,
+                                      ),
                                     ),
                                   ),
 
