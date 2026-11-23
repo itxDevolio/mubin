@@ -78,9 +78,12 @@ class SettingsScreen extends ConsumerWidget {
                 title: 'App Language',
                 subtitle: settings.language == 'en'
                     ? 'English'
+                    : (settings.language == 'ur' ? 'اردو' : 'پښتو'),
+                subtitleFontFamily: settings.language == 'en'
+                    ? 'Poppins'
                     : (settings.language == 'ur'
-                          ? 'Urdu (اردو)'
-                          : 'Pashto (پشتو)'),
+                          ? 'NotoNastaliqUrdu'
+                          : 'Amiri'),
                 isDark: isDark,
                 onTap: () =>
                     _showLanguageDialog(context, ref, settings.language),
@@ -325,6 +328,7 @@ class SettingsScreen extends ConsumerWidget {
     required bool isDark,
     Widget? trailing,
     VoidCallback? onTap,
+    String? subtitleFontFamily,
   }) {
     return ListTile(
       onTap: onTap,
@@ -347,8 +351,12 @@ class SettingsScreen extends ConsumerWidget {
       ),
       subtitle: Text(
         subtitle,
-        style: _getStyle(
-          fontSize: 12,
+        style: TextStyle(
+          fontFamily: subtitleFontFamily ?? 'Poppins',
+          fontSize:
+              subtitleFontFamily != null && subtitleFontFamily != 'Poppins'
+              ? 14
+              : 12,
           color: isDark
               ? Colors.white.withValues(alpha: 0.4)
               : Colors.black.withValues(alpha: 0.45),
@@ -378,8 +386,6 @@ class SettingsScreen extends ConsumerWidget {
       endIndent: 20,
     );
   }
-
-
 
   void _showAboutDialog(BuildContext context, bool isDark) {
     showDialog(
@@ -536,6 +542,7 @@ class SettingsScreen extends ConsumerWidget {
                 ref,
                 title: 'English',
                 value: 'en',
+                fontFamily: 'Poppins',
                 isSelected: currentLang == 'en',
                 isDark: isDark,
                 onSelect: (val) => ref
@@ -546,8 +553,9 @@ class SettingsScreen extends ConsumerWidget {
               _buildOption(
                 context,
                 ref,
-                title: 'Urdu (اردو)',
+                title: 'اردو',
                 value: 'ur',
+                fontFamily: 'NotoNastaliqUrdu',
                 isSelected: currentLang == 'ur',
                 isDark: isDark,
                 onSelect: (val) => ref
@@ -558,8 +566,9 @@ class SettingsScreen extends ConsumerWidget {
               _buildOption(
                 context,
                 ref,
-                title: 'Pashto (پښتو)',
+                title: 'پښتو',
                 value: 'ps',
+                fontFamily: 'Amiri',
                 isSelected: currentLang == 'ps',
                 isDark: isDark,
                 onSelect: (val) => ref
@@ -758,6 +767,7 @@ class SettingsScreen extends ConsumerWidget {
     required bool isSelected,
     required bool isDark,
     required Function(String) onSelect,
+    String fontFamily = 'Poppins',
   }) {
     return InkWell(
       onTap: () {
@@ -787,7 +797,9 @@ class SettingsScreen extends ConsumerWidget {
           children: [
             Text(
               title,
-              style: _getStyle(
+              style: TextStyle(
+                fontFamily: fontFamily,
+                fontSize: fontFamily == 'Poppins' ? 14 : 15,
                 fontWeight: isSelected ? FontWeight.w900 : FontWeight.normal,
                 color: isDark ? Colors.white : Colors.black87,
               ),

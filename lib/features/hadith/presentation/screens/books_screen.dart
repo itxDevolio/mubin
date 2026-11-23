@@ -86,8 +86,8 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                           Text(
                             'د حدیثو پښتو ترجمه',
                             style: TextStyle(
-                              fontFamily: 'NotoNastaliqUrdu',
-                              fontSize: 15,
+                              fontFamily: 'Amiri',
+                              fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: isDark ? Colors.white : Colors.black87,
                             ),
@@ -96,8 +96,8 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                           Text(
                             'ژر به پوره شي',
                             style: TextStyle(
-                              fontFamily: 'NotoNastaliqUrdu',
-                              fontSize: 11.5,
+                              fontFamily: 'Amiri',
+                              fontSize: 13,
                               color: isDark ? Colors.white60 : Colors.black54,
                             ),
                           ),
@@ -128,9 +128,9 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                     'د حدیثو پښتو ترجمه لا روانه ده. مهرباني وکړئ د اوس لپاره په اردو یا انګلش کې ولولئ.',
                     textAlign: TextAlign.right,
                     style: TextStyle(
-                      fontFamily: 'NotoNastaliqUrdu',
-                      fontSize: 13.5,
-                      height: 1.85,
+                      fontFamily: 'Amiri',
+                      fontSize: 15,
+                      height: 1.6,
                       color: isDark
                           ? Colors.white.withValues(alpha: 0.92)
                           : Colors.black87,
@@ -196,8 +196,8 @@ class _BooksScreenState extends ConsumerState<BooksScreen> {
                         child: const Text(
                           'انګلش',
                           style: TextStyle(
-                            fontFamily: 'NotoNastaliqUrdu',
-                            fontSize: 13.5,
+                            fontFamily: 'Amiri',
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

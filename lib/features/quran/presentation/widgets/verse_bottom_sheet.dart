@@ -42,7 +42,9 @@ class _VerseBottomSheetState extends ConsumerState<VerseBottomSheet> {
     );
 
     final isPlayingThis =
-        audioState.isPlaying && (audioState.currentAudioUrl == verse.audioUrl || audioState.playingVerseId == verse.id);
+        audioState.isPlaying &&
+        (audioState.currentAudioUrl == verse.audioUrl ||
+            audioState.playingVerseId == verse.id);
     final isLoadingThis =
         audioState.isLoading && audioState.playingVerseId == verse.id;
 
@@ -180,7 +182,9 @@ class _VerseBottomSheetState extends ConsumerState<VerseBottomSheet> {
                 child: Text(
                   isUrdu ? 'ترجمہ' : (isPashto ? 'ترجمہ' : 'Translation:'),
                   style: TextStyle(
-                    fontFamily: isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins'),
+                    fontFamily: isPashto
+                        ? 'Amiri'
+                        : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins'),
                     fontWeight: FontWeight.bold,
                     fontSize: 13,
                     color: AppColors.primaryTeal,
@@ -220,7 +224,9 @@ class _VerseBottomSheetState extends ConsumerState<VerseBottomSheet> {
                   child: Text(
                     isUrdu || isPashto ? 'تفسیر:' : 'Tafseer:',
                     style: TextStyle(
-                      fontFamily: isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins'),
+                      fontFamily: isPashto
+                          ? 'Amiri'
+                          : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins'),
                       fontWeight: FontWeight.bold,
                       fontSize: 13,
                       color: AppColors.primaryTeal,
@@ -251,7 +257,9 @@ class _VerseBottomSheetState extends ConsumerState<VerseBottomSheet> {
                           : TextDirection.ltr,
                       style: isRtl
                           ? TextStyle(
-                              fontFamily: isPashto ? 'Amiri' : 'NotoNastaliqUrdu',
+                              fontFamily: isPashto
+                                  ? 'Amiri'
+                                  : 'NotoNastaliqUrdu',
                               fontSize: 13,
                               height: 2.2,
                               color: Theme.of(
@@ -307,14 +315,18 @@ class _VerseBottomSheetState extends ConsumerState<VerseBottomSheet> {
     final isUrdu = settings.language == 'ur';
     final isPashto = settings.language == 'ps';
     final isRtl = isUrdu || isPashto;
-    final String textFont = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
+    final String textFont = isPashto
+        ? 'Amiri'
+        : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final controller = TextEditingController();
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
+        backgroundColor: isDark
+            ? AppColors.surfaceDark
+            : AppColors.surfaceLight,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text(
           isUrdu
@@ -326,7 +338,9 @@ class _VerseBottomSheetState extends ConsumerState<VerseBottomSheet> {
             fontFamily: textFont,
             fontWeight: FontWeight.bold,
             fontSize: 18,
-            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+            color: isDark
+                ? AppColors.textPrimaryDark
+                : AppColors.textPrimaryLight,
           ),
         ),
         content: TextField(
@@ -336,7 +350,9 @@ class _VerseBottomSheetState extends ConsumerState<VerseBottomSheet> {
           cursorColor: AppColors.primaryTeal,
           style: TextStyle(
             fontFamily: textFont,
-            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+            color: isDark
+                ? AppColors.textPrimaryDark
+                : AppColors.textPrimaryLight,
             fontSize: 14,
           ),
           decoration: InputDecoration(
@@ -345,12 +361,19 @@ class _VerseBottomSheetState extends ConsumerState<VerseBottomSheet> {
                 : (isPashto ? 'عنوان ولیکئ' : 'Enter title'),
             hintStyle: TextStyle(
               fontFamily: textFont,
-              color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+              color: isDark
+                  ? AppColors.textSecondaryDark
+                  : AppColors.textSecondaryLight,
               fontSize: 14,
             ),
             filled: true,
-            fillColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            fillColor: isDark
+                ? AppColors.backgroundDark
+                : AppColors.backgroundLight,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 14,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
               borderSide: BorderSide.none,
@@ -377,12 +400,12 @@ class _VerseBottomSheetState extends ConsumerState<VerseBottomSheet> {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              isUrdu
-                  ? ' کینسل'
-                  : (isPashto ? 'کینسل' : 'Cancel'),
+              isUrdu ? ' کینسل' : (isPashto ? 'کینسل' : 'Cancel'),
               style: TextStyle(
                 fontFamily: textFont,
-                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                color: isDark
+                    ? AppColors.textSecondaryDark
+                    : AppColors.textSecondaryLight,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -409,9 +432,7 @@ class _VerseBottomSheetState extends ConsumerState<VerseBottomSheet> {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             ),
             child: Text(
-              isUrdu
-                  ? 'محفوظ کریں'
-                  : (isPashto ? 'خوندي کړئ' : 'Save'),
+              isUrdu ? 'محفوظ کریں' : (isPashto ? 'خوندي کړئ' : 'Save'),
               style: TextStyle(
                 fontFamily: textFont,
                 fontWeight: FontWeight.bold,
