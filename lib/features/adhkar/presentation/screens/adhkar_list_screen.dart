@@ -41,13 +41,11 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
     final bool isRtl = isUrdu || isPashto;
     final String fontFamily = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
 
-    return Directionality(
-      textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
-      child: PageView.builder(
-        controller: _pageController,
-        itemCount: widget.dhikrList.length,
-        onPageChanged: (index) => setState(() => _currentIndex = index),
-        itemBuilder: (context, index) {
+    return PageView.builder(
+      controller: _pageController,
+      itemCount: widget.dhikrList.length,
+      onPageChanged: (index) => setState(() => _currentIndex = index),
+      itemBuilder: (context, index) {
         final dhikr = widget.dhikrList[index];
         final currentCount = ref.watch(adhkarCountProvider(dhikr.id));
         final remaining = (dhikr.targetCount - currentCount).clamp(
@@ -126,140 +124,142 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
               ),
             ],
           ),
-          body: GestureDetector(
-            onTap: () {
-              if (remaining > 0) {
-                hapticFeedBack();
-                ref.read(adhkarCountProvider(dhikr.id).notifier).increment();
-                if (remaining == 1) {
-                  if (_currentIndex == widget.dhikrList.length - 1) {
-                    AdHelper.showInterstitialWithLoading(context, onContinue: () {}, onSkip: () {});
-                  } else if (_currentIndex < widget.dhikrList.length - 1) {
-                    Future.delayed(const Duration(milliseconds: 350), () {
-                      if (mounted) {
-                        _pageController.nextPage(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                        );
-                      }
-                    });
+          body: Directionality(
+            textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+            child: GestureDetector(
+              onTap: () {
+                if (remaining > 0) {
+                  hapticFeedBack();
+                  ref.read(adhkarCountProvider(dhikr.id).notifier).increment();
+                  if (remaining == 1) {
+                    if (_currentIndex == widget.dhikrList.length - 1) {
+                      AdHelper.showInterstitialWithLoading(context, onContinue: () {}, onSkip: () {});
+                    } else if (_currentIndex < widget.dhikrList.length - 1) {
+                      Future.delayed(const Duration(milliseconds: 350), () {
+                        if (mounted) {
+                          _pageController.nextPage(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        }
+                      });
+                    }
                   }
                 }
-              }
-            },
-            child: Center(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 20,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    if (shouldShowAd) ...[
-                      const AdBannerWidget(),
-                      const SizedBox(height: 20),
-                    ],
-                    if (fazilatText != null)
-                      _buildTag(fazilatText, isRtl, fontFamily),
+              },
+              child: Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 20,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      if (shouldShowAd) ...[
+                        const AdBannerWidget(),
+                        const SizedBox(height: 20),
+                      ],
+                      if (fazilatText != null)
+                        _buildTag(fazilatText, isRtl, fontFamily),
 
-                    const SizedBox(height: 40),
+                      const SizedBox(height: 40),
 
-                    // Arabic Text
-                    Text(
-                      dhikr.arabic,
-                      style: const TextStyle(
-                        fontFamily: 'Amiri',
-                        fontSize: 22,
-                        height: 2,
-                        color: AppColors.primaryTeal,
-                      ),
-                      textAlign: TextAlign.center,
-                      textDirection: TextDirection.rtl,
-                    ),
-
-                    if (showTranslation) ...[
-                      const SizedBox(height: 30),
-
-                      // Translation Text
+                      // Arabic Text
                       Text(
-                        translationText,
-                        style: isRtl
-                            ? TextStyle(
-                                fontFamily: fontFamily,
-                                fontSize: 13.5,
-                                color: isDark
-                                    ? Colors.white70
-                                    : const Color(0xFF555555),
-                                height: 2.2,
-                              )
-                            : TextStyle(
-                                fontSize: 14,
-                                color: isDark
-                                    ? Colors.white60
-                                    : const Color(0xFF757575),
-                              ),
-                        textAlign: isRtl ? TextAlign.right : TextAlign.center,
-                        textDirection: isRtl
-                            ? TextDirection.rtl
-                            : TextDirection.ltr,
-                      ),
-                    ],
-
-                    const SizedBox(height: 50),
-
-                    // Centered Circle for Count/Tick
-                    Container(
-                      height: 100,
-                      width: 100,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: isCompleted
-                            ? AppColors.primaryTeal.withValues(alpha: 0.1)
-                            : Colors.transparent,
-                        border: Border.all(
-                          color: AppColors.primaryTeal.withValues(alpha: 0.3),
-                          width: 1.5,
-                        ),
-                      ),
-                      child: isCompleted
-                          ? const Icon(
-                              Icons.check,
-                              size: 40,
-                              color: AppColors.primaryTeal,
-                            )
-                          : Text(
-                              "$remaining",
-                              style: const TextStyle(
-                                fontSize: 32,
-                                fontWeight: FontWeight.w300,
-                                color: AppColors.primaryTeal,
-                              ),
-                            ),
-                    ),
-
-                    const SizedBox(height: 50),
-
-                    if (dhikr.reference != null)
-                      Text(
-                        dhikr.reference!,
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey.withValues(alpha: 0.5),
-                          letterSpacing: 1.2,
+                        dhikr.arabic,
+                        style: const TextStyle(
+                          fontFamily: 'Amiri',
+                          fontSize: 22,
+                          height: 2,
+                          color: AppColors.primaryTeal,
                         ),
                         textAlign: TextAlign.center,
+                        textDirection: TextDirection.rtl,
                       ),
-                  ],
+
+                      if (showTranslation) ...[
+                        const SizedBox(height: 30),
+
+                        // Translation Text
+                        Text(
+                          translationText,
+                          style: isRtl
+                              ? TextStyle(
+                                  fontFamily: fontFamily,
+                                  fontSize: 13.5,
+                                  color: isDark
+                                      ? Colors.white70
+                                      : const Color(0xFF555555),
+                                  height: 2.2,
+                                )
+                              : TextStyle(
+                                  fontSize: 14,
+                                  color: isDark
+                                      ? Colors.white60
+                                      : const Color(0xFF757575),
+                                ),
+                          textAlign: isRtl ? TextAlign.right : TextAlign.center,
+                          textDirection: isRtl
+                              ? TextDirection.rtl
+                              : TextDirection.ltr,
+                        ),
+                      ],
+
+                      const SizedBox(height: 50),
+
+                      // Centered Circle for Count/Tick
+                      Container(
+                        height: 100,
+                        width: 100,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: isCompleted
+                              ? AppColors.primaryTeal.withValues(alpha: 0.1)
+                              : Colors.transparent,
+                          border: Border.all(
+                            color: AppColors.primaryTeal.withValues(alpha: 0.3),
+                            width: 1.5,
+                          ),
+                        ),
+                        child: isCompleted
+                            ? const Icon(
+                                Icons.check,
+                                size: 40,
+                                color: AppColors.primaryTeal,
+                              )
+                            : Text(
+                                "$remaining",
+                                style: const TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.w300,
+                                  color: AppColors.primaryTeal,
+                                ),
+                              ),
+                      ),
+
+                      const SizedBox(height: 50),
+
+                      if (dhikr.reference != null)
+                        Text(
+                          dhikr.reference!,
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey.withValues(alpha: 0.5),
+                            letterSpacing: 1.2,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
         );
       },
-    ),
     );
   }
 
