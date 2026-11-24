@@ -41,92 +41,99 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
     final bool isRtl = isUrdu || isPashto;
     final String fontFamily = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
 
-    return PageView.builder(
-      controller: _pageController,
-      itemCount: widget.dhikrList.length,
-      onPageChanged: (index) => setState(() => _currentIndex = index),
-      itemBuilder: (context, index) {
-        final dhikr = widget.dhikrList[index];
-        final currentCount = ref.watch(adhkarCountProvider(dhikr.id));
-        final remaining = (dhikr.targetCount - currentCount).clamp(
-          0,
-          dhikr.targetCount,
-        );
-        final isCompleted = remaining == 0;
-        final translationText = isUrdu
-            ? dhikr.urdu
-            : (isPashto ? (dhikr.pashto ?? dhikr.english) : dhikr.english);
-        final bool showTranslation = translationText.isNotEmpty;
+    return Directionality(
+      textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+      child: PageView.builder(
+        controller: _pageController,
+        itemCount: widget.dhikrList.length,
+        onPageChanged: (index) => setState(() => _currentIndex = index),
+        itemBuilder: (context, index) {
+          final dhikr = widget.dhikrList[index];
+          final currentCount = ref.watch(adhkarCountProvider(dhikr.id));
+          final remaining = (dhikr.targetCount - currentCount).clamp(
+            0,
+            dhikr.targetCount,
+          );
+          final isCompleted = remaining == 0;
+          final translationText = isUrdu
+              ? dhikr.urdu
+              : (isPashto ? (dhikr.pashto ?? dhikr.english) : dhikr.english);
+          final bool showTranslation = translationText.isNotEmpty;
 
-        final bool isMorningEvening =
-            widget.title.contains('Morning') ||
-            widget.title.contains('Evening') ||
-            widget.title.contains('صبح') ||
-            widget.title.contains('شام') ||
-            widget.title.contains('سهار') ||
-            widget.title.contains('ماښام');
-        final bool isSleeping =
-            widget.title.contains('Sleeping') ||
-            widget.title.contains('سونے') ||
-            widget.title.contains('خوب');
+          final bool isMorningEvening =
+              widget.title.contains('Morning') ||
+              widget.title.contains('Evening') ||
+              widget.title.contains('صبح') ||
+              widget.title.contains('شام') ||
+              widget.title.contains('سهار') ||
+              widget.title.contains('ماښام');
+          final bool isSleeping =
+              widget.title.contains('Sleeping') ||
+              widget.title.contains('سونے') ||
+              widget.title.contains('خوب');
 
-        // 1-based positions: 5, 10, 15, 17 for Morning/Evening; 5, 10 for Sleeping
-        final bool shouldShowAd =
-            (isMorningEvening && [5, 10, 15, 17].contains(index + 1)) ||
-            (isSleeping && [5, 10].contains(index + 1));
+          // 1-based positions: 5, 10, 15, 17 for Morning/Evening; 5, 10 for Sleeping
+          final bool shouldShowAd =
+              (isMorningEvening && [5, 10, 15, 17].contains(index + 1)) ||
+              (isSleeping && [5, 10].contains(index + 1));
 
-        final fazilatText = isUrdu
-            ? dhikr.fazilatUrdu
-            : (isPashto ? (dhikr.fazilatPashto ?? dhikr.fazilatEnglish) : dhikr.fazilatEnglish);
+          final fazilatText = isUrdu
+              ? dhikr.fazilatUrdu
+              : (isPashto ? (dhikr.fazilatPashto ?? dhikr.fazilatEnglish) : dhikr.fazilatEnglish);
 
-        return Scaffold(
-          backgroundColor: isDark
-              ? AppColors.backgroundDark
-              : AppColors.backgroundLight,
-          appBar: AppBar(
-            title: Text(
-              widget.title,
-              style: TextStyle(
-                fontSize: isRtl ? 14 : 16,
-                fontWeight: FontWeight.w600,
-                fontFamily: fontFamily,
-                color: isDark
-                    ? AppColors.textPrimaryDark
-                    : AppColors.textPrimaryLight,
-              ),
-            ),
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            centerTitle: true,
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back_ios_new,
-                size: 20,
-                color: isDark
-                    ? AppColors.textPrimaryDark
-                    : AppColors.textPrimaryLight,
-              ),
-              onPressed: () => Navigator.pop(context),
-            ),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Center(
-                  child: Text(
-                    "${_currentIndex + 1}/${widget.dhikrList.length}",
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primaryTeal,
+          return Scaffold(
+            backgroundColor: isDark
+                ? AppColors.backgroundDark
+                : AppColors.backgroundLight,
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(kToolbarHeight),
+              child: Directionality(
+                textDirection: TextDirection.ltr,
+                child: AppBar(
+                  title: Text(
+                    widget.title,
+                    textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+                    style: TextStyle(
+                      fontSize: isRtl ? 14 : 16,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: fontFamily,
+                      color: isDark
+                          ? AppColors.textPrimaryDark
+                          : AppColors.textPrimaryLight,
                     ),
                   ),
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  centerTitle: true,
+                  leading: IconButton(
+                    icon: Icon(
+                      Icons.arrow_back_ios_new,
+                      size: 20,
+                      color: isDark
+                          ? AppColors.textPrimaryDark
+                          : AppColors.textPrimaryLight,
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  actions: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Center(
+                        child: Text(
+                          "${_currentIndex + 1}/${widget.dhikrList.length}",
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primaryTeal,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-          body: Directionality(
-            textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
-            child: GestureDetector(
+            ),
+            body: GestureDetector(
               onTap: () {
                 if (remaining > 0) {
                   hapticFeedBack();
@@ -257,9 +264,9 @@ class _AdhkarListScreenState extends ConsumerState<AdhkarListScreen> {
                 ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
