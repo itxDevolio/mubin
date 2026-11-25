@@ -82,7 +82,8 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
       int vNum = widget.highlightVerseId! % 1000;
       page = await QuranDbService().getPageForVerse(sNum, vNum);
     } else if (widget.surahNumber != null) {
-      page = await QuranDbService().getStartingPageForSurah(widget.surahNumber!);
+      page =
+      await QuranDbService().getStartingPageForSurah(widget.surahNumber!);
     }
 
     if (mounted) {
@@ -161,12 +162,10 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
     });
   }
 
-  List<InlineSpan> _buildWordSpans(
-    String rawText,
-    TextStyle baseStyle,
-    VoidCallback onTap,
-    VoidCallback onLongPress,
-  ) {
+  List<InlineSpan> _buildWordSpans(String rawText,
+      TextStyle baseStyle,
+      VoidCallback onTap,
+      VoidCallback onLongPress,) {
     final cleaned = fixLamAlif(rawText);
     return [
       WidgetSpan(
@@ -186,11 +185,9 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
     ];
   }
 
-  Future<void> _onWordLongPressed(
-    int surah,
-    int ayah,
-    Map<String, dynamic> word,
-  ) async {
+  Future<void> _onWordLongPressed(int surah,
+      int ayah,
+      Map<String, dynamic> word,) async {
     final verseId = surah * 1000 + ayah;
     setState(() {
       _selectedSurah = surah;
@@ -201,11 +198,9 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
         .updateProgress(_currentPage, verseId: verseId);
   }
 
-  Future<void> _onWordTapped(
-    int surah,
-    int ayah,
-    Map<String, dynamic> word,
-  ) async {
+  Future<void> _onWordTapped(int surah,
+      int ayah,
+      Map<String, dynamic> word,) async {
     setState(() {
       _selectedSurah = surah;
       _selectedAyah = ayah;
@@ -235,12 +230,12 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
           ? verseArabicText
           : (word['text']?.toString() ?? ''),
       translation:
-          translation ??
+      translation ??
           (isUrdu
               ? 'ترجمہ دستیاب نہیں'
               : (isPashto
-                    ? 'ترجمه و نه موندل شوه'
-                    : 'Translation not available')),
+              ? 'ترجمه و نه موندل شوه'
+              : 'Translation not available')),
       audioUrl: audioUrl,
     );
 
@@ -249,7 +244,9 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Theme.of(context).cardColor,
+      backgroundColor: Theme
+          .of(context)
+          .cardColor,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -267,7 +264,9 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = Theme
+        .of(context)
+        .brightness == Brightness.dark;
 
     if (_isLoadingPage) {
       return Scaffold(
@@ -349,15 +348,16 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
             }
 
             final surahNameLine = lines.firstWhere(
-              (l) => l.lineType == 'surah_name',
-              orElse: () => QuranLine(
-                pageNumber: pageNumber,
-                lineNumber: 0,
-                lineType: '',
-                isCentered: false,
-                text: '',
-                words: [],
-              ),
+                  (l) => l.lineType == 'surah_name',
+              orElse: () =>
+                  QuranLine(
+                    pageNumber: pageNumber,
+                    lineNumber: 0,
+                    lineType: '',
+                    isCentered: false,
+                    text: '',
+                    words: [],
+                  ),
             );
             final bool hasNewSurah = surahNameLine.lineType == 'surah_name';
             final int? startingSurahNum = surahNameLine.surahNumber;
@@ -398,17 +398,20 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
                   Expanded(
                     child: Column(
                       mainAxisAlignment:
-                          (pageNumber == 1 || pageNumber == 2)
+                      (pageNumber == 1 || pageNumber == 2)
                           ? MainAxisAlignment.center
                           : MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: lines.asMap().entries.map((entry) {
+                      children: lines
+                          .asMap()
+                          .entries
+                          .map((entry) {
                         final idx = entry.key;
                         final line = entry.value;
                         final prevLine = idx > 0 ? lines[idx - 1] : null;
                         final isBasmallahAfterSurahName =
                             line.lineType == 'basmallah' &&
-                            prevLine?.lineType == 'surah_name';
+                                prevLine?.lineType == 'surah_name';
 
                         if (isBasmallahAfterSurahName) {
                           return const SizedBox.shrink();
@@ -437,13 +440,12 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
     );
   }
 
-  Widget _buildRealMushafTopHeader(
-    int pageNumber,
-    int juzNum,
-    bool isDark, {
-    bool hasNewSurah = false,
-    int? startingSurah,
-  }) {
+  Widget _buildRealMushafTopHeader(int pageNumber,
+      int juzNum,
+      bool isDark, {
+        bool hasNewSurah = false,
+        int? startingSurah,
+      }) {
     String surahTitle = '';
     try {
       final pageData = quran.getPageData(pageNumber);
@@ -505,7 +507,9 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
       final sNum = line.surahNumber ?? 1;
       final surahName = quran.getSurahNameArabic(sNum);
       final verseCount = quran.getVerseCount(sNum);
-      final place = quran.getPlaceOfRevelation(sNum) == 'Makkah' ? 'مكية' : 'مدنية';
+      final place = quran.getPlaceOfRevelation(sNum) == 'Makkah'
+          ? 'مكية'
+          : 'مدنية';
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -615,10 +619,12 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
               final isSelected =
                   _selectedSurah == wordSurah && _selectedAyah == wordAyah;
               final isHighlighted =
-                  widget.highlightVerseId != null && widget.highlightVerseId == wordVerseId;
+                  widget.highlightVerseId != null &&
+                      widget.highlightVerseId == wordVerseId;
 
               Color textColor;
-              if (isSelected || (isHighlighted && !widget.isBookmarkHighlight)) {
+              if (isSelected ||
+                  (isHighlighted && !widget.isBookmarkHighlight)) {
                 textColor = AppColors.accentGold;
               } else if (isHighlighted && widget.isBookmarkHighlight) {
                 textColor = AppColors.primaryTeal;
@@ -637,8 +643,8 @@ class _MushafViewScreenState extends ConsumerState<MushafViewScreen> {
               return _buildWordSpans(
                 word['text']?.toString() ?? '',
                 wordStyle,
-                () => _onWordTapped(wordSurah, wordAyah, word),
-                () => _onWordLongPressed(wordSurah, wordAyah, word),
+                    () => _onWordTapped(wordSurah, wordAyah, word),
+                    () => _onWordLongPressed(wordSurah, wordAyah, word),
               );
             }).toList(),
           ),

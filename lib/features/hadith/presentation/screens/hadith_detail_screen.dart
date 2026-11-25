@@ -197,7 +197,7 @@ class HadithDetailScreen extends ConsumerWidget {
                         // Translation Section
                         if (isRtl && hadith.urduText.isNotEmpty)
                           _buildTranslationSection(
-                            title: isPashto ? "ژباړه" : "ترجمہ",
+                            title: isPashto ? "ترجمہ" : "ترجمہ",
                             content: hadith.urduText,
                             fontFamily: fontFamily,
                             isRtl: true,

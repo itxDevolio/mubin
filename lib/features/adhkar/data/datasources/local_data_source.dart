@@ -12,7 +12,7 @@ class AdhkarLocalDataSource {
     final box = await _getBox();
     final data = box.get(id);
     final today = DateTime.now().toIso8601String().split('T')[0];
-    
+
     if (data != null) {
       final map = Map<String, dynamic>.from(data);
       map['count'] = newCount;
@@ -32,18 +32,18 @@ class AdhkarLocalDataSource {
     final box = await _getBox();
     final data = box.get(id);
     if (data == null) return null;
-    
+
     final map = Map<String, dynamic>.from(data);
     final today = DateTime.now().toIso8601String().split('T')[0];
     final lastUpdated = map['lastUpdated'];
-    
+
     // If it was updated on a different day, reset the count in memory (and save it)
     if (lastUpdated != today) {
       map['count'] = 0;
       map['lastUpdated'] = today;
       await box.put(id, map);
     }
-    
+
     return map;
   }
 }
