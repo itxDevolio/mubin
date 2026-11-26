@@ -16,35 +16,37 @@ class ContactUsScreen extends ConsumerWidget {
     final bool isUrdu = lang == 'ur';
     final bool isPashto = lang == 'ps';
     final bool isRtl = isUrdu || isPashto;
+    final String fontFamily = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
 
-    final String appBarTitle = 'Contact Us & Support';
+    final String appBarTitle = isUrdu
+        ? 'رابطہ اور سپورٹ'
+        : (isPashto ? 'موږ سره اړیکه او مرسته' : 'Contact Us & Support');
 
-    final String headerTitle = 'Get in Touch With Us';
+    final String headerTitle = isUrdu
+        ? 'ہم سے رابطہ کریں'
+        : (isPashto ? 'مونږ سره اړیکه ونیسئ' : 'Get in Touch With Us');
 
     final String description = isUrdu
-        ? 'ہم نے پوری کوشش کی ہے کہ         MUBIN       ایپ کو بگ فری اور بہترین رکھا جائے تاکہ آپ کی عبادت میں کوئی خلل نہ آئے۔ لیکن اگر آپ کو کوئی بھی مسئلہ، بگ یا خامی نظر آئے تو  بلا جھجھک رابطہ کریں!'
+        ? 'ہم نے پوری کوشش کی ہے کہ مبین ایپ کو بہترین اور بگ فری رکھا جائے تاکہ آپ کی عبادت میں کوئی خلل نہ آئے۔ اگر آپ کو کوئی بھی مسئلہ یا خامی نظر آئے تو بلا جھجھک رابطہ کریں!'
         : (isPashto
-              ? 'موږ خپله پوره هڅه کړې چې         MUBIN       اپلیکیشن له بګونو پاک او ستاسو د عبادت لپاره غوره وساتو. که څه هم، که تاسو کومه ستونزه، بګ یا نیمګړتیا ووینئ، مهرباني وکړئ موږ خبر کړئ. '
-              : 'We have tried our best to keep         MUBIN       bug-free and optimized for your daily spiritual needs. However, if you notice any issues, bugs feel free to contact us anytime!');
+              ? 'موږ پوره هڅه کړې چې مبین اپلیکیشن غوره او له بګونو پاک وي تر څو ستاسو عبادت په اسانۍ ترسره شي. که تاسو ته کومه ستونزه یا نیمګړتیا په نظر راشي، نو مهرباني وکړئ موږ ته خبر راکړئ!'
+              : 'We have tried our best to keep Mubin bug-free and optimized for your daily spiritual needs. However, if you notice any issues or bugs, feel free to contact us anytime!');
 
     final String whatsappTitle = isUrdu
-        ? 'واٹس ایپ '
-        : (isPashto ? 'واټس اپ ' : 'WhatsApp ');
+        ? 'واٹس ایپ'
+        : (isPashto ? 'واټس اپ' : 'WhatsApp');
 
-    final String whatsappSubtitle = isUrdu
-        ? '+923003209427 '
-        : (isPashto ? '+923003209427 ' : '+923003209427 ');
+    final String whatsappSubtitle = '+92 300 3209427';
 
     final String emailTitle = isUrdu
-        ? 'ای میل '
-        : (isPashto ? 'ای میل ' : 'Email ');
+        ? 'ای میل سپورٹ'
+        : (isPashto ? 'برېښنالیک ملاتړ' : 'Email Support');
 
-    final String emailSubtitle = isUrdu
-        ? 'devolio.office@gmail.com '
-        : (isPashto ? 'devolio.office@gmail.com' : 'devolio.office@gmail.com ');
+    final String emailSubtitle = 'devolio.office@gmail.com';
 
-    final String footerText =
-        'Devolio Software Solutions — Building Modern Apps & Web Platforms';
+    final String footerText = isUrdu
+        ? 'امت مسلمہ کے لیے محبت کے ساتھ تیار کیا گیا'
+        : (isPashto ? 'د امت مسلمه لپاره په مینه جوړ شوی' : 'Developed with ❤️ for the Muslim Ummah');
 
     return Directionality(
       textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
@@ -55,10 +57,10 @@ class ContactUsScreen extends ConsumerWidget {
         appBar: AppBar(
           title: Text(
             appBarTitle,
-            style: const TextStyle(
-              fontFamily: 'Poppins',
+            style: TextStyle(
+              fontFamily: fontFamily,
               fontWeight: FontWeight.w600,
-              fontSize: 18,
+              fontSize: isRtl ? 16 : 18,
             ),
           ),
           centerTitle: true,
@@ -91,7 +93,7 @@ class ContactUsScreen extends ConsumerWidget {
                 ],
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: isRtl ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                 children: [
                   Container(
                     padding: const EdgeInsets.all(12),
@@ -108,9 +110,10 @@ class ContactUsScreen extends ConsumerWidget {
                   const SizedBox(height: 18),
                   Text(
                     headerTitle,
-                    style: const TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 20,
+                    textAlign: isRtl ? TextAlign.right : TextAlign.left,
+                    style: TextStyle(
+                      fontFamily: fontFamily,
+                      fontSize: isRtl ? 18 : 20,
                       fontWeight: FontWeight.w900,
                       color: Colors.white,
                     ),
@@ -118,12 +121,11 @@ class ContactUsScreen extends ConsumerWidget {
                   const SizedBox(height: 10),
                   Text(
                     description,
+                    textAlign: isRtl ? TextAlign.right : TextAlign.left,
                     style: TextStyle(
-                      fontFamily: isUrdu || isPashto
-                          ? 'NotoNastaliqUrdu'
-                          : 'Poppins',
+                      fontFamily: fontFamily,
                       fontSize: isUrdu || isPashto ? 13 : 13.5,
-                      height: 1.8,
+                      height: 1.9,
                       color: Colors.white.withValues(alpha: 0.95),
                     ),
                   ),
@@ -159,6 +161,7 @@ class ContactUsScreen extends ConsumerWidget {
                   ],
                 ),
                 child: Row(
+                  textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
                   children: [
                     Container(
                       padding: const EdgeInsets.all(12),
@@ -175,12 +178,12 @@ class ContactUsScreen extends ConsumerWidget {
                     const SizedBox(width: 16),
                     Expanded(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: isRtl ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                         children: [
                           Text(
                             whatsappTitle,
                             style: TextStyle(
-                              fontFamily: 'Poppins',
+                              fontFamily: fontFamily,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: isDark ? Colors.white : Colors.black87,
@@ -198,8 +201,8 @@ class ContactUsScreen extends ConsumerWidget {
                         ],
                       ),
                     ),
-                    const Icon(
-                      Icons.arrow_forward_ios_rounded,
+                    Icon(
+                      isRtl ? Icons.arrow_back_ios_rounded : Icons.arrow_forward_ios_rounded,
                       size: 16,
                       color: Colors.grey,
                     ),
@@ -236,6 +239,7 @@ class ContactUsScreen extends ConsumerWidget {
                   ],
                 ),
                 child: Row(
+                  textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
                   children: [
                     Container(
                       padding: const EdgeInsets.all(12),
@@ -252,12 +256,12 @@ class ContactUsScreen extends ConsumerWidget {
                     const SizedBox(width: 16),
                     Expanded(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: isRtl ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                         children: [
                           Text(
                             emailTitle,
                             style: TextStyle(
-                              fontFamily: 'Poppins',
+                              fontFamily: fontFamily,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: isDark ? Colors.white : Colors.black87,
@@ -275,8 +279,8 @@ class ContactUsScreen extends ConsumerWidget {
                         ],
                       ),
                     ),
-                    const Icon(
-                      Icons.arrow_forward_ios_rounded,
+                    Icon(
+                      isRtl ? Icons.arrow_back_ios_rounded : Icons.arrow_forward_ios_rounded,
                       size: 16,
                       color: Colors.grey,
                     ),
@@ -289,13 +293,13 @@ class ContactUsScreen extends ConsumerWidget {
             // Footer branding
             Center(
               child: Opacity(
-                opacity: 0.5,
+                opacity: 0.6,
                 child: Text(
                   footerText,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 11,
+                  style: TextStyle(
+                    fontFamily: fontFamily,
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
