@@ -6,13 +6,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../app_colors.dart';
 
 class AdHelper {
-  static const String _admobInterstitialAndroid = 'ca-app-pub-3940256099942544/1033173712';
-  static const String _admobInterstitialIos = 'ca-app-pub-3940256099942544/4411468910';
+  static const String _admobInterstitialAndroid =
+      'ca-app-pub-3940256099942544/1033173712';
+  static const String _admobInterstitialIos =
+      'ca-app-pub-3940256099942544/4411468910';
 
   static String get interstitialAdUnitId =>
       defaultTargetPlatform == TargetPlatform.iOS
-          ? _admobInterstitialIos
-          : _admobInterstitialAndroid;
+      ? _admobInterstitialIos
+      : _admobInterstitialAndroid;
 
   // Show Interstitial ad with a 7-second loading dialog (auto-continue if not loaded)
   static void showInterstitialWithLoading(
@@ -34,7 +36,9 @@ class AdHelper {
         return StatefulBuilder(
           builder: (context, setStateModal) {
             if (countdownTimer == null) {
-              countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+              countdownTimer = Timer.periodic(const Duration(seconds: 1), (
+                timer,
+              ) {
                 if (secondsRemaining > 1) {
                   secondsRemaining--;
                   if (context.mounted) {
@@ -44,7 +48,8 @@ class AdHelper {
                   timer.cancel();
                   if (!adHandled) {
                     adHandled = true;
-                    if (dialogContext != null && Navigator.canPop(dialogContext!)) {
+                    if (dialogContext != null &&
+                        Navigator.canPop(dialogContext!)) {
                       Navigator.pop(dialogContext!);
                     }
                     interstitialAd?.dispose();
@@ -56,10 +61,15 @@ class AdHelper {
 
             final isDark = Theme.of(context).brightness == Brightness.dark;
             return AlertDialog(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
               backgroundColor: isDark ? AppColors.surfaceDark : Colors.white,
               content: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 8.0),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 24.0,
+                  horizontal: 8.0,
+                ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -120,10 +130,11 @@ class AdHelper {
               ad.dispose();
               onContinue();
             },
-            onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
-              ad.dispose();
-              onContinue();
-            },
+            onAdFailedToShowFullScreenContent:
+                (InterstitialAd ad, AdError error) {
+                  ad.dispose();
+                  onContinue();
+                },
           );
           ad.show();
         },
@@ -165,7 +176,11 @@ class AdHelper {
       if (surahOpens % 5 == 0 && dailyCount < 5) {
         dailyCount++;
         await prefs.setInt('surah_juz_ad_count', dailyCount);
-        showInterstitialWithLoading(context, onContinue: onContinue, onSkip: onSkip);
+        showInterstitialWithLoading(
+          context,
+          onContinue: onContinue,
+          onSkip: onSkip,
+        );
         return;
       }
     } catch (e) {
@@ -187,7 +202,11 @@ class AdHelper {
       await prefs.setInt('khatam_open_count', khatamOpens);
 
       if (khatamOpens % 5 == 0) {
-        showInterstitialWithLoading(context, onContinue: onContinue, onSkip: onSkip);
+        showInterstitialWithLoading(
+          context,
+          onContinue: onContinue,
+          onSkip: onSkip,
+        );
         return;
       }
     } catch (e) {
@@ -209,7 +228,11 @@ class AdHelper {
       await prefs.setInt('qibla_open_count', qiblaOpens);
 
       if (qiblaOpens % 5 == 0) {
-        showInterstitialWithLoading(context, onContinue: onContinue, onSkip: onSkip);
+        showInterstitialWithLoading(
+          context,
+          onContinue: onContinue,
+          onSkip: onSkip,
+        );
         return;
       }
     } catch (e) {
@@ -231,7 +254,11 @@ class AdHelper {
       await prefs.setInt('guide_open_count', guideOpens);
 
       if (guideOpens % 3 == 0) {
-        showInterstitialWithLoading(context, onContinue: onContinue, onSkip: onSkip);
+        showInterstitialWithLoading(
+          context,
+          onContinue: onContinue,
+          onSkip: onSkip,
+        );
         return;
       }
     } catch (e) {

@@ -16,7 +16,9 @@ class ContactUsScreen extends ConsumerWidget {
     final bool isUrdu = lang == 'ur';
     final bool isPashto = lang == 'ps';
     final bool isRtl = isUrdu || isPashto;
-    final String fontFamily = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
+    final String fontFamily = isPashto
+        ? 'Amiri'
+        : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
 
     final String appBarTitle = isUrdu
         ? 'رابطہ اور سپورٹ'
@@ -29,7 +31,7 @@ class ContactUsScreen extends ConsumerWidget {
     final String description = isUrdu
         ? 'ہم نے پوری کوشش کی ہے کہ مبین ایپ کو بہترین اور بگ فری رکھا جائے تاکہ آپ کی عبادت میں کوئی خلل نہ آئے۔ اگر آپ کو کوئی بھی مسئلہ یا خامی نظر آئے تو بلا جھجھک رابطہ کریں!'
         : (isPashto
-              ? 'موږ پوره هڅه کړې چې مبین اپلیکیشن غوره او له بګونو پاک وي تر څو ستاسو عبادت په اسانۍ ترسره شي. که تاسو ته کومه ستونزه یا نیمګړتیا په نظر راشي، نو مهرباني وکړئ موږ ته خبر راکړئ!'
+              ? 'موږ پوره کوشش کړې چې مبین اپلیکیشن غوره او له بگز نہ پاک وي تر څو ستاسو عبادت په اسانۍ ترسره شي. که تاسو ته کومه ستونزه یا نیمګړتیا په نظر راشي، نو مهرباني وکړئ موږ ته خبر راکړئ!'
               : 'We have tried our best to keep Mubin bug-free and optimized for your daily spiritual needs. However, if you notice any issues or bugs, feel free to contact us anytime!');
 
     final String whatsappTitle = isUrdu
@@ -39,14 +41,16 @@ class ContactUsScreen extends ConsumerWidget {
     final String whatsappSubtitle = '+92 300 3209427';
 
     final String emailTitle = isUrdu
-        ? 'ای میل سپورٹ'
-        : (isPashto ? 'برېښنالیک ملاتړ' : 'Email Support');
+        ? 'ای میل '
+        : (isPashto ? 'ای میل  ' : 'Email ');
 
     final String emailSubtitle = 'devolio.office@gmail.com';
 
     final String footerText = isUrdu
-        ? 'امت مسلمہ کے لیے محبت کے ساتھ تیار کیا گیا'
-        : (isPashto ? 'د امت مسلمه لپاره په مینه جوړ شوی' : 'Developed with ❤️ for the Muslim Ummah');
+        ? 'امت مسلمہ کے لیے ❤️ کے ساتھ تیار کیا گیا'
+        : (isPashto
+              ? 'د امت مسلمه لپاره په ❤️ جوړ شوی'
+              : 'Developed with ❤️ for the Muslim Ummah');
 
     return Scaffold(
       backgroundColor: isDark
@@ -68,7 +72,9 @@ class ContactUsScreen extends ConsumerWidget {
           icon: Icon(
             Icons.arrow_back_ios_new,
             size: 20,
-            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+            color: isDark
+                ? AppColors.textPrimaryDark
+                : AppColors.textPrimaryLight,
           ),
           onPressed: () => Navigator.pop(context),
         ),
@@ -99,10 +105,14 @@ class ContactUsScreen extends ConsumerWidget {
               ],
             ),
             child: Column(
-              crossAxisAlignment: isRtl ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              crossAxisAlignment: isRtl
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.start,
               children: [
                 Align(
-                  alignment: isRtl ? Alignment.centerRight : Alignment.centerLeft,
+                  alignment: isRtl
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
@@ -215,11 +225,6 @@ class ContactUsScreen extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    const Icon(
-                      Icons.arrow_back_ios_rounded,
-                      size: 16,
-                      color: Colors.grey,
-                    ),
                   ] else ...[
                     // Icon on the left for English
                     Container(
@@ -259,11 +264,6 @@ class ContactUsScreen extends ConsumerWidget {
                           ),
                         ],
                       ),
-                    ),
-                    const Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      size: 16,
-                      color: Colors.grey,
                     ),
                   ],
                 ],
@@ -344,11 +344,6 @@ class ContactUsScreen extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    const Icon(
-                      Icons.arrow_back_ios_rounded,
-                      size: 16,
-                      color: Colors.grey,
-                    ),
                   ] else ...[
                     // Icon on the left for English
                     Container(
@@ -388,11 +383,6 @@ class ContactUsScreen extends ConsumerWidget {
                           ),
                         ],
                       ),
-                    ),
-                    const Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      size: 16,
-                      color: Colors.grey,
                     ),
                   ],
                 ],

@@ -17,7 +17,9 @@ class HadithDetailScreen extends ConsumerWidget {
     final bool isUrdu = hadithLang == 'ur';
     final bool isPashto = hadithLang == 'ps';
     final bool isRtl = isUrdu || isPashto;
-    final String fontFamily = isPashto ? 'Amiri' : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
+    final String fontFamily = isPashto
+        ? 'Amiri'
+        : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
 
     final String bookName = BookModel.getBookNameFromSlug(
       hadith.bookSlug,
@@ -26,11 +28,11 @@ class HadithDetailScreen extends ConsumerWidget {
 
     final String heading = isRtl
         ? (hadith.headingUrdu.isNotEmpty
-            ? hadith.headingUrdu
-            : hadith.headingEnglish)
+              ? hadith.headingUrdu
+              : hadith.headingEnglish)
         : (hadith.headingEnglish.isNotEmpty
-            ? hadith.headingEnglish
-            : hadith.headingUrdu);
+              ? hadith.headingEnglish
+              : hadith.headingUrdu);
 
     return Scaffold(
       backgroundColor: isDark
@@ -38,7 +40,9 @@ class HadithDetailScreen extends ConsumerWidget {
           : AppColors.backgroundLight,
       appBar: AppBar(
         title: Text(
-          isRtl ? "حدیث ${hadith.hadithNumber}" : "Hadith ${hadith.hadithNumber}",
+          isRtl
+              ? "حدیث ${hadith.hadithNumber}"
+              : "Hadith ${hadith.hadithNumber}",
           style: TextStyle(
             fontFamily: fontFamily,
             letterSpacing: 0.5,
@@ -104,8 +108,9 @@ class HadithDetailScreen extends ConsumerWidget {
                       spacing: 8,
                       runSpacing: 6,
                       alignment: WrapAlignment.spaceBetween,
-                      textDirection:
-                          isRtl ? TextDirection.rtl : TextDirection.ltr,
+                      textDirection: isRtl
+                          ? TextDirection.rtl
+                          : TextDirection.ltr,
                       children: [
                         if (bookName.isNotEmpty)
                           Container(
@@ -134,7 +139,9 @@ class HadithDetailScreen extends ConsumerWidget {
                           ),
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: AppColors.primaryTeal.withValues(alpha: 0.4),
+                              color: AppColors.primaryTeal.withValues(
+                                alpha: 0.4,
+                              ),
                             ),
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -171,8 +178,7 @@ class HadithDetailScreen extends ConsumerWidget {
                                   ? Colors.white
                                   : AppColors.textPrimaryLight,
                             ),
-                            textAlign:
-                                isRtl ? TextAlign.right : TextAlign.left,
+                            textAlign: isRtl ? TextAlign.right : TextAlign.left,
                           ),
                           const SizedBox(height: 24),
                         ],
@@ -235,12 +241,14 @@ class HadithDetailScreen extends ConsumerWidget {
     required bool isMain,
   }) {
     return Column(
-      crossAxisAlignment:
-          isRtl ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      crossAxisAlignment: isRtl
+          ? CrossAxisAlignment.end
+          : CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment:
-              isRtl ? MainAxisAlignment.end : MainAxisAlignment.start,
+          mainAxisAlignment: isRtl
+              ? MainAxisAlignment.end
+              : MainAxisAlignment.start,
           children: [
             if (!isRtl)
               Container(
