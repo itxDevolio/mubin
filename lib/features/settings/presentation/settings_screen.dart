@@ -261,7 +261,7 @@ class SettingsScreen extends ConsumerWidget {
           const SizedBox(height: 40),
           Center(
             child: Opacity(
-              opacity: 0.3,
+              opacity: 0.4,
               child: Column(
                 children: [
                   const Text(
@@ -275,8 +275,20 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Designed for the Modern Ummah',
-                    style: _getStyle(fontSize: 10),
+                    settings.language == 'ur'
+                        ? 'امت مسلمہ کے لیے محبت کے ساتھ تیار کیا گیا'
+                        : (settings.language == 'ps'
+                              ? 'د امت مسلمه لپاره په مینه جوړ شوی'
+                              : 'Developed with ❤️ for the Muslim Ummah'),
+                    style: TextStyle(
+                      fontFamily: settings.language == 'ps'
+                          ? 'Amiri'
+                          : (settings.language == 'ur'
+                                ? 'NotoNastaliqUrdu'
+                                : 'Poppins'),
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ],
               ),
