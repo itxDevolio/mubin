@@ -15,7 +15,6 @@ class ContactUsScreen extends ConsumerWidget {
     final lang = settings.language;
     final bool isUrdu = lang == 'ur';
     final bool isPashto = lang == 'ps';
-    final bool isRtl = isUrdu || isPashto;
     final String fontFamily = isPashto
         ? 'Amiri'
         : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
@@ -29,10 +28,10 @@ class ContactUsScreen extends ConsumerWidget {
         : (isPashto ? 'مونږ سره اړیکه ونیسئ' : 'Get in Touch With Us');
 
     final String description = isUrdu
-        ? 'ہم نے پوری کوشش کی ہے کہ مبین ایپ کو بہترین اور بگ فری رکھا جائے تاکہ آپ کی عبادت میں کوئی خلل نہ آئے۔ اگر آپ کو کوئی بھی مسئلہ یا خامی نظر آئے تو بلا جھجھک رابطہ کریں!'
+        ? 'ہم آپ کی مدد کے لیے ہمیشہ حاضر ہیں۔ کسی بھی سوال، فیڈ بیک یا رہنمائی کے لیے واٹس ایپ یا ای میل کے ذریعے بلا جھجھک رابطہ کریں۔'
         : (isPashto
-              ? 'موږ پوره کوشش کړې چې مبین اپلیکیشن غوره او له بگز نہ پاک وي تر څو ستاسو عبادت په اسانۍ ترسره شي. که تاسو ته کومه ستونزه یا نیمګړتیا په نظر راشي، نو مهرباني وکړئ موږ ته خبر راکړئ!'
-              : 'We have tried our best to keep Mubin bug-free and optimized for your daily spiritual needs. However, if you notice any issues or bugs, feel free to contact us anytime!');
+              ? 'موږ تل ستاسو د مرستې لپاره چمتو یو. د هرې پوښتنې، نظر یا مرستې لپاره په واټس اپ یا برېښنالیک له موږ سره اړیکه ونیسئ.'
+              : 'We are always here to help. Reach out to us via WhatsApp or Email anytime for any questions, feedback, or support.');
 
     final String whatsappTitle = isUrdu
         ? 'واٹس ایپ'
@@ -41,15 +40,15 @@ class ContactUsScreen extends ConsumerWidget {
     final String whatsappSubtitle = '+92 300 3209427';
 
     final String emailTitle = isUrdu
-        ? 'ای میل '
-        : (isPashto ? 'ای میل  ' : 'Email ');
+        ? 'ای میل سپورٹ'
+        : (isPashto ? 'برېښنالیک ملاتړ' : 'Email Support');
 
     final String emailSubtitle = 'devolio.office@gmail.com';
 
     final String footerText = isUrdu
-        ? 'امت مسلمہ کے لیے ❤️ کے ساتھ تیار کیا گیا'
+        ? 'امت مسلمہ کے لیے محبت کے ساتھ تیار کیا گیا'
         : (isPashto
-              ? 'د امت مسلمه لپاره په ❤️ جوړ شوی'
+              ? 'د امت مسلمه لپاره په مینه جوړ شوی'
               : 'Developed with ❤️ for the Muslim Ummah');
 
     return Scaffold(
@@ -62,7 +61,7 @@ class ContactUsScreen extends ConsumerWidget {
           style: TextStyle(
             fontFamily: fontFamily,
             fontWeight: FontWeight.w600,
-            fontSize: isRtl ? 16 : 18,
+            fontSize: 18,
           ),
         ),
         centerTitle: true,
@@ -81,315 +80,134 @@ class ContactUsScreen extends ConsumerWidget {
       ),
       body: ListView(
         physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         children: [
-          // Top Banner Card
-          Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  AppColors.primaryTeal,
-                  AppColors.primaryTeal.withValues(alpha: 0.8),
+          // Clean Header Section
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(
+                    Icons.support_agent_rounded,
+                    color: AppColors.primaryTeal,
+                    size: 28,
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    headerTitle,
+                    style: TextStyle(
+                      fontFamily: fontFamily,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      color: isDark ? Colors.white : Colors.black87,
+                    ),
+                  ),
                 ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
               ),
-              borderRadius: BorderRadius.circular(24),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.primaryTeal.withValues(alpha: 0.25),
-                  blurRadius: 16,
-                  offset: const Offset(0, 6),
+              const SizedBox(height: 12),
+              Text(
+                description,
+                style: TextStyle(
+                  fontFamily: fontFamily,
+                  fontSize: 13.5,
+                  height: 1.8,
+                  color: isDark ? Colors.white70 : Colors.black54,
                 ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: isRtl
-                  ? CrossAxisAlignment.end
-                  : CrossAxisAlignment.start,
-              children: [
-                Align(
-                  alignment: isRtl
-                      ? Alignment.centerRight
-                      : Alignment.centerLeft,
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: const Icon(
-                      Icons.support_agent_rounded,
-                      color: Colors.white,
-                      size: 32,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 18),
-                Text(
-                  headerTitle,
-                  textAlign: isRtl ? TextAlign.right : TextAlign.left,
-                  style: TextStyle(
-                    fontFamily: fontFamily,
-                    fontSize: isRtl ? 18 : 20,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  description,
-                  textAlign: isRtl ? TextAlign.right : TextAlign.left,
-                  style: TextStyle(
-                    fontFamily: fontFamily,
-                    fontSize: isUrdu || isPashto ? 13 : 13.5,
-                    height: 1.9,
-                    color: Colors.white.withValues(alpha: 0.95),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
+          const SizedBox(height: 32),
+          const Divider(height: 1),
           const SizedBox(height: 24),
 
-          // WhatsApp Contact Card
-          InkWell(
+          // WhatsApp Contact Row
+          ListTile(
             onTap: () {
               hapticFeedBack();
               _launchWhatsApp();
             },
-            borderRadius: BorderRadius.circular(20),
-            child: Container(
-              padding: const EdgeInsets.all(18),
+            contentPadding: EdgeInsets.zero,
+            leading: Container(
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: isDark ? AppColors.surfaceDark : Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: isDark
-                      ? Colors.white10
-                      : Colors.black.withValues(alpha: 0.05),
-                ),
-                boxShadow: [
-                  if (!isDark)
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.03),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                ],
+                color: const Color(0xFF25D366).withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: Row(
-                children: [
-                  if (isRtl) ...[
-                    // Icon on the left for Urdu/Pashto
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF25D366).withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: const Icon(
-                        Icons.chat_rounded,
-                        color: Color(0xFF25D366),
-                        size: 26,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    // Text on the right
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            whatsappTitle,
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                              fontFamily: fontFamily,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: isDark ? Colors.white : Colors.black87,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            whatsappSubtitle,
-                            textAlign: TextAlign.right,
-                            style: const TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                  ] else ...[
-                    // Icon on the left for English
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF25D366).withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: const Icon(
-                        Icons.chat_rounded,
-                        color: Color(0xFF25D366),
-                        size: 26,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            whatsappTitle,
-                            style: TextStyle(
-                              fontFamily: fontFamily,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: isDark ? Colors.white : Colors.black87,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            whatsappSubtitle,
-                            style: const TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ],
+              child: const Icon(
+                Icons.chat_rounded,
+                color: Color(0xFF25D366),
+                size: 22,
               ),
             ),
+            title: Text(
+              whatsappTitle,
+              style: TextStyle(
+                fontFamily: fontFamily,
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : Colors.black87,
+              ),
+            ),
+            subtitle: Text(
+              whatsappSubtitle,
+              style: const TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 12,
+                color: Colors.grey,
+              ),
+            ),
+            trailing: const Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: 14,
+              color: Colors.grey,
+            ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
 
-          // Email Contact Card
-          InkWell(
+          // Email Contact Row
+          ListTile(
             onTap: () {
               hapticFeedBack();
               _launchEmail();
             },
-            borderRadius: BorderRadius.circular(20),
-            child: Container(
-              padding: const EdgeInsets.all(18),
+            contentPadding: EdgeInsets.zero,
+            leading: Container(
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: isDark ? AppColors.surfaceDark : Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: isDark
-                      ? Colors.white10
-                      : Colors.black.withValues(alpha: 0.05),
-                ),
-                boxShadow: [
-                  if (!isDark)
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.03),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                ],
+                color: AppColors.primaryTeal.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: Row(
-                children: [
-                  if (isRtl) ...[
-                    // Icon on the left for Urdu/Pashto
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryTeal.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: const Icon(
-                        Icons.email_outlined,
-                        color: AppColors.primaryTeal,
-                        size: 26,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    // Text on the right
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            emailTitle,
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                              fontFamily: fontFamily,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: isDark ? Colors.white : Colors.black87,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            emailSubtitle,
-                            textAlign: TextAlign.right,
-                            style: const TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                  ] else ...[
-                    // Icon on the left for English
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryTeal.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: const Icon(
-                        Icons.email_outlined,
-                        color: AppColors.primaryTeal,
-                        size: 26,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            emailTitle,
-                            style: TextStyle(
-                              fontFamily: fontFamily,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: isDark ? Colors.white : Colors.black87,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            emailSubtitle,
-                            style: const TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ],
+              child: const Icon(
+                Icons.email_outlined,
+                color: AppColors.primaryTeal,
+                size: 22,
               ),
             ),
+            title: Text(
+              emailTitle,
+              style: TextStyle(
+                fontFamily: fontFamily,
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : Colors.black87,
+              ),
+            ),
+            subtitle: Text(
+              emailSubtitle,
+              style: const TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 12,
+                color: Colors.grey,
+              ),
+            ),
+            trailing: const Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: 14,
+              color: Colors.grey,
+            ),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 50),
 
           // Footer branding
           Center(
