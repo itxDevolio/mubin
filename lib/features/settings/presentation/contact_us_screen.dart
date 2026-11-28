@@ -15,6 +15,7 @@ class ContactUsScreen extends ConsumerWidget {
     final lang = settings.language;
     final bool isUrdu = lang == 'ur';
     final bool isPashto = lang == 'ps';
+    final bool isRtl = isUrdu || isPashto;
     final String fontFamily = isPashto
         ? 'Amiri'
         : (isUrdu ? 'NotoNastaliqUrdu' : 'Poppins');
@@ -30,20 +31,16 @@ class ContactUsScreen extends ConsumerWidget {
     final String description = isUrdu
         ? 'ہم نے پوری کوشش کی ہے کہ مبین ایپ کو بہترین اور بگ فری رکھا جائے تاکہ آپ کی عبادت میں کوئی خلل نہ آئے۔ اگر آپ کو کوئی بھی مسئلہ، بگ یا خامی نظر آئے یا کوئی تجاویز ہوں، تو بلا جھجھک واٹس ایپ یا ای میل کے ذریعے رابطہ کریں۔'
         : (isPashto
-              ? 'موږ خپله پوره هڅه کړې چې مبین اپلیکیشن غوره او له بګونو پاک وساتو ترڅو ستاسو عبادت په اسانۍ ترسره شي. که تاسو ته کومه ستونزه، بګ یا نیمګړتیا په نظر راشي، نو مهرباني وکړئ په واټس اپ یا برېښنالیک له موږ سره اړیکه ونیسئ.'
+              ? 'موږ خپله پوره هڅه کړې چې مبین اپلیکیشن غوره او له بګونو پاک وساتو تر څو ستاسو عبادت په اسانۍ ترسره شي. که تاسو ته کومه ستونزه، بګ یا نیمګړتیا په نظر راشي، نو مهرباني وکړئ په واټس اپ یا برېښنالیک له موږ سره اړیکه ونیسئ.'
               : 'We have tried our best to keep Mubin bug-free and optimized for your daily spiritual needs. However, if you notice any issues, bugs, or have feedback, feel free to contact us anytime via WhatsApp or Email.');
 
     final String whatsappTitle = isUrdu
-        ? 'واٹس ایپ'
-        : (isPashto ? 'واټس اپ' : 'WhatsApp');
-
-    final String whatsappSubtitle = '+92 300 3209427';
+        ? 'واٹس ایپ: +92 300 3209427'
+        : (isPashto ? 'واټس اپ: +92 300 3209427' : 'WhatsApp: +92 300 3209427');
 
     final String emailTitle = isUrdu
-        ? 'ای میل سپورٹ'
-        : (isPashto ? 'برېښنالیک ملاتړ' : 'Email Support');
-
-    final String emailSubtitle = 'devolio.office@gmail.com';
+        ? 'ای میل: devolio.office@gmail.com'
+        : (isPashto ? 'برېښنالیک: devolio.office@gmail.com' : 'Email: devolio.office@gmail.com');
 
     final String footerText = isUrdu
         ? 'امت مسلمہ کے لیے محبت کے ساتھ تیار کیا گیا'
@@ -51,188 +48,139 @@ class ContactUsScreen extends ConsumerWidget {
               ? 'د امت مسلمه لپاره په مینه جوړ شوی'
               : 'Developed with ❤️ for the Muslim Ummah');
 
-    return Scaffold(
-      backgroundColor: isDark
-          ? AppColors.backgroundDark
-          : AppColors.backgroundLight,
-      appBar: AppBar(
-        title: Text(
-          appBarTitle,
-          style: TextStyle(
-            fontFamily: fontFamily,
-            fontWeight: FontWeight.w600,
-            fontSize: 18,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios_new,
-            size: 20,
-            color: isDark
-                ? AppColors.textPrimaryDark
-                : AppColors.textPrimaryLight,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: ListView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-        children: [
-          // Clean Header Section with Left Icon
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryTeal.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(
-                      Icons.support_agent_rounded,
-                      color: AppColors.primaryTeal,
-                      size: 24,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    headerTitle,
-                    style: TextStyle(
-                      fontFamily: fontFamily,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w900,
-                      color: isDark ? Colors.white : Colors.black87,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Text(
-                description,
-                style: TextStyle(
-                  fontFamily: fontFamily,
-                  fontSize: 13.5,
-                  height: 1.85,
-                  color: isDark ? Colors.white70 : Colors.black54,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 32),
-          const Divider(height: 1),
-          const SizedBox(height: 24),
-
-          // WhatsApp Contact Row (Left aligned)
-          ListTile(
-            onTap: () {
-              hapticFeedBack();
-              _launchWhatsApp();
-            },
-            contentPadding: EdgeInsets.zero,
-            leading: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: const Color(0xFF25D366).withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Icon(
-                Icons.chat_rounded,
-                color: Color(0xFF25D366),
-                size: 22,
-              ),
+    return Directionality(
+      textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+      child: Scaffold(
+        backgroundColor: isDark
+            ? AppColors.backgroundDark
+            : AppColors.backgroundLight,
+        appBar: AppBar(
+          title: Text(
+            appBarTitle,
+            style: TextStyle(
+              fontFamily: fontFamily,
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
             ),
-            title: Text(
-              whatsappTitle,
+          ),
+          centerTitle: true,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
+        body: ListView(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
+          children: [
+            // Header Title
+            Text(
+              headerTitle,
+              textAlign: isRtl ? TextAlign.right : TextAlign.left,
               style: TextStyle(
                 fontFamily: fontFamily,
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                fontWeight: FontWeight.w900,
                 color: isDark ? Colors.white : Colors.black87,
               ),
             ),
-            subtitle: Text(
-              whatsappSubtitle,
-              style: const TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 12,
-                color: Colors.grey,
-              ),
-            ),
-            trailing: const Icon(
-              Icons.arrow_forward_ios_rounded,
-              size: 14,
-              color: Colors.grey,
-            ),
-          ),
-          const SizedBox(height: 12),
+            const SizedBox(height: 16),
 
-          // Email Contact Row (Left aligned)
-          ListTile(
-            onTap: () {
-              hapticFeedBack();
-              _launchEmail();
-            },
-            contentPadding: EdgeInsets.zero,
-            leading: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: AppColors.primaryTeal.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Icon(
-                Icons.email_outlined,
-                color: AppColors.primaryTeal,
-                size: 22,
-              ),
-            ),
-            title: Text(
-              emailTitle,
+            // Description
+            Text(
+              description,
+              textAlign: isRtl ? TextAlign.right : TextAlign.left,
               style: TextStyle(
                 fontFamily: fontFamily,
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black87,
+                fontSize: 14,
+                height: 1.9,
+                color: isDark ? Colors.white70 : Colors.black54,
               ),
             ),
-            subtitle: Text(
-              emailSubtitle,
-              style: const TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 12,
-                color: Colors.grey,
-              ),
-            ),
-            trailing: const Icon(
-              Icons.arrow_forward_ios_rounded,
-              size: 14,
-              color: Colors.grey,
-            ),
-          ),
-          const SizedBox(height: 50),
+            const SizedBox(height: 36),
+            const Divider(height: 1),
+            const SizedBox(height: 24),
 
-          // Footer branding
-          Center(
-            child: Opacity(
-              opacity: 0.6,
-              child: Text(
-                footerText,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: fontFamily,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
+            // WhatsApp Link
+            InkWell(
+              onTap: () {
+                hapticFeedBack();
+                _launchWhatsApp();
+              },
+              borderRadius: BorderRadius.circular(12),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      whatsappTitle,
+                      style: TextStyle(
+                        fontFamily: fontFamily,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primaryTeal,
+                      ),
+                    ),
+                    const Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 14,
+                      color: Colors.grey,
+                    ),
+                  ],
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: 24),
-        ],
+            const SizedBox(height: 8),
+
+            // Email Link
+            InkWell(
+              onTap: () {
+                hapticFeedBack();
+                _launchEmail();
+              },
+              borderRadius: BorderRadius.circular(12),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      emailTitle,
+                      style: TextStyle(
+                        fontFamily: fontFamily,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primaryTeal,
+                      ),
+                    ),
+                    const Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 14,
+                      color: Colors.grey,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 60),
+
+            // Footer branding
+            Center(
+              child: Opacity(
+                opacity: 0.6,
+                child: Text(
+                  footerText,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: fontFamily,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+          ],
+        ),
       ),
     );
   }
