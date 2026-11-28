@@ -31,14 +31,8 @@ class ContactUsScreen extends ConsumerWidget {
     final String description = isUrdu
         ? 'ہم نے پوری کوشش کی ہے کہ مبین ایپ کو بہترین اور بگ فری رکھا جائے تاکہ آپ کی عبادت میں کوئی خلل نہ آئے۔ اگر آپ کو کوئی بھی مسئلہ، بگ یا خامی نظر آئے یا کوئی تجاویز ہوں، تو بلا جھجھک واٹس ایپ یا ای میل کے ذریعے رابطہ کریں۔'
         : (isPashto
-              ? 'موږ خپله پوره هڅه کړې چې مبین اپلیکیشن غوره او له بګونو پاک وساتو تر څو ستاسو عبادت په اسانۍ ترسره شي. که تاسو ته کومه ستونزه، بګ یا نیمګړتیا په نظر راشي، نو مهرباني وکړئ په واټس اپ یا برېښنالیک له موږ سره اړیکه ونیسئ.'
+              ? 'موږ خپله پوره هڅه کړې چې مبین اپلیکیشن غوره او له بګونو پاک وساتو تر څو ستاسو عبادت په اسانۍ ترسره شي. که تاسو ته کومه ستونزه، بګ یا نیمګړتیا په نظر راشي، نو مهرباني وکړئ په واټس اپ یا ای میل له موږ سره اړیکه ونیسئ.'
               : 'We have tried our best to keep Mubin bug-free and optimized for your daily spiritual needs. However, if you notice any issues, bugs, or have feedback, feel free to contact us anytime via WhatsApp or Email.');
-
-    final String footerText = isUrdu
-        ? 'امت مسلمہ کے لیے محبت کے ساتھ تیار کیا گیا'
-        : (isPashto
-              ? 'د امت مسلمه لپاره په مینه جوړ شوی'
-              : 'Developed with ❤️ for the Muslim Ummah');
 
     return Directionality(
       textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
@@ -104,7 +98,7 @@ class ContactUsScreen extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      '+92 300 3209427',
+                      '923003209427',
                       style: TextStyle(
                         fontFamily: 'Poppins',
                         fontSize: 15,
@@ -143,24 +137,6 @@ class ContactUsScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 60),
-
-            // Footer branding
-            Center(
-              child: Opacity(
-                opacity: 0.6,
-                child: Text(
-                  footerText,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: fontFamily,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
           ],
         ),
       ),
