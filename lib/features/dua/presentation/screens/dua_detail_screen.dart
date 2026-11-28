@@ -221,45 +221,6 @@ class _DuaPageContentState extends State<_DuaPageContent>
               ),
               const SizedBox(height: 20),
 
-              // Reference
-              if (widget.dua.reference.isNotEmpty)
-                Align(
-                  alignment: isRtl ? Alignment.centerRight : Alignment.centerLeft,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 10,
-                    ),
-                    decoration: BoxDecoration(
-                      color: isDark
-                          ? Colors.white.withValues(alpha: 0.05)
-                          : Colors.black.withValues(alpha: 0.03),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.menu_book_rounded,
-                          size: 14,
-                          color: Colors.grey,
-                        ),
-                        const SizedBox(width: 8),
-                        Flexible(
-                          child: Text(
-                            widget.dua.reference,
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.grey.shade600,
-                              fontFamily: fontFamily,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
               const SizedBox(height: 20),
               const AdBannerWidget(),
               const SizedBox(height: 30),
@@ -302,6 +263,20 @@ class _DuaPageContentState extends State<_DuaPageContent>
                   ),
                 ),
               ),
+
+              // Reference at the bottom like Adhkar & Shifa
+              if (widget.dua.reference.isNotEmpty) ...[
+                const SizedBox(height: 30),
+                Text(
+                  widget.dua.reference,
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: Colors.grey.withValues(alpha: 0.5),
+                    letterSpacing: 1.2,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
               const SizedBox(height: 40),
             ],
           ),
