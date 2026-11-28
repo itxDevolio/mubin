@@ -4,6 +4,7 @@ import 'package:mubin/features/hadith/data/models/book_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../controller/hadith_notifier.dart';
+import '../../../../core/widgets/ad_banner_widget.dart';
 
 class HadithDetailScreen extends ConsumerWidget {
   final HadithEntity hadith;
@@ -226,6 +227,8 @@ class HadithDetailScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 32),
+            const AdBannerWidget(),
+            const SizedBox(height: 20),
           ],
         ),
       ),
