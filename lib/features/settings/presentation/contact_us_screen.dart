@@ -91,7 +91,7 @@ class ContactUsScreen extends ConsumerWidget {
             const Divider(height: 1),
             const SizedBox(height: 24),
 
-            // WhatsApp Number Link
+            // WhatsApp Number Link (Icon-free)
             InkWell(
               onTap: () {
                 hapticFeedBack();
@@ -101,9 +101,9 @@ class ContactUsScreen extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       '+92 300 3209427',
                       style: TextStyle(
                         fontFamily: 'Poppins',
@@ -112,18 +112,13 @@ class ContactUsScreen extends ConsumerWidget {
                         color: AppColors.primaryTeal,
                       ),
                     ),
-                    const Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      size: 14,
-                      color: Colors.grey,
-                    ),
                   ],
                 ),
               ),
             ),
             const SizedBox(height: 8),
 
-            // Email Address Link
+            // Email Address Link (Icon-free)
             InkWell(
               onTap: () {
                 hapticFeedBack();
@@ -133,9 +128,9 @@ class ContactUsScreen extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'devolio.office@gmail.com',
                       style: TextStyle(
                         fontFamily: 'Poppins',
@@ -143,11 +138,6 @@ class ContactUsScreen extends ConsumerWidget {
                         fontWeight: FontWeight.bold,
                         color: AppColors.primaryTeal,
                       ),
-                    ),
-                    const Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      size: 14,
-                      color: Colors.grey,
                     ),
                   ],
                 ),
