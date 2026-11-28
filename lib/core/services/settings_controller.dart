@@ -48,7 +48,7 @@ class SettingsState {
     this.ishaNotification = true,
     this.morningAdhkarNotification = true,
     this.eveningAdhkarNotification = true,
-    this.autoOpenOnPrayer = true,
+    this.autoOpenOnPrayer = false,
     this.morningAdhkarTime = '07:00',
     this.eveningAdhkarTime = '17:00',
   }) : currentReciter = currentReciter ?? availableReciters.first;
@@ -118,7 +118,7 @@ class SettingsController extends Notifier<SettingsState> {
     final bool isha = box.get('ishaNotification', defaultValue: true);
     final bool morningAdhkar = box.get('morningAdhkarNotification', defaultValue: true);
     final bool eveningAdhkar = box.get('eveningAdhkarNotification', defaultValue: true);
-    final bool autoOpen = box.get('autoOpenOnPrayer', defaultValue: true);
+    final bool autoOpen = box.get('autoOpenOnPrayer', defaultValue: false);
     
     final String morningTime = box.get('morningAdhkarTime', defaultValue: '07:00');
     final String eveningTime = box.get('eveningAdhkarTime', defaultValue: '17:00');

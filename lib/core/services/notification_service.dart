@@ -207,7 +207,7 @@ class NotificationService {
       );
       if (!isEnabled) continue;
 
-      final bool autoOpen = box.get('autoOpenOnPrayer', defaultValue: true);
+      final bool autoOpen = box.get('autoOpenOnPrayer', defaultValue: false);
 
       final scheduledTime = tz.TZDateTime.from(time, tz.local);
       final nowTime = tz.TZDateTime.now(tz.local);
