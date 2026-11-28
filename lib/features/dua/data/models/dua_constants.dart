@@ -24,13 +24,13 @@ class DuaConstants {
       titleUr: 'رات کو آنکھ کھلنے پر دعا',
       titlePs: 'د شپې له خوبه راویښېدو دعا',
       arabic:
-          'لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، سُبْحَانَ اللَّهِ، وَالْحَمْدُ للهِ، وَلَا إِلَهَ إِلَّا اللَّهُ، وَاللَّهُ أَكْبَرُ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ',
+          'لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ، وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، الْحَمْدُ لِلَّهِ، وَسُبْحَانَ اللَّهِ، وَلَا إِلَهَ إِلَّا اللَّهُ، وَاللَّهُ أَكْبَرُ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ، اللَّهُمَّ اغْفِرْ لِي',
       translationEn:
-          'There is none worthy of worship except Allah, alone, without partner. To Him belongs sovereignty and to Him belongs all praise and He is capable of all things. Glory is to Allah, and praise is to Allah, and there is none worthy of worship except Allah, Allah is the Greatest, and there is no power nor might except with Allah.',
+          'There is none worthy of worship except Allah, alone, without partner. To Him belongs sovereignty and to Him belongs all praise, and He is capable of all things. All praise is for Allah, glory is to Allah, there is none worthy of worship except Allah, Allah is the Greatest, and there is no power nor might except with Allah. O Allah, forgive me. (Then make any supplication, and it will be accepted).',
       translationUr:
-          'اللہ کے سوا کوئی معبود نہیں، اکیلا ہے، اس کا کوئی شریک نہیں، اسی کی بادشاہت ہے، اسی کے لیے تمام تعریفیں ہیں، اور وہ ہر چیز پر قادر ہے۔ اللہ پاک ہے، تعریف اللہ کے لیے ہے، اللہ کے سوا کوئی معبود نہیں، اللہ سب سے بڑا ہے، اور کوئی طاقت و قوت نہیں مگر اللہ کے ساتھ۔',
+          'اللہ کے سوا کوئی معبود نہیں، وہ اکیلا ہے، اس کا کوئی شریک نہیں، اسی کی بادشاہت ہے، اور اسی کے لیے تمام تعریفیں ہیں، اور وہ ہر چیز پر قادر ہے۔ تمام تعریفیں اللہ کے لیے ہیں، اللہ پاک ہے، اللہ کے سوا کوئی معبود نہیں، اللہ سب سے بڑا ہے، اور کوئی طاقت و قوت نہیں مگر اللہ کی مدد سے۔ اے اللہ! مجھے بخش دے۔ (اس کے بعد جو دعا مانگی جائے قبول ہوتی ہے)۔',
       translationPs:
-          'له الله پرته بل هېڅ معبود نشته، یو دی، شریک نه لري، پاچاهي او ټولې ستاینې یې دي، او هغه پر هر څه قادر دی. الله پاک دی، ستاینې الله ته دي، له الله پرته بل معبود نشته، الله تر ټولو لوی دی، او هېڅ ځواک او قوت نشته مګر د الله په مرسته.',
+          'له الله پرته بل هېڅ معبود نشته، یو دی، شریک نه لري، پاچاهي او ټولې ستاینې یې دي، او هغه پر هر څه قادر دی. ټولې ستاینې الله ته دي، الله پاک دی، له الله پرته بل معبود نشته، الله تر ټولو لوی دی، او هېڅ ځواک او قوت نشته مګر د الله په مرسته. اې الله! ما وبښه. (له دې وروسته چې کومه دعا وشي، قبلېږي).',
       reference: 'Sahih al-Bukhari: 1154',
     ),
   ];
@@ -111,17 +111,6 @@ class DuaConstants {
       translationPs:
           'ټولې ستاینې الله ته دي چې دا جامه یې ما ته واغوستله او له ما څخه پرته د کوم ځواک او قوت یې راکړه.',
       reference: 'Abu Dawud: 4023, Tirmidhi: 3458',
-    ),
-    DuaEntity(
-      id: 'cl2',
-      titleEn: 'When Undressing',
-      titleUr: 'کپڑے اتارنے کی دعا',
-      titlePs: 'د جامو ایستلو دعا',
-      arabic: 'بِسْمِ اللَّهِ',
-      translationEn: 'In the name of Allah.',
-      translationUr: 'اللہ کے نام سے۔',
-      translationPs: 'د الله په نامه.',
-      reference: 'Tirmidhi: 606',
     ),
   ];
 
@@ -213,17 +202,7 @@ class DuaConstants {
           'ټولې ستاینې الله ته دي چې موږ یې وخوړول، وڅښل او مسلمانان یې کړو.',
       reference: 'Abu Dawud: 3850',
     ),
-    DuaEntity(
-      id: 'fd5',
-      titleEn: 'When Fasting and Someone Invites You to Eat',
-      titleUr: 'روزے میں کھانے کی دعوت ملے تو',
-      titlePs: 'کله چې روژه وي او څوک خوراک ته بلنه کوي',
-      arabic: 'إِنِّي صَائِمٌ',
-      translationEn: 'I am fasting.',
-      translationUr: 'میں روزے سے ہوں۔',
-      translationPs: 'زه روژه یم.',
-      reference: 'Sahih al-Bukhari: 1894, Sahih Muslim: 1151',
-    ),
+
     DuaEntity(
       id: 'fd6',
       titleEn: 'When Breaking the Fast (Iftar)',
@@ -435,55 +414,6 @@ class DuaConstants {
   // ─── GREETING & VISITING ─────────────────────────────────────────────────────
   static List<DuaEntity> greetingDuas = [
     DuaEntity(
-      id: 'gr1',
-      titleEn: 'Islamic Greeting (Salam)',
-      titleUr: 'اسلامی سلام',
-      titlePs: 'اسلامي سلام',
-      arabic: 'السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ',
-      translationEn:
-          'Peace be upon you, and the mercy of Allah and His blessings.',
-      translationUr: 'تم پر سلامتی ہو، اور اللہ کی رحمت اور اس کی برکتیں ہوں۔',
-      translationPs: 'پر تاسو دې سلامتي، د الله رحمت او برکتونه وي.',
-      reference: 'Abu Dawud: 5195, Tirmidhi: 2689',
-    ),
-    DuaEntity(
-      id: 'gr2',
-      titleEn: 'Response to Salam',
-      titleUr: 'سلام کا جواب',
-      titlePs: 'د سلام ځواب',
-      arabic: 'وَعَلَيْكُمُ السَّلَامُ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ',
-      translationEn:
-          'And upon you be peace, and the mercy of Allah and His blessings.',
-      translationUr:
-          'اور تم پر بھی سلامتی ہو، اللہ کی رحمت اور اس کی برکتیں ہوں۔',
-      translationPs: 'او پر تاسو دې هم سلامتي، د الله رحمت او برکتونه وي.',
-      reference: 'Quran 4:86, Abu Dawud: 5196',
-    ),
-    DuaEntity(
-      id: 'gr3',
-      titleEn: 'When Meeting a Fellow Muslim',
-      titleUr: 'مسلمان بھائی سے ملتے وقت',
-      titlePs: 'مسلمان ورور سره د لیدو پر مهال',
-      arabic: 'السَّلَامُ عَلَيْكُمْ',
-      translationEn: 'Peace be upon you.',
-      translationUr: 'تم پر سلامتی ہو۔',
-      translationPs: 'پر تاسو دې سلامتي وي.',
-      reference: 'Sahih al-Bukhari: 12',
-    ),
-    DuaEntity(
-      id: 'gr4',
-      titleEn: 'When Saying Goodbye',
-      titleUr: 'رخصت کے وقت',
-      titlePs: 'د خدای پامانۍ پر مهال',
-      arabic: 'أَسْتَوْدِعُكَ اللَّهَ الَّذِي لَا تَضِيعُ وَدَائِعُهُ',
-      translationEn:
-          'I place you in the trust of Allah, whose trusts are never lost.',
-      translationUr:
-          'میں تجھے اللہ کے سپرد کرتا ہوں جس کی امانتیں کبھی ضائع نہیں ہوتیں۔',
-      translationPs: 'زه تا الله ته سپارم چې امانتونه یې هېڅکله نه ضایع کېږي.',
-      reference: 'Ibn Majah: 2825, Ahmad: 8693',
-    ),
-    DuaEntity(
       id: 'gr5',
       titleEn: 'When Someone Does You a Favour',
       titleUr: 'کوئی احسان کرے تو',
@@ -586,21 +516,6 @@ class DuaConstants {
       translationPs:
           'ای الله! دا سپوږمۍ پر موږ د امن، ایمان، سلامتۍ او اسلام سره راپورته کړه. زما او ستا رب الله دی.',
       reference: 'Tirmidhi: 3451, Ahmad: 1397',
-    ),
-    DuaEntity(
-      id: 'wt5',
-      titleEn: 'When Strong Wind Blows',
-      titleUr: 'تیز ہوا چلنے پر',
-      titlePs: 'د تېز باد پر مهال',
-      arabic:
-          'اللَّهُمَّ إِنِّي أَسْأَلُكَ خَيْرَهَا وَخَيْرَ مَا فِيهَا وَخَيْرَ مَا أُرْسِلَتْ بِهِ وَأَعُوذُ بِكَ مِنْ شَرِّهَا وَشَرِّ مَا فِيهَا وَشَرِّ مَا أُرْسِلَتْ بِهِ',
-      translationEn:
-          'O Allah, I ask You for the good of it, the good of what it contains, and the good of what it is sent with; and I seek refuge in You from the evil of it, the evil of what it contains, and the evil of what it is sent with.',
-      translationUr:
-          'اے اللہ! میں تجھ سے اس کی بھلائی، اس میں جو ہے اس کی بھلائی اور اسے جس کے ساتھ بھیجا گیا اس کی بھلائی مانگتا ہوں، اور اس کے شر سے، اس میں جو ہے اس کے شر سے اور اسے جس کے ساتھ بھیجا گیا اس کے شر سے تیری پناہ مانگتا ہوں۔',
-      translationPs:
-          'ای الله! زه له تا د دې ښېګڼه، په دې کې د شته ښېګڼې او د هغه څه ښېګڼه چې پرې لېږل شوی غواړم، او ستا پناه غواړم له دې شر، په دې کې له شته شر او له هغه شره چې پرې لېږل شوی.',
-      reference: 'Sahih Muslim: 899',
     ),
   ];
 
@@ -867,15 +782,20 @@ class DuaConstants {
     ),
     DuaEntity(
       id: 'ms11',
-      titleEn: 'Dua for Protection of Faith',
-      titleUr: 'دین کی حفاظت کی دعا',
-      titlePs: 'د دین د ساتنې دعا',
-      arabic: 'اللَّهُمَّ لَا تَجْعَلْ مُصِيبَتَنَا فِي دِينِنَا',
-      translationEn: 'O Allah, do not make our calamity in our religion.',
-      translationUr: 'اے اللہ! ہماری مصیبت ہمارے دین میں نہ ڈال۔',
-      translationPs: 'ای الله! زموږ مصیبت زموږ په دین کې مه کړه.',
-      reference: 'Tirmidhi: 3502',
+      titleEn: 'Dua for Protection of Faith and Worldly Affairs',
+      titleUr: 'دین و دنیا کی حفاظت کی جامع دعا',
+      titlePs: 'د دین او دنیا د ساتنې جامع دعا',
+      arabic:
+          'اللَّهُمَّ اقْسِمْ لَنَا مِنْ خَشْيَتِكَ مَا يَحُولُ بَيْنَنَا وَبَيْنَ مَعَاصِيكَ، وَمِنْ طَاعَتِكَ مَا تُبَلِّغُنَا بِهِ جَنَّتَكَ، وَمِنَ الْيَقِينِ مَا تُهَوِّنُ بِهِ عَلَيْنَا مُصِيبَاتِ الدُّنْيَا، وَمَتِّعْنَا بِأَسْمَاعِنَا وَأَبْصَارِنَا وَقُوَّتِنَا مَا أَحْيَيْتَنَا، وَاجْعَلْهُ الْوَارِثَ مِنَّا، وَاجْعَلْ ثَأْرَنَا عَلَى مَنْ ظَلَمَنَا، وَانْصُرْنَا عَلَى مَنْ عَادَانَا، وَلَا تَجْعَلْ مُصِيبَتَنَا فِي دِينِنَا، وَلَا تَجْعَلِ الدُّنْيَا أَكْبَرَ هَمِّنَا، وَلَا مَبْلَغَ عِلْمِنَا، وَلَا تُسَلِّطْ عَلَيْنَا مَنْ لَا يَرْحَمُنَا',
+      translationEn:
+          'O Allah, apportion to us such fear of You as will come between us and disobedience to You; and such obedience to You as will bring us to Your Paradise; and such certainty as will make the calamities of this world easy for us to bear. Let us enjoy our hearing, our sight, and our strength as long as You keep us alive, and make that last until we die. Avenge us upon those who wrong us, and grant us victory over those who oppose us. Do not make our calamity be in our religion, do not make this world our greatest concern or the limit of our knowledge, and do not give power over us to those who will not show mercy to us.',
+      translationUr:
+          'اے اللہ! ہمارے لیے اپنا اتنا خوف تقسیم فرما جو ہمارے اور تیری نافرمانیوں کے درمیان حائل ہو جائے، اور اپنی اتنی اطاعت نصیب فرما جس کے ذریعے تو ہمیں اپنی جنت تک پہنچا دے، اور اتنا یقین عطا فرما جس کے ذریعے تو ہم پر دنیا کی مصیبتوں کو آسان کر دے۔ جب تک تو ہمیں زندہ رکھے ہمیں ہمارے کانوں، آنکھوں اور قوت سے فائدہ اٹھانے کی توفیق دے، اور اسے ہمارا وارث بنا (یعنی مرتے دم تک سلامت رکھ)۔ ہمارا بدلہ ان لوگوں سے لے جنہوں نے ہم پر ظلم کیا، اور ان لوگوں کے خلاف ہماری مدد فرما جو ہم سے دشمنی رکھتے ہیں۔ ہماری مصیبت ہمارے دین میں نہ بنا، دنیا کو ہمارا سب سے بڑا غم اور ہمارے علم کی انتہا نہ بنا، اور ہم پر ایسے لوگوں کو مسلط نہ کر جو ہم پر رحم نہ کریں۔',
+      translationPs:
+          'اې الله! موږ ته له خپلې وېرې دومره برخه راکړه چې زموږ او ستا د نافرمانیو ترمنځ خنډ شي، او له خپلې اطاعت څخه دومره برخه راکړه چې موږ پرې خپل جنت ته ورسوې، او دومره یقین راکړه چې د دنیا مصیبتونه پر موږ اسانه کړې. تر څو چې موږ ژوندي ساتې، موږ ته له خپلو غوږونو، سترګو او ځواک څخه د ګټې اخیستو توفیق راکړه، او دا نعمتونه تر مرګه راسره وساته. زموږ غچ له هغو کسانو واخله چې پر موږ یې ظلم کړی، او د هغو کسانو پر وړاندې زموږ مرسته وکړه چې له موږ سره دښمني لري. زموږ مصیبت زموږ په دین کې مه ګرځوه، دنیا زموږ تر ټولو لوی غم او زموږ د علم وروستۍ موخه مه ګرځوه، او پر موږ داسې کسان مه مسلطوه چې پر موږ رحم نه کوي.',
+      reference: 'Jami` at-Tirmidhi: 3502',
     ),
+
     DuaEntity(
       id: 'ms12',
       titleEn: 'Seeking Forgiveness Throughout the Day',
@@ -1002,36 +922,23 @@ class DuaConstants {
           'هغه چې الله وغواړي (هماغه کېږي)، هېڅ ځواک نشته مګر د الله په مرسته.',
       reference: 'Quran 18:39',
     ),
-    DuaEntity(
-      id: 'ms29',
-      titleEn: 'Protection for Children',
-      titleUr: 'بچوں کو نظر بد سے محفوظ کرنا',
-      titlePs: 'د ماشومانو ساتنه',
-      arabic:
-          'أُعِيذُكُمَا بِكَلِمَاتِ اللَّهِ التَّامَّةِ مِنْ كُلِّ شَيْطَانٍ وَهَامَّةٍ وَمِنْ كُلِّ عَيْنٍ لَامَّةٍ',
-      translationEn:
-          'I seek protection for you both in the perfect words of Allah from every devil and every poisonous creature, and from every evil eye.',
-      translationUr:
-          'میں تم دونوں کو اللہ کے کامل کلمات کی پناہ میں دیتا ہوں ہر شیطان، زہریلے جانور اور ہر نقصان دہ نظر سے۔',
-      translationPs:
-          'زه تاسو دواړه د الله په بشپړو کلماتو پناه کې ورکوم له هر شیطانه، زهري حشرې او له هر زیانمنوونکې سترګې.',
-      reference: 'Sahih al-Bukhari: 3371',
-    ),
+
     DuaEntity(
       id: 'ms30',
       titleEn: 'When Visiting a Graveyard',
       titleUr: 'قبرستان جاتے وقت',
       titlePs: 'هديرې ته د تګ پر مهال',
       arabic:
-          'السَّلَامُ عَلَيْكُمْ أَهْلَ الدِّيَارِ مِنَ الْمُؤْمِنِينَ وَالْمُسْلِمِينَ وَإِنَّا إِنْ شَاءَ اللَّهُ بِكُمْ لَاحِقُونَ نَسْأَلُ اللَّهَ لَنَا وَلَكُمُ الْعَافِيَةَ',
+      'السَّلَامُ عَلَيْكُمْ أَهْلَ الدِّيَارِ مِنَ الْمُؤْمِنِينَ وَالْمُسْلِمِينَ، وَإِنَّا إِنْ شَاءَ اللَّهُ لَلَاحِقُونَ، أَسْأَلُ اللَّهَ لَنَا وَلَكُمُ الْعَافِيَةَ',
       translationEn:
-          'Peace be upon you, O inhabitants of these dwellings, from among the believers and those who are Muslims. And we will, if Allah wills, be joining you. We ask Allah for well-being for ourselves and for you.',
+      'Peace be upon you, O inhabitants of these dwellings, from among the believers and the Muslims. Indeed, we will, if Allah wills, soon join you. I ask Allah for well-being for us and for you.',
       translationUr:
-          'تم پر سلامتی ہو اے اس جگہ کے رہنے والو، مومنوں اور مسلمانوں میں سے۔ اور ہم بھی ان شاء اللہ تم سے ملنے والے ہیں۔ ہم اپنے لیے اور تمہارے لیے اللہ سے عافیت مانگتے ہیں۔',
+      'تم پر سلامتی ہو اے اس جگہ کے رہنے والو، مومنوں اور مسلمانوں میں سے۔ اور بے شک ہم بھی ان شاء اللہ ضرور تم سے ملنے والے ہیں۔ میں اپنے لیے اور تمہارے لیے اللہ سے عافیت مانگتا ہوں۔',
       translationPs:
-          'پر تاسو دې سلامتي وي ای د دې ځایونو اوسېدونکو، له مومنانو او مسلمانانو. او که الله وغواړي موږ هم تاسو سره یو ځای کېدونکي یو. موږ له الله زموږ او ستاسو لپاره عافیت غواړو.',
+      'پر تاسو دې سلامتي وي اې د دې ځایونو اوسېدونکو، له مومنانو او مسلمانانو څخه. او بېشکه موږ هم که الله وغواړي خامخا له تاسو سره یو ځای کېدونکي یو. زه د ځان او ستاسو لپاره له الله څخه عافیت غواړم.',
       reference: 'Sahih Muslim: 975',
     ),
+
     DuaEntity(
       id: 'ms31',
       titleEn: 'Prompting the Dying Person (Talqin)',
@@ -1058,36 +965,7 @@ class DuaConstants {
           'بېشکه موږ د الله یو او هغه ته ورګرځېدونکي یو. ای الله! هغه وبخښه، پر هغه رحم وکړه، هغه ته عافیت ورکړه او له هغه تېرې شه.',
       reference: 'Sahih Muslim: 918, 963',
     ),
-    DuaEntity(
-      id: 'ms35',
-      titleEn: 'Dua Against Evil Eye (Ruqyah)',
-      titleUr: 'نظر بد کے لیے دعا',
-      titlePs: 'د بد نظر دم',
-      arabic:
-          'بِسْمِ اللَّهِ أَرْقِيكَ مِنْ كُلِّ شَيْءٍ يُؤْذِيكَ مِنْ شَرِّ كُلِّ نَفْسٍ أَوْ عَيْنٍ حَاسِدٍ اللَّهُ يَشْفِيكَ بِسْمِ اللَّهِ أَرْقِيكَ',
-      translationEn:
-          'In the name of Allah I perform ruqyah for you, from everything that harms you, from the evil of every soul or envious eye may Allah cure you. In the name of Allah I perform ruqyah for you.',
-      translationUr:
-          'اللہ کے نام سے میں تم پر دم کرتا ہوں، ہر اس چیز سے جو تمہیں نقصان دے، ہر نفس کے شر سے یا حسد کرنے والی آنکھ سے، اللہ تمہیں شفا دے۔ اللہ کے نام سے میں تم پر دم کرتا ہوں۔',
-      translationPs:
-          'د الله په نامه زه پر تا دم کوم، له هر هغه څه چې تا ته زیان رسوي، له هر نفس شره یا حسد کوونکې سترګې، الله دې تا ته شفا درکړي. د الله په نامه زه پر تا دم کوم.',
-      reference: 'Sahih Muslim: 2186',
-    ),
-    DuaEntity(
-      id: 'ms36',
-      titleEn: 'When Looking at the Sky',
-      titleUr: 'آسمان کی طرف دیکھتے وقت',
-      titlePs: 'اسمان ته کتلو پر مهال',
-      arabic:
-          'رَبَّنَا مَا خَلَقْتَ هَذَا بَاطِلاً سُبْحَانَكَ فَقِنَا عَذَابَ النَّارِ',
-      translationEn:
-          'Our Lord, You have not created this in vain. Glory be to You, so protect us from the punishment of the Fire.',
-      translationUr:
-          'اے ہمارے رب! تو نے یہ بیکار نہیں بنایا، تو پاک ہے، ہمیں آگ کے عذاب سے بچا۔',
-      translationPs:
-          'ای زموږ ربه! تا دا بې ځایه نه دي پيدا کړي، ته پاک یې، نو موږ د اور له عذابه وساته.',
-      reference: 'Quran 3:191',
-    ),
+
   ];
 
   // ─── ALL CATEGORIES ──────────────────────────────────────────────────────────

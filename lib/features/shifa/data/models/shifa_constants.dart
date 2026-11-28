@@ -24,19 +24,19 @@ class ShifaConstants {
       titleUr: 'جسمانی درد کے لیے',
       titlePs: 'د بدن د درد لپاره',
       arabic:
-      'بِسْمِ اللَّهِ\nبِسْمِ اللَّهِ\nبِسْمِ اللَّهِ\nأَعُوذُ بِاللَّهِ وَقُدْرَتِهِ مِنْ شَرِّ مَا أَجِدُ وَأُحَاذِرُ',
+          'بِسْمِ اللَّهِ\nبِسْمِ اللَّهِ\nبِسْمِ اللَّهِ\nأَعُوذُ بِاللَّهِ وَقُدْرَتِهِ مِنْ شَرِّ مَا أَجِدُ وَأُحَاذِرُ',
       translationEn:
-      'In the name of Allah (3 times), then: I seek refuge in Allah and His Power from the evil of what I find (pain) and what I fear.',
+          'In the name of Allah (3 times), then: I seek refuge in Allah and His Power from the evil of what I find (pain) and what I fear.',
       translationUr:
-      'بسم اللہ (3 مرتبہ)، پھر: میں اللہ اور اس کی قدرت کی پناہ مانگتا ہوں اس تکلیف کے شر سے جو مجھے ہو رہی ہے اور جس سے میں ڈرتا ہوں۔',
+          'بسم اللہ (3 مرتبہ)، پھر: میں اللہ اور اس کی قدرت کی پناہ مانگتا ہوں اس تکلیف کے شر سے جو مجھے ہو رہی ہے اور جس سے میں ڈرتا ہوں۔',
       translationPs:
-      'د الله په نوم (۳ ځله)، بیا: زه د الله او د هغه د قدرت پناہ غواړم له هغه شر څخه چې زه یې احساسوم او وریږم.',
+          'د الله په نوم (۳ ځله)، بیا: زه د الله او د هغه د قدرت پناہ غواړم له هغه شر څخه چې زه یې احساسوم او وریږم.',
       instructionEn:
-      'Place your right hand on the painful area. Say Bismillah 3 times, then recite this dua 7 times.',
+          'Place your right hand on the painful area. Say Bismillah 3 times, then recite this dua 7 times.',
       instructionUr:
-      'دردناک جگہ پر سیدھا ہاتھ رکھیں۔ بسم اللہ 3 مرتبہ کہیں، پھر یہ دعا 7 مرتبہ پڑھیں۔',
+          'دردناک جگہ پر سیدھا ہاتھ رکھیں۔ بسم اللہ 3 مرتبہ کہیں، پھر یہ دعا 7 مرتبہ پڑھیں۔',
       instructionPs:
-      'خپل ښی لاس پر دردناک ځای کېږده. ۳ ځله بسم الله ووایه، بیا ۷ ځله دا دعا ولوله.',
+          'خپل ښی لاس پر دردناک ځای کېږده. ۳ ځله بسم الله ووایه، بیا ۷ ځله دا دعا ولوله.',
       reference: 'Sahih Muslim: 5737',
       targetCount: 7,
     ),
@@ -46,19 +46,19 @@ class ShifaConstants {
       titleUr: 'زخم اور پھوڑے کا روحانی علاج',
       titlePs: 'د زخم یا پړسوب لپاره دعا',
       arabic:
-      'بِسْمِ اللَّهِ تُرْبَةُ أَرْضِنَا بِرِيقَةِ بَعْضِنَا يُشْفَى سَقِيمُنَا بِإِذْنِ رَبِّنَا',
+          'بِسْمِ اللَّهِ تُرْبَةُ أَرْضِنَا بِرِيقَةِ بَعْضِنَا يُشْفَى سَقِيمُنَا بِإِذْنِ رَبِّنَا',
       translationEn:
-      'In the name of Allah, with the soil of our land and the saliva of some of us, our sick one is healed by the permission of our Lord.',
+          'In the name of Allah, with the soil of our land and the saliva of some of us, our sick one is healed by the permission of our Lord.',
       translationUr:
-      'اللہ کے نام سے، ہماری زمین کی مٹی اور ہم میں سے کسی کے تھوک کے ساتھ، ہمارا بیمار ہمارے رب کے حکم سے شفاء پائے۔',
+          'اللہ کے نام سے، ہماری زمین کی مٹی اور ہم میں سے کسی کے تھوک کے ساتھ، ہمارا بیمار ہمارے رب کے حکم سے شفاء پائے۔',
       translationPs:
-      'د الله په نوم، زموږ د ځمکې په خاورو او زموږ د ځینو په تولو سره، زموږ ناروغ زموږ د رب په حکم روغ شي.',
+          'د الله په نوم، زموږ د ځمکې په خاورو او زموږ د ځینو په تولو سره، زموږ ناروغ زموږ د رب په حکم روغ شي.',
       instructionEn:
-      'Put index finger on ground (or clean soil), then apply lightly on the wound while reciting.',
+          'Put index finger on ground (or clean soil), then apply lightly on the wound while reciting.',
       instructionUr:
-      'شہادت کی انگلی زمین (یا پاک مٹی) پر رکھیں، پھر زخم پر ہلکا لگائیں اور پڑھیں۔',
+          'شہادت کی انگلی زمین (یا پاک مٹی) پر رکھیں، پھر زخم پر ہلکا لگائیں اور پڑھیں۔',
       instructionPs:
-      'شهادت ګوته پر ځمکه کښېږده، بیا د لوستلو په وخت کې په سپک ډول پر زخم ووهه.',
+          'شهادت ګوته پر ځمکه کښېږده، بیا د لوستلو په وخت کې په سپک ډول پر زخم ووهه.',
       reference: 'Sahih al-Bukhari: 5745',
       targetCount: 1,
     ),
@@ -68,19 +68,17 @@ class ShifaConstants {
       titleUr: ' بیماری کے لیے دعا',
       titlePs: ' بیمارئ لپاره دعا',
       arabic:
-      'اللَّهُمَّ رَبَّ النَّاسِ أَذْهِبِ الْبَأْسَ اشْفِ أَنْتَ الشَّافِي لَا شِفَاءَ إِلَّا شِفَاؤُكَ شِفَاءً لَا يُغَادِرُ سَقَمًا',
+          'اللَّهُمَّ رَبَّ النَّاسِ أَذْهِبِ الْبَأْسَ اشْفِ أَنْتَ الشَّافِي لَا شِفَاءَ إِلَّا شِفَاؤُكَ شِفَاءً لَا يُغَادِرُ سَقَمًا',
       translationEn:
-      'O Allah, Lord of mankind, remove the suffering. Cure (him/her), for You are the Healer. There is no healing except Your healing, a healing that leaves no illness.',
+          'O Allah, Lord of mankind, remove the suffering. Cure (him/her), for You are the Healer. There is no healing except Your healing, a healing that leaves no illness.',
       translationUr:
-      'اے اللہ، لوگوں کے رب! تکلیف دور فرما۔ شفاء دے، کیونکہ تو ہی شفاء دینے والا ہے۔ تیری شفاء کے سوا کوئی شفاء نہیں، ایسی شفاء جو کوئی بیماری نہ چھوڑے۔',
+          'اے اللہ، لوگوں کے رب! تکلیف دور فرما۔ شفاء دے، کیونکہ تو ہی شفاء دینے والا ہے۔ تیری شفاء کے سوا کوئی شفاء نہیں، ایسی شفاء جو کوئی بیماری نہ چھوڑے۔',
       translationPs:
-      'یا الله، د خلکو ربه! تکلیف لرې کړه. شفا راکړه، ځکه چې ته پخپله شفاه ورکوونکی یې. د ستا له شفاه پرته بله شفاه نشته، ایسی شفا چې هیڅ ناروغی ونه نیسي.',
+          'یا الله، د خلکو ربه! تکلیف لرې کړه. شفا راکړه، ځکه چې ته پخپله شفاه ورکوونکی یې. د ستا له شفاه پرته بله شفاه نشته، ایسی شفا چې هیڅ ناروغی ونه نیسي.',
       instructionEn:
-      'Place right hand on the patient and recite while wiping over them.',
-      instructionUr:
-      'مریض پر سیدھا ہاتھ رکھیں اور پڑھتے ہوئے ہاتھ پھیریں۔',
-      instructionPs:
-      'پر ناروغ ښی لاس کېږده او په لوستلو سره لاس پرې ووهه.',
+          'Place right hand on the patient and recite while wiping over them.',
+      instructionUr: 'مریض پر سیدھا ہاتھ رکھیں اور پڑھتے ہوئے ہاتھ پھیریں۔',
+      instructionPs: 'پر ناروغ ښی لاس کېږده او په لوستلو سره لاس پرې ووهه.',
       reference: 'Sahih al-Bukhari: 5750',
       targetCount: 1,
     ),
@@ -90,19 +88,16 @@ class ShifaConstants {
       titleUr: 'جبریل علیہ السلام کی رقیہ',
       titlePs: 'د جبرائیل علیه السلام دم د هر ضرر لپاره',
       arabic:
-      'بِسْمِ اللَّهِ أَرْقِيكَ مِنْ كُلِّ شَيْءٍ يُؤْذِيكَ مِنْ شَرِّ كُلِّ نَفْسٍ أَوْ عَيْنٍ حَاسِدٍ اللَّهُ يَشْفِيكَ بِسْمِ اللَّهِ أَرْقِيكَ',
+          'بِسْمِ اللَّهِ أَرْقِيكَ مِنْ كُلِّ شَيْءٍ يُؤْذِيكَ مِنْ شَرِّ كُلِّ نَفْسٍ أَوْ عَيْنٍ حَاسِدٍ اللَّهُ يَشْفِيكَ بِسْمِ اللَّهِ أَرْقِيكَ',
       translationEn:
-      'In the name of Allah I perform ruqyah for you, from everything that harms you, from the evil of every soul or envious eye. May Allah heal you; in the name of Allah I perform ruqyah for you.',
+          'In the name of Allah I perform ruqyah for you, from everything that harms you, from the evil of every soul or envious eye. May Allah heal you; in the name of Allah I perform ruqyah for you.',
       translationUr:
-      'اللہ کے نام سے میں تجھے دم کرتا ہوں، ہر اس چیز سے جو تجھے تکلیف دیتی ہے، ہر نفس یا حاسد نظر کے شر سے۔ اللہ تجھے شفاء دے، اللہ کے نام سے میں تجھے دم کرتا ہوں۔',
+          'اللہ کے نام سے میں تجھے دم کرتا ہوں، ہر اس چیز سے جو تجھے تکلیف دیتی ہے، ہر نفس یا حاسد نظر کے شر سے۔ اللہ تجھے شفاء دے، اللہ کے نام سے میں تجھے دم کرتا ہوں۔',
       translationPs:
-      'د الله په نوم زه پر تا دم کوم، له هر هغه شي څخه چې تا ته تکلیف درکوي، د هر نفس یا حسد کوونکې سترګې له شر څخه. الله دې تا روغ کړي؛ د الله په نوم پر تا دم کوم.',
-      instructionEn:
-      'Jibril (AS) recited this upon the Prophet ﷺ.',
-      instructionUr:
-      'جبریل علیہ السلام نے یہ نبی ﷺ پر پڑھی تھی۔۔',
-      instructionPs:
-      'جبرائیل علیه السلام دا پر نبی ﷺ لوستې وه. .',
+          'د الله په نوم زه پر تا دم کوم، له هر هغه شي څخه چې تا ته تکلیف درکوي، د هر نفس یا حسد کوونکې سترګې له شر څخه. الله دې تا روغ کړي؛ د الله په نوم پر تا دم کوم.',
+      instructionEn: 'Jibril (AS) recited this upon the Prophet ﷺ.',
+      instructionUr: 'جبریل علیہ السلام نے یہ نبی ﷺ پر پڑھی تھی۔۔',
+      instructionPs: 'جبرائیل علیه السلام دا پر نبی ﷺ لوستې وه. .',
       reference: 'Sunan at-Tirmidhi: 972',
       targetCount: 3,
     ),
@@ -112,13 +107,13 @@ class ShifaConstants {
       titleUr: 'سر درد یا کسی مخصوص جگہ کے درد کے لیے',
       titlePs: 'د سر درد یا هر ځانګړي درد لپاره',
       arabic:
-      'أَعُوذُ بِعِزَّةِ اللَّهِ وَقُدْرَتِهِ مِنْ شَرِّ مَا أَجِدُ وَأُحَاذِرُ',
+          'أَعُوذُ بِعِزَّةِ اللَّهِ وَقُدْرَتِهِ مِنْ شَرِّ مَا أَجِدُ وَأُحَاذِرُ',
       translationEn:
-      'I seek refuge in the might of Allah and His power from the evil of what I feel and what I fear.',
+          'I seek refuge in the might of Allah and His power from the evil of what I feel and what I fear.',
       translationUr:
-      'میں اللہ کی عزت اور اس کی قدرت کی پناہ مانگتا ہوں ہر اس شر سے جو مجھے ہو رہا ہے اور جس سے میں ڈرتا ہوں۔',
+          'میں اللہ کی عزت اور اس کی قدرت کی پناہ مانگتا ہوں ہر اس شر سے جو مجھے ہو رہا ہے اور جس سے میں ڈرتا ہوں۔',
       translationPs:
-      'زه د الله په عزت او د هغه په قدرت پناہ غواړم له هغه شر څخه چې زه یې احساسوم او وریږم.',
+          'زه د الله په عزت او د هغه په قدرت پناہ غواړم له هغه شر څخه چې زه یې احساسوم او وریږم.',
       instructionEn: 'Place hand on the painful area and recite 7 times.',
       instructionUr: 'دردناک جگہ پر ہاتھ رکھ کر 7 مرتبہ پڑھیں۔',
       instructionPs: 'پر دردناک ځای لاس کېږده او ۷ ځله یې ولوله.',
@@ -131,19 +126,19 @@ class ShifaConstants {
       titleUr: 'سورۃ الفاتحہ بطور رقیہ',
       titlePs: 'سورۃ الفاتحہ د دم په توګه',
       arabic:
-      'الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ\nالرَّحْمَنِ الرَّحِيمِ\nمَالِكِ يَوْمِ الدِّينِ\nإِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ\nاهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ\nصِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ',
+          'الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ\nالرَّحْمَنِ الرَّحِيمِ\nمَالِكِ يَوْمِ الدِّينِ\nإِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ\nاهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ\nصِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ',
       translationEn:
-      'All praise is for Allah, Lord of all worlds, the Most Gracious, the Most Merciful, Master of the Day of Judgement. You alone we worship and You alone we ask for help. Guide us to the straight path — the path of those You have blessed, not of those who have earned anger, nor of those who are astray.',
+          'All praise is for Allah, Lord of all worlds, the Most Gracious, the Most Merciful, Master of the Day of Judgement. You alone we worship and You alone we ask for help. Guide us to the straight path — the path of those You have blessed, not of those who have earned anger, nor of those who are astray.',
       translationUr:
-      'تمام تعریفیں اللہ کے لیے ہیں جو تمام جہانوں کا رب ہے، بڑا مہربان، نہایت رحم والا، روزِ جزا کا مالک۔ ہم صرف تیری عبادت کرتے ہیں اور صرف تجھ سے مدد مانگتے ہیں۔ ہمیں سیدھی راہ دکھا، ان لوگوں کی راہ جن پر تو نے انعام فرمایا، نہ ان کی جن پر غضب ہوا اور نہ گمراہوں کی۔',
+          'تمام تعریفیں اللہ کے لیے ہیں جو تمام جہانوں کا رب ہے، بڑا مہربان، نہایت رحم والا، روزِ جزا کا مالک۔ ہم صرف تیری عبادت کرتے ہیں اور صرف تجھ سے مدد مانگتے ہیں۔ ہمیں سیدھی راہ دکھا، ان لوگوں کی راہ جن پر تو نے انعام فرمایا، نہ ان کی جن پر غضب ہوا اور نہ گمراہوں کی۔',
       translationPs:
-      'ټولې ستاینې د الله لپاره دي چې د ټولو جهانونو رب دی، ډېر مهربان، ډېر رحم کوونکی، د جزا د ورځې مالک. موږ یوازې د تا عبادت کوو او یوازې له تا څخه مرسته غواړو. موږ سمې لارې ته هدایت وکړه — د هغو خلکو لاره چې ته پرې انعام کړی دی، نه د هغو چې غضب پرې شوی او نه د گمراهانو.',
+          'ټولې ستاینې د الله لپاره دي چې د ټولو جهانونو رب دی، ډېر مهربان، ډېر رحم کوونکی، د جزا د ورځې مالک. موږ یوازې د تا عبادت کوو او یوازې له تا څخه مرسته غواړو. موږ سمې لارې ته هدایت وکړه — د هغو خلکو لاره چې ته پرې انعام کړی دی، نه د هغو چې غضب پرې شوی او نه د گمراهانو.',
       instructionEn:
-      'A companion recited Surah Al-Fatihah on a scorpion-stung man and he was cured. Recite and blow on the patient or the painful area.',
+          'A companion recited Surah Al-Fatihah on a scorpion-stung man and he was cured. Recite and blow on the patient or the painful area.',
       instructionUr:
-      'ایک صحابی نے بچھو کے کاٹے ہوئے شخص پر سورۃ الفاتحہ پڑھی تو وہ ٹھیک ہو گیا۔ مریض یا دردناک جگہ پر پڑھ کر دم کریں۔',
+          'ایک صحابی نے بچھو کے کاٹے ہوئے شخص پر سورۃ الفاتحہ پڑھی تو وہ ٹھیک ہو گیا۔ مریض یا دردناک جگہ پر پڑھ کر دم کریں۔',
       instructionPs:
-      'یو صحابي د لړم په چیچلو شوي کس سورۃ الفاتحہ وویله او هغه روغ شو. د ناروغ یا دردناک ځای په سر یې ولوله او دم کړه.',
+          'یو صحابي د لړم په چیچلو شوي کس سورۃ الفاتحہ وویله او هغه روغ شو. د ناروغ یا دردناک ځای په سر یې ولوله او دم کړه.',
       reference: 'Sahih al-Bukhari: 5736, Sahih Muslim: 2201',
       targetCount: 7,
     ),
@@ -153,16 +148,17 @@ class ShifaConstants {
       titleUr: 'بخار ٹھنڈا کرنے کی دعا',
       titlePs: 'د تبې د سړولو دعا',
       arabic:
-      'بِسْمِ اللَّهِ الْكَبِيرِ أَعُوذُ بِاللَّهِ الْعَظِيمِ مِنْ شَرِّ كُلِّ عِرْقٍ نَعَّارٍ وَمِنْ شَرِّ حَرِّ النَّارِ',
+          'بِسْمِ اللَّهِ الْكَبِيرِ أَعُوذُ بِاللَّهِ الْعَظِيمِ مِنْ شَرِّ كُلِّ عِرْقٍ نَعَّارٍ وَمِنْ شَرِّ حَرِّ النَّارِ',
       translationEn:
-      'In the name of Allah, the Great. I seek refuge in Allah, the Magnificent, from the evil of every pulsing vein and from the evil of the heat of the fire.',
+          'In the name of Allah, the Great. I seek refuge in Allah, the Magnificent, from the evil of every pulsing vein and from the evil of the heat of the fire.',
       translationUr:
-      'اللہ کے بڑے نام سے۔ میں اللہ عظیم کی پناہ مانگتا ہوں ہر دھڑکتی رگ کے شر سے اور آگ کی گرمی کے شر سے۔',
-      translationPs: 'د الله په لوی نوم. زه د لوی الله پناہ غواړم د هرې تپېدونکې رګ له شر څخه او د اور د تودوخې له شر څخه.',
+          'اللہ کے بڑے نام سے۔ میں اللہ عظیم کی پناہ مانگتا ہوں ہر دھڑکتی رگ کے شر سے اور آگ کی گرمی کے شر سے۔',
+      translationPs:
+          'د الله په لوی نوم. زه د لوی الله پناہ غواړم د هرې تپېدونکې رګ له شر څخه او د اور د تودوخې له شر څخه.',
       instructionEn:
-      'Place hand on the forehead or affected area and recite. The Prophet ﷺ instructed this for fever.',
+          'Place hand on the forehead or affected area and recite. The Prophet ﷺ instructed this for fever.',
       instructionUr:
-      'ماتھے یا متاثرہ جگہ پر ہاتھ رکھ کر پڑھیں۔ نبی ﷺ نے بخار میں یہ پڑھنے کا حکم دیا۔',
+          'ماتھے یا متاثرہ جگہ پر ہاتھ رکھ کر پڑھیں۔ نبی ﷺ نے بخار میں یہ پڑھنے کا حکم دیا۔',
       instructionPs: 'پر تېږي یا اغېزمن ځای لاس کېږده او دا دعا ولوله.',
       reference: 'Tirmidhi: 2075, graded Hasan by Tirmidhi',
       targetCount: 7,
@@ -212,12 +208,14 @@ class ShifaConstants {
           'I ask Allah, the Mighty, Lord of the Mighty Throne, to cure you.',
       translationUr:
           'میں اللہ عظیم سے، جو عرشِ عظیم کا رب ہے، درخواست کرتا ہوں کہ وہ تجھے شفاء دے۔',
-      translationPs: 'زه له لوی الله څخه، چې د لوی عرش رب دی، غواړم چې تا ته شفا درکړي.',
+      translationPs:
+          'زه له لوی الله څخه، چې د لوی عرش رب دی، غواړم چې تا ته شفا درکړي.',
       instructionEn:
           'The Prophet ﷺ said: whoever visits a sick person who is not at the point of death and recites this 7 times, Allah will cure him of that illness.',
       instructionUr:
           'نبی ﷺ نے فرمایا: جو کوئی کسی بیمار کی عیادت کرے جو موت کے قریب نہ ہو اور یہ 7 مرتبہ پڑھے، اللہ اسے اس بیماری سے شفاء دے گا۔',
-      instructionPs: 'نبی ﷺ وویل: څوک چې د کوم ناروغ پوښتنې ته لاړ شي او دا ۷ ځله ولولي، الله به ورته شفا ورکړي.',
+      instructionPs:
+          'نبی ﷺ وویل: څوک چې د کوم ناروغ پوښتنې ته لاړ شي او دا ۷ ځله ولولي، الله به ورته شفا ورکړي.',
       reference: 'Abu Dawud: 3106',
       targetCount: 7,
     ),
@@ -232,7 +230,8 @@ class ShifaConstants {
           'Remove the suffering, O Lord of mankind, and heal; You are the Healer. There is no healing except Your healing, a healing that leaves no illness behind.',
       translationUr:
           'تکلیف دور فرما، اے لوگوں کے رب! اور شفاء دے، تو ہی شفاء دینے والا ہے، تیری شفاء کے سوا کوئی شفاء نہیں، ایسی شفاء جو کوئی بیماری نہ چھوڑے۔',
-      translationPs: 'تکلیف لرې کړه، ای د خلکو ربه! او شفا راکړه، ته په خپله شفا ورکوونکی یې، د ستا له شفا پرته بله شفا نشته.',
+      translationPs:
+          'تکلیف لرې کړه، ای د خلکو ربه! او شفا راکړه، ته په خپله شفا ورکوونکی یې، د ستا له شفا پرته بله شفا نشته.',
       instructionEn:
           'Place your right hand on the painful area of the body, wipe it gently, and recite the dua.',
       instructionUr:
@@ -252,7 +251,8 @@ class ShifaConstants {
           'Place your hand on the area of your body that hurts and say Bismillah three times; then say seven times: I seek refuge in Allah and His Power from the evil of what I find and what I fear.',
       translationUr:
           'جسم کے جس حصے میں تکلیف ہو اس پر ہاتھ رکھیں اور بسم اللہ 3 مرتبہ کہیں، پھر 7 مرتبہ کہیں: میں اللہ اور اس کی قدرت کی پناہ مانگتا ہوں ہر اس تکلیف کے شر سے جو مجھے ہو رہی ہے اور جس سے میں ڈرتا ہوں۔',
-      translationPs: 'د بدن په هغه ځای لاس کېږده چې درد کوي او ۳ ځله بسم الله ووايه، بیا ۷ ځله دا دعا ولوله.',
+      translationPs:
+          'د بدن په هغه ځای لاس کېږده چې درد کوي او ۳ ځله بسم الله ووايه، بیا ۷ ځله دا دعا ولوله.',
       instructionEn:
           'This is the complete Prophetic method for any bodily pain. Place right hand on the stomach or affected area.',
       instructionUr:
@@ -294,7 +294,8 @@ class ShifaConstants {
       translationEn:
           'Allah — there is no deity except Him, the Ever-Living, the Sustainer of all existence...',
       translationUr: 'اللہ — اس کے سوا کوئی معبود نہیں، وہ ہمیشہ زندہ ہے...',
-      translationPs: 'الله — هغه ذات دی چې تر سربیره بل د عبادت وړ نشته، تل ژوندی او قائم پاتې کیدونکی دی...',
+      translationPs:
+          'الله — هغه ذات دی چې تر سربیره بل د عبادت وړ نشته، تل ژوندی او قائم پاتې کیدونکی دی...',
       instructionEn: 'Recite before sleeping for protection.',
       instructionUr: 'حفاظت کے لیے سونے سے پہلے پڑھیں۔',
       instructionPs: 'د ساتنې لپاره د خوب پر مهال ووايئ.',
@@ -314,12 +315,14 @@ class ShifaConstants {
           'Indeed, adversity has touched me, and You are the Most Merciful of the merciful.',
       translationUr:
           'بے شک مجھے تکلیف پہنچی ہے اور تو سب سے زیادہ رحم کرنے والا ہے۔',
-      translationPs: 'بې شکه چې ماته تکلیف راپېښ شوی دی او ته د ټولو رحم کوونکو تر ټولو ډېر مهربان یې.',
+      translationPs:
+          'بې شکه چې ماته تکلیف راپېښ شوی دی او ته د ټولو رحم کوونکو تر ټولو ډېر مهربان یې.',
       instructionEn:
           'The dua of Prophet Ayyub (AS) when he was ill for many years. Allah accepted it and restored his health. Recite with full trust in Allah.',
       instructionUr:
           'حضرت ایوب علیہ السلام کی دعا جو انہوں نے سالوں بیمار رہتے ہوئے کی۔ اللہ نے قبول فرمائی اور صحت عطا کی۔ پورے یقین سے پڑھیں۔',
-      instructionPs: 'د حضرت ایوب علیه السلام دعا کله چې هغه کلونه ناروغ و. الله قبول کړه او روغتیا یې ورکړه. په پوره باور سره یې ولوله.',
+      instructionPs:
+          'د حضرت ایوب علیه السلام دعا کله چې هغه کلونه ناروغ و. الله قبول کړه او روغتیا یې ورکړه. په پوره باور سره یې ولوله.',
       reference: 'Quran 21:83; Tafsir Ibn Kathir',
       targetCount: 3,
     ),
@@ -334,12 +337,14 @@ class ShifaConstants {
           'There is no deity except You; exalted are You. Indeed, I have been of the wrongdoers.',
       translationUr:
           'تیرے سوا کوئی معبود نہیں، تو پاک ہے، بے شک میں ظالموں میں سے تھا۔',
-      translationPs: 'د تا پرته بل د عبادت وړ نشته، ته پاک یې، بې شکه چې زه له ظالمانو څخه وم.',
+      translationPs:
+          'د تا پرته بل د عبادت وړ نشته، ته پاک یې، بې شکه چې زه له ظالمانو څخه وم.',
       instructionEn:
           'The Prophet ﷺ said: No Muslim calls upon Allah with these words in any matter except that Allah will respond to him. Recite in any hardship or illness.',
       instructionUr:
           'نبی ﷺ نے فرمایا: جو مسلمان کسی بھی معاملے میں ان کلمات سے اللہ کو پکارے تو اللہ ضرور قبول فرماتا ہے۔ کسی بھی مشکل یا بیماری میں پڑھیں۔',
-      instructionPs: 'نبی ﷺ وویل: کوم مسلمان چې په هره ستونزه کې په دې کلماتو دعا وکړي، الله به یې ومني.',
+      instructionPs:
+          'نبی ﷺ وویل: کوم مسلمان چې په هره ستونزه کې په دې کلماتو دعا وکړي، الله به یې ومني.',
       reference: 'Quran 21:87; Jami at-Tirmidhi 3505 (Sahih)',
       targetCount: 40,
     ),
@@ -363,7 +368,8 @@ class ShifaConstants {
           'The Prophet ﷺ said: Allah will take away his grief and replace it with joy. When a person recites this dua with full heart.',
       instructionUr:
           'نبی ﷺ نے فرمایا: اللہ اس کا غم دور کرے گا اور اس کی جگہ خوشی دے گا۔ جب بندہ یہ دعا پوری طرح پڑھے۔',
-      instructionPs: 'نبی ﷺ وویل: الله به د هغه غم لرې کړي او په خوشحاله به یې بدل کړي، کله چې یو څوک دا دعا په زړه سره ولولي.',
+      instructionPs:
+          'نبی ﷺ وویل: الله به د هغه غم لرې کړي او په خوشحاله به یې بدل کړي، کله چې یو څوک دا دعا په زړه سره ولولي.',
       reference: 'Musnad Ahmad 3712 (Sahih by al-Albani)',
       targetCount: 1,
     ),
@@ -378,7 +384,8 @@ class ShifaConstants {
           'O Allah, nothing is easy except what You make easy, and You make the difficult easy if You wish.',
       translationUr:
           'اے اللہ! کوئی چیز آسان نہیں مگر جسے تو آسان کرے، اور تو چاہے تو مشکل کو بھی آسان کر دیتا ہے۔',
-      translationPs: 'یا الله! هیڅ شی اسانه نه دی مګر هغه چې ته یې اسانه کړې، او ته غواړې نو مشکل اسانه کوې.',
+      translationPs:
+          'یا الله! هیڅ شی اسانه نه دی مګر هغه چې ته یې اسانه کړې، او ته غواړې نو مشکل اسانه کوې.',
       instructionEn: 'Recite in any difficulty or hardship.',
       instructionUr: 'کسی بھی تنگی یا مشکل میں پڑھیں۔',
       instructionPs: 'په هر ډول سختی یا مشکل کې یې ولوله.',
@@ -396,7 +403,8 @@ class ShifaConstants {
           'O Allah, I seek refuge with You from worry and grief, from incapacity and laziness, from miserliness and cowardice, from being heavily in debt and from being overpowered by men.',
       translationUr:
           'اے اللہ! میں تیری پناہ مانگتا ہوں فکر و غم سے، عاجزی اور سستی سے، بخل اور بزدلی سے، قرض کے بوجھ سے اور لوگوں کے غلبے سے۔',
-      translationPs: 'یا الله! زه د اندېښنې، غم، سستۍ، بخل، بزدلۍ، د پور له بار او د خلکو له غلبې څخه په تا پناہ غواړم.',
+      translationPs:
+          'یا الله! زه د اندېښنې، غم، سستۍ، بخل، بزدلۍ، د پور له بار او د خلکو له غلبې څخه په تا پناہ غواړم.',
       instructionEn:
           'The Prophet ﷺ used to say this dua regularly. Recite morning and evening.',
       instructionUr: 'نبی ﷺ یہ دعا کثرت سے پڑھتے تھے۔ صبح و شام پڑھیں۔',
@@ -415,7 +423,8 @@ class ShifaConstants {
           'There is no deity except Allah, the Magnificent, the Forbearing. There is no deity except Allah, Lord of the Magnificent Throne. There is no deity except Allah, Lord of the heavens and Lord of the earth and Lord of the Noble Throne.',
       translationUr:
           'اللہ کے سوا کوئی معبود نہیں، وہ عظیم، بردبار ہے۔ اللہ کے سوا کوئی معبود نہیں، عرش عظیم کا رب۔ اللہ کے سوا کوئی معبود نہیں، آسمانوں کا رب، زمین کا رب اور کریم عرش کا رب۔',
-      translationPs: 'د الله پرته بل د عبادت وړ نشته، چې لوی او بردبار دی. د عرش عظیم رب دی...',
+      translationPs:
+          'د الله پرته بل د عبادت وړ نشته، چې لوی او بردبار دی. د عرش عظیم رب دی...',
       instructionEn:
           'The Prophet ﷺ used to say this when he was in distress. It is one of the most powerful duas for calamity.',
       instructionUr:
@@ -438,7 +447,8 @@ class ShifaConstants {
           'Ibrahim (AS) said this when thrown into fire; the Prophet ﷺ and companions said it in fear. Recite in any fear or overwhelming situation.',
       instructionUr:
           'ابراہیم علیہ السلام نے آگ میں ڈالے جاتے وقت یہ کہا، نبی ﷺ اور صحابہ نے خوف میں یہ کہا۔ کسی بھی خوف یا بھاری صورتحال میں پڑھیں۔',
-      instructionPs: 'حضرت ابراهیم (ع) په اور کې د اچولو پر مهال دا وویل. په هر ډار یا ستونزه کې یې ولوله.',
+      instructionPs:
+          'حضرت ابراهیم (ع) په اور کې د اچولو پر مهال دا وویل. په هر ډار یا ستونزه کې یې ولوله.',
       reference: 'Sahih Bukhari 4563; Quran 3:173',
       targetCount: 100,
     ),
