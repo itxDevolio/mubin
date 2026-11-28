@@ -34,14 +34,6 @@ class ContactUsScreen extends ConsumerWidget {
               ? 'موږ خپله پوره هڅه کړې چې مبین اپلیکیشن غوره او له بګونو پاک وساتو تر څو ستاسو عبادت په اسانۍ ترسره شي. که تاسو ته کومه ستونزه، بګ یا نیمګړتیا په نظر راشي، نو مهرباني وکړئ په واټس اپ یا برېښنالیک له موږ سره اړیکه ونیسئ.'
               : 'We have tried our best to keep Mubin bug-free and optimized for your daily spiritual needs. However, if you notice any issues, bugs, or have feedback, feel free to contact us anytime via WhatsApp or Email.');
 
-    final String whatsappTitle = isUrdu
-        ? 'واٹس ایپ: +92 300 3209427'
-        : (isPashto ? 'واټس اپ: +92 300 3209427' : 'WhatsApp: +92 300 3209427');
-
-    final String emailTitle = isUrdu
-        ? 'ای میل: devolio.office@gmail.com'
-        : (isPashto ? 'برېښنالیک: devolio.office@gmail.com' : 'Email: devolio.office@gmail.com');
-
     final String footerText = isUrdu
         ? 'امت مسلمہ کے لیے محبت کے ساتھ تیار کیا گیا'
         : (isPashto
@@ -99,7 +91,7 @@ class ContactUsScreen extends ConsumerWidget {
             const Divider(height: 1),
             const SizedBox(height: 24),
 
-            // WhatsApp Link
+            // WhatsApp Number Link
             InkWell(
               onTap: () {
                 hapticFeedBack();
@@ -111,10 +103,10 @@ class ContactUsScreen extends ConsumerWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      whatsappTitle,
+                    const Text(
+                      '+92 300 3209427',
                       style: TextStyle(
-                        fontFamily: fontFamily,
+                        fontFamily: 'Poppins',
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
                         color: AppColors.primaryTeal,
@@ -131,7 +123,7 @@ class ContactUsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
 
-            // Email Link
+            // Email Address Link
             InkWell(
               onTap: () {
                 hapticFeedBack();
@@ -143,10 +135,10 @@ class ContactUsScreen extends ConsumerWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      emailTitle,
+                    const Text(
+                      'devolio.office@gmail.com',
                       style: TextStyle(
-                        fontFamily: fontFamily,
+                        fontFamily: 'Poppins',
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
                         color: AppColors.primaryTeal,
