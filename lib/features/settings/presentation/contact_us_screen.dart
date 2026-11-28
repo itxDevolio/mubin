@@ -28,10 +28,10 @@ class ContactUsScreen extends ConsumerWidget {
         : (isPashto ? 'مونږ سره اړیکه ونیسئ' : 'Get in Touch With Us');
 
     final String description = isUrdu
-        ? 'ہم آپ کی مدد کے لیے ہمیشہ حاضر ہیں۔ کسی بھی سوال، فیڈ بیک یا رہنمائی کے لیے واٹس ایپ یا ای میل کے ذریعے بلا جھجھک رابطہ کریں۔'
+        ? 'ہم نے پوری کوشش کی ہے کہ مبین ایپ کو بہترین اور بگ فری رکھا جائے تاکہ آپ کی عبادت میں کوئی خلل نہ آئے۔ اگر آپ کو کوئی بھی مسئلہ، بگ یا خامی نظر آئے یا کوئی تجاویز ہوں، تو بلا جھجھک واٹس ایپ یا ای میل کے ذریعے رابطہ کریں۔'
         : (isPashto
-              ? 'موږ تل ستاسو د مرستې لپاره چمتو یو. د هرې پوښتنې، نظر یا مرستې لپاره په واټس اپ یا برېښنالیک له موږ سره اړیکه ونیسئ.'
-              : 'We are always here to help. Reach out to us via WhatsApp or Email anytime for any questions, feedback, or support.');
+              ? 'موږ خپله پوره هڅه کړې چې مبین اپلیکیشن غوره او له بګونو پاک وساتو ترڅو ستاسو عبادت په اسانۍ ترسره شي. که تاسو ته کومه ستونزه، بګ یا نیمګړتیا په نظر راشي، نو مهرباني وکړئ په واټس اپ یا برېښنالیک له موږ سره اړیکه ونیسئ.'
+              : 'We have tried our best to keep Mubin bug-free and optimized for your daily spiritual needs. However, if you notice any issues, bugs, or have feedback, feel free to contact us anytime via WhatsApp or Email.');
 
     final String whatsappTitle = isUrdu
         ? 'واٹس ایپ'
@@ -82,16 +82,23 @@ class ContactUsScreen extends ConsumerWidget {
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         children: [
-          // Clean Header Section
+          // Clean Header Section with Left Icon
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  const Icon(
-                    Icons.support_agent_rounded,
-                    color: AppColors.primaryTeal,
-                    size: 28,
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryTeal.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      Icons.support_agent_rounded,
+                      color: AppColors.primaryTeal,
+                      size: 24,
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Text(
@@ -105,13 +112,13 @@ class ContactUsScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 16),
               Text(
                 description,
                 style: TextStyle(
                   fontFamily: fontFamily,
                   fontSize: 13.5,
-                  height: 1.8,
+                  height: 1.85,
                   color: isDark ? Colors.white70 : Colors.black54,
                 ),
               ),
@@ -121,7 +128,7 @@ class ContactUsScreen extends ConsumerWidget {
           const Divider(height: 1),
           const SizedBox(height: 24),
 
-          // WhatsApp Contact Row
+          // WhatsApp Contact Row (Left aligned)
           ListTile(
             onTap: () {
               hapticFeedBack();
@@ -165,7 +172,7 @@ class ContactUsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 12),
 
-          // Email Contact Row
+          // Email Contact Row (Left aligned)
           ListTile(
             onTap: () {
               hapticFeedBack();
