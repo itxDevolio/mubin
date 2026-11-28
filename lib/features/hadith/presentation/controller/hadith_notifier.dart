@@ -50,6 +50,9 @@ class HadithLanguageNotifier extends Notifier<String> {
   @override
   String build() {
     final settings = ref.watch(settingsControllerProvider);
+    if (_userSelectedLang != null) {
+      return _userSelectedLang!;
+    }
     if (settings.language == 'en') {
       return 'en';
     } else if (settings.language == 'ur') {
@@ -57,7 +60,7 @@ class HadithLanguageNotifier extends Notifier<String> {
     } else if (settings.language == 'ps') {
       return 'ps';
     } else {
-      return _userSelectedLang ?? 'ur';
+      return 'ur';
     }
   }
 
