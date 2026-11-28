@@ -7,14 +7,34 @@ import '../app_colors.dart';
 
 class AdHelper {
   static const String _admobInterstitialAndroid =
-      'ca-app-pub-3940256099942544/1033173712';
+      'ca-app-pub-5751989678728366/1280518889';
   static const String _admobInterstitialIos =
-      'ca-app-pub-3940256099942544/4411468910';
+      'ca-app-pub-5751989678728366/1280518889';
+
+  static const String _admobBannerAndroid =
+      'ca-app-pub-5751989678728366/8507363719';
+  static const String _admobBannerIos =
+      'ca-app-pub-5751989678728366/8507363719';
+
+  static const String _admobRewardedAndroid =
+      'ca-app-pub-5751989678728366/3969215228';
+  static const String _admobRewardedIos =
+      'ca-app-pub-5751989678728366/3969215228';
 
   static String get interstitialAdUnitId =>
       defaultTargetPlatform == TargetPlatform.iOS
       ? _admobInterstitialIos
       : _admobInterstitialAndroid;
+
+  static String get bannerAdUnitId =>
+      defaultTargetPlatform == TargetPlatform.iOS
+      ? _admobBannerIos
+      : _admobBannerAndroid;
+
+  static String get rewardedAdUnitId =>
+      defaultTargetPlatform == TargetPlatform.iOS
+      ? _admobRewardedIos
+      : _admobRewardedAndroid;
 
   // Show Interstitial ad with a 7-second loading dialog (auto-continue if not loaded)
   static void showInterstitialWithLoading(
