@@ -148,28 +148,6 @@ class ShifaConstants {
       targetCount: 7,
     ),
     ShifaEntity(
-      id: 'p8',
-      titleEn: 'Surah Al-Ikhlas, Al-Falaq and An-Nas (Three Quls)',
-      titleUr: 'تین قل (سورۃ اخلاص، فلق، ناس)',
-      titlePs: 'درې قل (سورۃ اخلاص، فلق، ناس)',
-      arabic:
-      'قُلْ هُوَ اللَّهُ أَحَدٌ ۞ اللَّهُ الصَّمَدُ ۞ لَمْ يَلِدْ وَلَمْ يُولَدْ ۞ وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ\n\nقُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ۞ مِنْ شَرِّ مَا خَلَقَ ۞ وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ ۞ وَمِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ ۞ وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ\n\nقُلْ أَعُوذُ بِرَبِّ النَّاسِ ۞ مَلِكِ النَّاسِ ۞ إِلَهِ النَّاسِ ۞ مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ ۞ الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ ۞ مِنَ الْجِنَّةِ وَالنَّاسِ',
-      translationEn:
-      'Say: He is Allah, the One. Allah, the Eternal Refuge. He neither begets nor is born, nor is there to Him any equivalent.\n\nSay: I seek refuge in the Lord of daybreak — from the evil of what He has created, from the evil of darkness when it settles, from the evil of those who blow on knots, from the evil of an envier when he envies.\n\nSay: I seek refuge in the Lord of mankind, the Sovereign of mankind, the God of mankind — from the evil of the retreating whisperer, who whispers into the chests of mankind — from among jinn and mankind.',
-      translationUr:
-      'کہو: وہ اللہ ایک ہے، اللہ بے نیاز ہے، نہ اس نے کسی کو جنا، نہ وہ جنا گیا، اور نہ اس کا کوئی ہمسر ہے۔\n\nکہو: میں صبح کے رب کی پناہ مانگتا ہوں، اس کی مخلوق کے شر سے، اندھیرے کے شر سے جب وہ چھا جائے، گانٹھوں میں پھونکنے والیوں کے شر سے، اور حسد کرنے والے کے شر سے جب وہ حسد کرے۔\n\nکہو: میں لوگوں کے رب کی پناہ مانگتا ہوں، لوگوں کے بادشاہ کی، لوگوں کے معبود کی — وسوسہ ڈالنے والے پیچھے ہٹنے والے کے شر سے، جو لوگوں کے سینوں میں وسوسہ ڈالتا ہے — جنوں میں سے اور انسانوں میں سے۔',
-      translationPs:
-      'وایه‌: هغه الله یو دی، الله بې نیازه دی، نه چا ته زېږیدلی او نه زېږیدلی دی، او هیڅوک د هغه سیال نشته.\n\nوایه‌: زه د سهار له ربه پناہ غواړم — د هغو شیانو له شره چې هغه پیدا کړي دي، د تیارې له شره کله چې خپره شي، په غوټو کې د پوکوونکو له شره، او د حسد کوونکي له شره کله چې حسد وکړي.\n\nوایه‌: زه د خلکو له ربه پناہ غواړم، د خلکو له پادشا، د خلکو له معبود — د وسوسه اچوونکي او شاته تلونکي له شره، چې د خلکو په سینو کې وسوسه اچوي — له پیریانو او انسانانو.',
-      instructionEn:
-      'The Prophet ﷺ would recite these three surahs, blow into his palms and wipe over his entire body during illness. Repeat 3 times each.',
-      instructionUr:
-      'نبی ﷺ بیماری میں یہ تینوں سورتیں پڑھ کر ہتھیلیوں پر دم کرتے اور پورے جسم پر پھیرتے تھے۔ ہر سورت 3 مرتبہ پڑھیں۔',
-      instructionPs:
-      'نبی ﷺ به د ناروغۍ پر مهال دا درې سورتونه لوستل، په خپلو لاسونو به یې پوک کاوه او په ټول بدن به یې راکاوه. هر یو ۳ ځله ولوله.',
-      reference: 'Sahih al-Bukhari: 5748, Sahih Muslim: 2192',
-      targetCount: 3,
-    ),
-    ShifaEntity(
       id: 'p9',
       titleEn: 'Dua for Fever (Cooling It)',
       titleUr: 'بخار ٹھنڈا کرنے کی دعا',
@@ -222,27 +200,6 @@ class ShifaConstants {
       instructionPs: 'لاونه د بدن پر دردناک ځای وموږه او دا ولوله.',
       reference: '',
       targetCount: 7,
-    ),
-    ShifaEntity(
-      id: 'p12',
-      titleEn: 'Surah Al-Baqarah Last Two Verses for Protection',
-      titleUr: 'سورۃ البقرہ کی آخری دو آیات',
-      titlePs: 'سورۃ البقرۃ وروستۍ دوه آیاتونه',
-      arabic:
-          'آمَنَ الرَّسُولُ بِمَا أُنزِلَ إِلَيْهِ مِن رَّبِّهِ وَالْمُؤْمِنُونَ كُلٌّ آمَنَ بِاللَّهِ وَمَلَائِكَتِهِ وَكُتُبِهِ وَرُسُلِهِ لَا نُفَرِّقُ بَيْنَ أَحَدٍ مِّن رُّسُلِهِ وَقَالُوا سَمِعْنَا وَأَطَعْنَا غُفْرَانَكَ رَبَّنَا وَإِلَيْكَ الْمَصِيرُ ۞ لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا لَهَا مَا كَسَبَتْ وَعَلَيْهَا مَا اكْتَسَبَتْ رَبَّنَا لَا تُؤَاخِذْنَا إِن نَّسِينَا أَوْ أَخْطَأْنَا رَبَّنَا وَلَا تَحْمِلْ عَلَيْنَا إِصْرًا كَمَا حَمَلْتَهُ عَلَى الَّذِينَ مِن قَبْلِنَا رَبَّنَا وَلَا تُحَمِّلْنَا مَا لَا طَاقَةَ لَنَا بِهِ وَاعْفُ عَنَّا وَاغْفِرْ لَنَا وَارْحَمْنَا أَنتَ مَوْلَانَا فَانصُرْنَا عَلَى الْقَوْمِ الْكَافِرِينَ',
-      translationEn:
-          'The Messenger has believed in what was revealed to him from his Lord, and so have the believers. All of them have believed in Allah, His angels, His books, and His messengers, (saying), "We make no distinction between any of His messengers." And they say, "We hear and we obey. (We seek) Your forgiveness, our Lord, and to You is the (final) destination." Allah does not burden a soul beyond what it can bear. It will have (the consequence of) what (good) it has gained, and it will bear (the consequence of) what (evil) it has earned. "Our Lord, do not impose blame upon us if we forget or make error. Our Lord, and lay not upon us a burden like that which You laid upon those before us. Our Lord, and burden us not with that which we have no ability to bear. And pardon us; and forgive us; and have mercy upon us. You are our protector, so give us victory over the disbelieving people."',
-      translationUr:
-          'رسول ایمان لائے اس پر جو ان کے رب کی طرف سے ان پر نازل ہوا اور مومن بھی۔ سب اللہ پر، اس کے فرشتوں پر، اس کی کتابوں پر اور اس کے رسولوں پر ایمان لائے۔ ہم اس کے رسولوں میں سے کسی میں فرق نہیں کرتے۔ اور انہوں نے کہا: ہم نے سنا اور مانا، اے ہمارے رب تیری بخشش ہو، اور تیری ہی طرف لوٹنا ہے۔ اللہ کسی نفس پر اس کی طاقت سے زیادہ بوجھ نہیں ڈالتا۔ اسے وہی ملے گا جو اس نے کمایا، اور اسی کے ذمے ہوگا جو اس نے کیا۔ اے ہمارے رب! اگر ہم بھول جائیں یا غلطی کریں تو ہم سے مواخذہ نہ کر۔ اے ہمارے رب! ہم پر وہ بوجھ نہ ڈال جو تو نے ہم سے پہلوں پر ڈالا تھا۔ اے ہمارے رب! ہم سے وہ بوجھ نہ اٹھوا جو ہم میں طاقت نہیں۔ اور ہمیں معاف کر، ہمیں بخش دے، ہم پر رحم فرما، تو ہی ہمارا مولا ہے، کافر قوم کے خلاف ہماری مدد فرما۔',
-      translationPs:
-          'رسول ایمان راوړی په هغه څه چې د هغه رب له لوري پرې نازل شوي دي او مومنانو هم. ټول په الله، د هغه په فرښتو، د هغه په کتابونو او د هغه په رسولانو ایمان راوړي دي. موږ د هغه په رسولانو کې هېڅ توپیر نه کوو. او دوی وویل: موږ واوریدل او اطاعت مو وکړ، ای زموږ ربه، ستا بخښنه غواړو او د تا په لور ورتګ دی. الله پر هېڅ نفس د هغه د وسې اندازه بوج نه اچوي...',
-      instructionEn:
-          'The Prophet ﷺ said: "Whoever recites the last two verses of Surah Al-Baqarah at night, they will suffice him." Recite before sleep or during illness for protection.',
-      instructionUr:
-          'نبی ﷺ نے فرمایا: جو شخص رات کو سورۃ البقرہ کی آخری دو آیات پڑھے وہ اسے کافی ہو جائیں گی۔ رات کو سونے سے پہلے یا بیماری میں پڑھیں۔',
-      instructionPs: 'نبی ﷺ وویل: څوک چې د شپې د سورۃ البقرۃ وروستۍ دوه آیتونه ولولي، هغه ورته بس دي. د خوب پر مهال یا په ناروغۍ کې یې ولوله.',
-      reference: 'Sahih al-Bukhari: 5009, Sahih Muslim: 808 (Quran 2:285-286)',
-      targetCount: 1,
     ),
     ShifaEntity(
       id: 'p13',
@@ -342,38 +299,6 @@ class ShifaConstants {
       instructionUr: 'حفاظت کے لیے سونے سے پہلے پڑھیں۔',
       instructionPs: 'د ساتنې لپاره د خوب پر مهال ووايئ.',
       reference: 'Sahih al-Bukhari 2311',
-      targetCount: 1,
-    ),
-    ShifaEntity(
-      id: 'e7',
-      titleEn: 'Seek Refuge from the Evil of Creation',
-      titleUr: 'مخلوق کے شر سے پناہ',
-      titlePs: 'د مخلوق له شره پناہ',
-      arabic: 'أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ',
-      translationEn:
-          'I seek refuge in the perfect words of Allah from the evil of what He has created.',
-      translationUr:
-          'میں اللہ کے کامل کلمات کی پناہ مانگتا ہوں ہر اس چیز کے شر سے جو اس نے پیدا کی ہے۔',
-      translationPs: 'زه د الله په پوره کلماتو پناہ غواړم له هغه شره چې هغه پیدا کړی دی.',
-      instructionEn: 'Recite when arriving at a place.',
-      instructionUr: 'کسی جگہ پہنچ کر پڑھیں۔',
-      instructionPs: 'کله چې کوم ځای ته ورشئ، دا ولولئ.',
-      reference: 'Sahih Muslim 2708',
-      targetCount: 3,
-    ),
-    ShifaEntity(
-      id: 'e8',
-      titleEn: 'The Evil Eye is Real',
-      titleUr: 'نظرِ بد حق ہے',
-      titlePs: 'بد نظر او سترګې لګیدل حق دي',
-      arabic: 'الْعَيْنُ حَقٌّ',
-      translationEn: 'The evil eye is a fact.',
-      translationUr: 'نظرِ بد حق ہے۔',
-      translationPs: 'بد نظر او سترګې لګیدل حق دي.',
-      instructionEn: 'A statement affirming the reality of evil eye.',
-      instructionUr: 'نظرِ بد کی حقیقت کو ثابت کرنے والی حدیث۔',
-      instructionPs: 'دا د بد نظر د حقیقت په اړه حدیث دی.',
-      reference: 'Sahih al-Bukhari 5740',
       targetCount: 1,
     ),
   ];
